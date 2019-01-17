@@ -1,0 +1,6 @@
+<solution>
+	<projects>
+		<project name="sprav807.pjx" buildaction="0" recompile="false" displayerrors="true" regenerate="false" runafterbuild="false" outputfile="" />
+	</projects>
+	<versioncontrol class="GitOperations" library="ProjectExplorerEngine.vcx" convclass="BinaryToTextConversionFoxBin2PRG" convlibrary="ProjectExplorerEngine.vcx" convpath="D:\WORK\TOOLS\FOXBIN2PRG" repository="D:\WORK\ITALIKA" includeinversioncontrol="2" autocommit="true" fileaddmessage="Файл добавлен в проект" fileremovemessage="Файл удален из проекта" cleanupmessage="Чистка проекта" savedsolutionmessage="Именены настройки" buildmessage="Построение проекта: version {Project.VersionNumber}" />
+</solution>
