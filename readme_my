@@ -1,0 +1,4 @@
+http://www.winimage.com/zLibDll/
+Ѕиблиотека скачана под именем zlib123dll.zip
+zlibwapi.dll переименовал в zlib.dll (дл€ разархивации zip-архивов) (что бы не править в коде)
+
