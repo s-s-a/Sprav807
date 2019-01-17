@@ -55,50 +55,53 @@ DEFINE CLASS form_acc AS form
 		*< END OBJECT: BaseClass="textbox" />
 	
 	PROCEDURE Destroy
-		SELECT (al2)
-		SET ORDER TO TAG BIC
-		ON KEY LABEL F6
-		POP KEY 
+		Select (al2)
+		Set Order To Tag BIC
+		On Key Label F6
+		Pop Key
 		
 	ENDPROC
 
 	PROCEDURE Init
-		ThisForm.Left = 30/7*(SYSMETRIC(1)/100) 
-		ThisForm.Top  = 24/19.5*(SYSMETRIC(2)/100)
-		PUSH KEY CLEAR 
+		With This
+			.Left = 30/7*(Sysmetric(1)/100)
+			.Top  = 24/19.5*(Sysmetric(2)/100)
+		Endwith
+		Push Key Clear
 		
-		ON KEY LABEL F6 DO act_poisk_a
-		
+		On Key Label F6 Do act_poisk_a
 		
 	ENDPROC
 
 	PROCEDURE Command1.Click
-		alac1=ALIAS()
-		SELECT (al2)
-		  trec = RECNO()
-		  SET ORDER TO TAG Account
-		  SEEK ThisForm.Text1.Value+a807.BIC
+		With Thisform
+			alac1 = Alias()
+			Select (al2)
+			trec = Recno()
+			Set Order To Tag Account
+			Seek .Text1.Value+a807.BIC
 		*  LOCATE FOR Account=ThisForm.Text1.Value
-		  IF !FOUND()
-		   =MESSAGEBOX('Счет НЕ НАЙДЕН!',0+48,'Внимание!',2000)
-		   GO trec
-		   ThisForm.Text1.SetFocus 
-		  ELSE 
-		   SET ORDER TO TAG BIC
-		   SELECT (alac1)
-		   ThisForm.Release  
-		  ENDIF
-		
+			If !Found()
+				Messagebox('Счет НЕ НАЙДЕН!',0+48,'Внимание!',2000)
+				Go trec
+				.Text1.SetFocus
+			Else
+				Set Order To Tag BIC
+				Select (alac1)
+				.Release
+			Endif
+		Endwith
 		
 	ENDPROC
 
 	PROCEDURE Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 ENDDEFINE

@@ -55,45 +55,49 @@ DEFINE CLASS form_bic AS form
 		*< END OBJECT: BaseClass="textbox" />
 	
 	PROCEDURE Destroy
-		ON KEY LABEL F5
-		POP KEY 
+		On Key Label F5
+		Pop Key
 		
 	ENDPROC
 
 	PROCEDURE Init
-		ThisForm.Left = 8/7*(SYSMETRIC(1)/100) && делим на 7, если ScalableMode= Foxels
-		ThisForm.Top  = 6/19.5*(SYSMETRIC(2)/100) && делим на 19.5, если ScalableMode= Foxels
-		PUSH KEY CLEAR 
+		With This
+			.Left = 8/7*(Sysmetric(1)/100) && делим на 7, если ScalableMode= Foxels
+			.Top  = 6/19.5*(Sysmetric(2)/100) && делим на 19.5, если ScalableMode= Foxels
+		Endwith
+		Push Key Clear
 		
-		ON KEY LABEL F5 DO act_poisk
+		On Key Label F5 Do act_poisk
 		
 		
 	ENDPROC
 
 	PROCEDURE Command1.Click
-		  SELECT (al)
-		  trec = RECNO()
-		  SET ORDER TO TAG BIC
-		  SEEK ThisForm.Text1.Value
-		  
-		  IF !FOUND()
-		   =MESSAGEBOX('БИК НЕ НАЙДЕН!',0+48,'Внимание!',2000)
-		   GO trec
-		   ThisForm.Text1.SetFocus 
-		  ELSE 
-		   ThisForm.Release  
-		  ENDIF
-		   
+		With Thisform
+			Select (al)
+			trec = Recno()
+			Set Order To Tag BIC
+			Seek .Text1.Value
+		
+			If !Found()
+				=Messagebox('БИК НЕ НАЙДЕН!',0+48,'Внимание!',2000)
+				Go trec
+				.Text1.SetFocus()
+			Else
+				.Release()
+			Endif
+		Endwith
 		
 	ENDPROC
 
 	PROCEDURE Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF 
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 ENDDEFINE

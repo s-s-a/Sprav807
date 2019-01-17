@@ -1013,256 +1013,242 @@ DEFINE CLASS form2 AS form
 	ADD OBJECT 'Label1' AS label WITH ;
 		AutoSize = .T., ;
 		Caption = "Label1", ;
-		Height = 0.84, ;
+		Height = 0.89, ;
 		Left = 132.86, ;
 		Name = "Label1", ;
 		Top = 37.63, ;
 		Width = 5.71
 		*< END OBJECT: BaseClass="label" />
 	
-	PROCEDURE Activate
-		* ПО ширине ФОКСЕЛИ в 7 раз меньше пикселей  , высота в 19.25 раз меньше
-		*ThisForm.Grid1.FontSize = 10
-		*ThisForm.Grid2.FontSize = 10
-		
-		*ThisForm.Grid1.Width  =  g1_Width*koef
-		*ThisForm.Grid1.Height =  g1_Height*koef
-		*ThisForm.Grid2.Height =  g2_Height*koef2  
-		*ThisForm.Grid2.Top    =  g2_Top*koef4 
-		*ThisForm.Grid2.Width  =  g2_Width*koef   
-		
-		*koef  = 1.3
-		*koef2 = 1
-		*koef3 = 1
-		*koef4 = 1
-	ENDPROC
-
 	PROCEDURE Destroy
-		 _vfp.StatusBar=''  
-		 ON KEY LABEl F5
-		 ON KEY LABEL F6
-		 ON KEY LABEL F1
-		 ON KEY LABEL F7
-		 ON KEY LABEL F9
-		 TRY 
-		  fr_start.Command2.Enabled = .T.
-		 CATCH 
-		 ENDTRY 
+		_vfp.StatusBar=''
+		On Key Label F5
+		On Key Label F6
+		On Key Label F1
+		On Key Label F7
+		On Key Label F9
+		Try
+			fr_start.Command2.Enabled = .T.
+		Catch
+		Endtry
+		
 	ENDPROC
 
 	PROCEDURE Init
-		  ThisForm.Grid1.RecordSourceType = 1
-		  ThisForm.Grid1.RecordSource = (al)
-		*  ThisForm.Grid1.ColumnCount = 15  
+		With This
+			With .Grid1
+				.RecordSourceType = 1
+				.RecordSource = (al)
+		*  ThisForm.Grid1.ColumnCount = 15
 		*  ThisForm.Grid1.Column1.ControlSource = 'a807.NameP'
 		*  ThisForm.Grid1.AutoFit()
-		  ThisForm.Grid1.ReadOnly = .T.
+				.ReadOnly = .T.
 		
 		*  =LoadKeyboardLayout("00000419",1) && Рус
 		
-		m_ED11=' '
-		m_Bus11=' '
-		m_Dir11=' '
+				m_ED11=' '
+				m_Bus11=' '
+				m_Dir11=' '
 		
-		  GO TOP
-		  ThisForm.Height = (99/19.25)*(SYSMETRIC(2)/100)
-		  ThisForm.Caption = ThisForm.Caption+' '+m_EDNo+' '+m_EDDate+' '+m_EDAuthor+' '+m_CreationReason+' '+m_CreationDateTime+;
-		  ' '+m_InfoTypeCode+' '+m_ED11+' '+m_Bus11+' '+m_Dir11+;
-		  '   '+' ;  F5 - поиск в табл. БИК; F6 - поиск в табл. счетов ; Ctrl+Home - верх ; Ctrl+End - низ ; F1 - помощь ; F7 - сохранить в DBF, F9 - экспорт в BNKSEEK.DBF'
+				Go Top
+				.Height = (99/19.25)*(Sysmetric(2)/100)
+				.Caption = .Caption+' '+m_EDNo+' '+m_EDDate+' '+m_EDAuthor+' '+m_CreationReason+' '+m_CreationDateTime+;
+					' '+m_InfoTypeCode+' '+m_ED11+' '+m_Bus11+' '+m_Dir11+;
+					'   '+' ;  F5 - поиск в табл. БИК; F6 - поиск в табл. счетов ; Ctrl+Home - верх ; Ctrl+End - низ ; F1 - помощь ; F7 - сохранить в DBF, F9 - экспорт в BNKSEEK.DBF'
 		* ПО ширине ФОКСЕЛИ в 7 раз меньше пикселей  , высота в 19.25 раз меньше
-		  ThisForm.Grid1.Width = SYSMETRIC(1)/7.05 && Ширина Grid1 
-		  ThisForm.Grid1.Height = (63/19.25)*(SYSMETRIC(2)/100) && Высота грид  
-		  ThisForm.Grid2.Height = (23/19.25)*(SYSMETRIC(2)/100) 
-		  ThisForm.Grid2.Top = ThisForm.Grid1.Top + ThisForm.Grid1.Height 
-		  
-		  ThisForm.Grid1.Column1.ControlSource = 'a807.BIC'
-		 * ThisForm.Grid1.Column1.Header1.ForeColor = RGB(255,128,0)
-		  ThisForm.Grid1.Column1.Header1.FontBold = .T.
-		  ThisForm.Grid1.Column2.ControlSource = 'a807.NameP'
-		 * ThisForm.Grid1.Column2.Header1.ForeColor = RGB(255,128,0)
-		  ThisForm.Grid1.Column2.Header1.Caption = 'Наименование участника'
-		  ThisForm.Grid1.Column2.Header1.FontBold = .T.
-		  ThisForm.Grid1.Column3.ControlSource = 'a807.Rgn'
-		  ThisForm.Grid1.Column3.Header1.Caption = 'Код территории'
-		  ThisForm.Grid1.Column3.Header1.FontBold = .T.   
-		  ThisForm.Grid1.Column4.ControlSource = 'a807.Ind' 
-		  ThisForm.Grid1.Column4.Header1.Caption = 'Индекс'
-		  ThisForm.Grid1.Column4.Header1.FontBold = .T. 
-		  ThisForm.Grid1.Column5.ControlSource = 'a807.Tnp' 
-		  ThisForm.Grid1.Column5.Header1.Caption = 'Тип населенного пункта'
-		  ThisForm.Grid1.Column6.ControlSource = 'a807.Nnp' 
-		  ThisForm.Grid1.Column6.Header1.Caption = 'Наименование населенного пункта'
-		  ThisForm.Grid1.Column6.Header1.FontBold = .T. 
-		  ThisForm.Grid1.Column7.ControlSource = 'a807.Adr' 
-		  ThisForm.Grid1.Column7.Header1.Caption = 'Адрес'
-		  ThisForm.Grid1.Column7.Header1.FontBold = .T. 
-		  ThisForm.Grid1.Column8.ControlSource = 'a807.PrntBIC' 
-		  ThisForm.Grid1.Column8.Header1.Caption = 'БИК головной организации'
-		  ThisForm.Grid1.Column8.Header1.FontBold = .T. 
-		  ThisForm.Grid1.Column9.ControlSource = 'a807.DateIn' 
-		  ThisForm.Grid1.Column9.Header1.Caption = 'Дата включения в состав участников перевода'
-		  ThisForm.Grid1.Column10.ControlSource = 'a807.PtType' 
-		  ThisForm.Grid1.Column10.Header1.Caption = 'Тип участника перевода'
-		  ThisForm.Grid1.Column10.Header1.FontBold = .T.
-		  ThisForm.Grid1.Column11.ControlSource = 'a807.Srvcs' 
-		  ThisForm.Grid1.Column11.Header1.Caption = 'Доступные сервисы перевода денежных средств'
-		  ThisForm.Grid1.Column12.ControlSource = 'a807.XchType' 
-		  ThisForm.Grid1.Column12.Header1.Caption = 'Уч. обмена'
-		  ThisForm.Grid1.Column13.ControlSource = 'a807.UID' 
-		  ThisForm.Grid1.Column13.Header1.Caption = 'УИС'
-		  ThisForm.Grid1.Column13.Header1.FontBold = .T. 
-		  ThisForm.Grid1.Column14.ControlSource = 'a807.Participan' 
-		  ThisForm.Grid1.Column14.Header1.Caption = 'Статус участника'
-		  ThisForm.Grid1.Column15.ControlSource = 'a807.NPSPartici' 
-		  ThisForm.Grid1.Column15.Header1.Caption = 'Признак участия в ПС БР'
-		  
-		  ThisForm.Grid1.Column16.ControlSource = 'a807.Regn' 
-		  ThisForm.Grid1.Column16.Header1.Caption = 'Регистрационный № п/п'
-		  ThisForm.Grid1.Column16.Header1.FontBold = .T. 
-		  ThisForm.Grid1.Column17.ControlSource = 'a807.CntrCd' 
-		  ThisForm.Grid1.Column17.Header1.Caption = 'Код страны'
-		  ThisForm.Grid1.Column18.ControlSource = 'a807.SWBIC' 
-		  ThisForm.Grid1.Column18.Header1.Caption = 'БИК (СВИФТ)'
-		  ThisForm.Grid1.Column18.Header1.FontBold = .T.
-		  ThisForm.Grid1.Column19.ControlSource = 'a807.DefaultSWB' 
-		  ThisForm.Grid1.Column19.Header1.Caption = 'Признак использования БИК (СВИФТ), «по умолчанию»'
-		  ThisForm.Grid1.Column20.ControlSource = 'a807.EnglName' 
-		  ThisForm.Grid1.Column20.Header1.Caption = 'Наименование участника на английском языке'
-		  ThisForm.Grid1.Column21.ControlSource = 'a807.DateOut' 
-		  ThisForm.Grid1.Column21.Header1.Caption = 'Дата исключения информации об Участнике'
-		  ThisForm.Grid1.Column22.ControlSource = 'a807.PartNo' 
-		  ThisForm.Grid1.Column22.Header1.Caption = '№ части'
-		  ThisForm.Grid1.Column23.ControlSource = 'a807.PartQuanti' 
-		  ThisForm.Grid1.Column23.Header1.Caption = 'Количество частей'
-		  ThisForm.Grid1.Column24.ControlSource = 'a807.PartAggreg' 
-		  ThisForm.Grid1.Column24.Header1.Caption = 'Уникальный идентификатор совокупности частей'
-		  ThisForm.Grid1.Column25.ControlSource = 'a807.EDNo' 
-		  ThisForm.Grid1.Column25.Header1.Caption = '№ ЭС в течение опердня'
-		  ThisForm.Grid1.Column26.ControlSource = 'a807.EDDate' 
-		  ThisForm.Grid1.Column26.Header1.Caption = 'Дата составления ЭС'
-		  ThisForm.Grid1.Column27.ControlSource = 'a807.EDAuthor' 
-		  ThisForm.Grid1.Column27.Header1.Caption = 'Уникальный идентификатор составителя ЭС - УИС'
-		  ThisForm.Grid1.Column28.ControlSource = 'a807.ChangeType' 
-		  ThisForm.Grid1.Column28.Header1.Caption = 'Тип изменения в Справочнике по сравнению с предыдущим операционным днем (добавление записи/изменение/удаление/без изменения)'
-		  ThisForm.Grid1.Column29.ControlSource = 'a807.Rstr' 
-		  ThisForm.Grid1.Column29.Header1.Caption = 'Код ограничения, наложенного на участника'
-		  ThisForm.Grid1.Column30.ControlSource = 'a807.RstrDate' 
-		  ThisForm.Grid1.Column30.Header1.Caption = 'Дата начала действия ограничения участника'
-		  ThisForm.Grid1.Column31.ControlSource = 'a807.ToNPSDate' 
-		  ThisForm.Grid1.Column31.Header1.Caption = 'Дата включения в список участников ПС БР'
+				.Width = Sysmetric(1)/7.05 && Ширина Grid1
+				.Height = (63/19.25)*(Sysmetric(2)/100) && Высота грид
+				.Height = (23/19.25)*(Sysmetric(2)/100)
+				.Top = .Grid1.Top + .Grid1.Height
 		
-		  
+				.Column1.ControlSource = 'a807.BIC'
+		* .Column1.Header1.ForeColor = RGB(255,128,0)
+				.Column1.Header1.FontBold = .T.
+				.Column2.ControlSource = 'a807.NameP'
+		* .Column2.Header1.ForeColor = RGB(255,128,0)
+				.Column2.Header1.Caption = 'Наименование участника'
+				.Column2.Header1.FontBold = .T.
+				.Column3.ControlSource = 'a807.Rgn'
+				.Column3.Header1.Caption = 'Код территории'
+				.Column3.Header1.FontBold = .T.
+				.Column4.ControlSource = 'a807.Ind'
+				.Column4.Header1.Caption = 'Индекс'
+				.Column4.Header1.FontBold = .T.
+				.Column5.ControlSource = 'a807.Tnp'
+				.Column5.Header1.Caption = 'Тип населенного пункта'
+				.Column6.ControlSource = 'a807.Nnp'
+				.Column6.Header1.Caption = 'Наименование населенного пункта'
+				.Column6.Header1.FontBold = .T.
+				.Column7.ControlSource = 'a807.Adr'
+				.Column7.Header1.Caption = 'Адрес'
+				.Column7.Header1.FontBold = .T.
+				.Column8.ControlSource = 'a807.PrntBIC'
+				.Column8.Header1.Caption = 'БИК головной организации'
+				.Column8.Header1.FontBold = .T.
+				.Column9.ControlSource = 'a807.DateIn'
+				.Column9.Header1.Caption = 'Дата включения в состав участников перевода'
+				.Column10.ControlSource = 'a807.PtType'
+				.Column10.Header1.Caption = 'Тип участника перевода'
+				.Column10.Header1.FontBold = .T.
+				.Column11.ControlSource = 'a807.Srvcs'
+				.Column11.Header1.Caption = 'Доступные сервисы перевода денежных средств'
+				.Column12.ControlSource = 'a807.XchType'
+				.Column12.Header1.Caption = 'Уч. обмена'
+				.Column13.ControlSource = 'a807.UID'
+				.Column13.Header1.Caption = 'УИС'
+				.Column13.Header1.FontBold = .T.
+				.Column14.ControlSource = 'a807.Participan'
+				.Column14.Header1.Caption = 'Статус участника'
+				.Column15.ControlSource = 'a807.NPSPartici'
+				.Column15.Header1.Caption = 'Признак участия в ПС БР'
 		
-		  ThisForm.Grid1.Column1.Width  = (5.4/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column2.Width  = (23/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column3.Width  = (3/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column4.Width  = (4/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column5.Width  = (1.8/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column6.Width  = (10/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column7.Width  = (13/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column8.Width  = (6/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column9.Width  = (5/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column10.Width = (3/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column11.Width = (2/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column12.Width = (2/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column13.Width = (6/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column14.Width = (3/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column15.Width = (2/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column16.Width = (5/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column17.Width = (3/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column18.Width = (8/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column19.Width = (6/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column20.Width = (10/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column21.Width = (3/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column22.Width = (3/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column23.Width = (5.5/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column24.Width = (5.5/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column25.Width = (5.5/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column26.Width = (5.5/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column27.Width = (5.5/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column28.Width = (5.5/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column29.Width = (5.5/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column30.Width = (5.5/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid1.Column31.Width = (5.5/7)*(SYSMETRIC(1)/100)
-		  
-		  
-		  ThisForm.Grid2.RecordSourceType = 1
-		  ThisForm.Grid2.RecordSource = (al2)
+				.Column16.ControlSource = 'a807.Regn'
+				.Column16.Header1.Caption = 'Регистрационный № п/п'
+				.Column16.Header1.FontBold = .T.
+				.Column17.ControlSource = 'a807.CntrCd'
+				.Column17.Header1.Caption = 'Код страны'
+				.Column18.ControlSource = 'a807.SWBIC'
+				.Column18.Header1.Caption = 'БИК (СВИФТ)'
+				.Column18.Header1.FontBold = .T.
+				.Column19.ControlSource = 'a807.DefaultSWB'
+				.Column19.Header1.Caption = 'Признак использования БИК (СВИФТ), «по умолчанию»'
+				.Column20.ControlSource = 'a807.EnglName'
+				.Column20.Header1.Caption = 'Наименование участника на английском языке'
+				.Column21.ControlSource = 'a807.DateOut'
+				.Column21.Header1.Caption = 'Дата исключения информации об Участнике'
+				.Column22.ControlSource = 'a807.PartNo'
+				.Column22.Header1.Caption = '№ части'
+				.Column23.ControlSource = 'a807.PartQuanti'
+				.Column23.Header1.Caption = 'Количество частей'
+				.Column24.ControlSource = 'a807.PartAggreg'
+				.Column24.Header1.Caption = 'Уникальный идентификатор совокупности частей'
+				.Column25.ControlSource = 'a807.EDNo'
+				.Column25.Header1.Caption = '№ ЭС в течение опердня'
+				.Column26.ControlSource = 'a807.EDDate'
+				.Column26.Header1.Caption = 'Дата составления ЭС'
+				.Column27.ControlSource = 'a807.EDAuthor'
+				.Column27.Header1.Caption = 'Уникальный идентификатор составителя ЭС - УИС'
+				.Column28.ControlSource = 'a807.ChangeType'
+				.Column28.Header1.Caption = 'Тип изменения в Справочнике по сравнению с предыдущим операционным днем (добавление записи/изменение/удаление/без изменения)'
+				.Column29.ControlSource = 'a807.Rstr'
+				.Column29.Header1.Caption = 'Код ограничения, наложенного на участника'
+				.Column30.ControlSource = 'a807.RstrDate'
+				.Column30.Header1.Caption = 'Дата начала действия ограничения участника'
+				.Column31.ControlSource = 'a807.ToNPSDate'
+				.Column31.Header1.Caption = 'Дата включения в список участников ПС БР'
+				.Column1.Width  = (5.4/7)*(Sysmetric(1)/100)
+				.Column2.Width  = (23/7)*(Sysmetric(1)/100)
+				.Column3.Width  = (3/7)*(Sysmetric(1)/100)
+				.Column4.Width  = (4/7)*(Sysmetric(1)/100)
+				.Column5.Width  = (1.8/7)*(Sysmetric(1)/100)
+				.Column6.Width  = (10/7)*(Sysmetric(1)/100)
+				.Column7.Width  = (13/7)*(Sysmetric(1)/100)
+				.Column8.Width  = (6/7)*(Sysmetric(1)/100)
+				.Column9.Width  = (5/7)*(Sysmetric(1)/100)
+				.Column10.Width = (3/7)*(Sysmetric(1)/100)
+				.Column11.Width = (2/7)*(Sysmetric(1)/100)
+				.Column12.Width = (2/7)*(Sysmetric(1)/100)
+				.Column13.Width = (6/7)*(Sysmetric(1)/100)
+				.Column14.Width = (3/7)*(Sysmetric(1)/100)
+				.Column15.Width = (2/7)*(Sysmetric(1)/100)
+				.Column16.Width = (5/7)*(Sysmetric(1)/100)
+				.Column17.Width = (3/7)*(Sysmetric(1)/100)
+				.Column18.Width = (8/7)*(Sysmetric(1)/100)
+				.Column19.Width = (6/7)*(Sysmetric(1)/100)
+				.Column20.Width = (10/7)*(Sysmetric(1)/100)
+				.Column21.Width = (3/7)*(Sysmetric(1)/100)
+				.Column22.Width = (3/7)*(Sysmetric(1)/100)
+				.Column23.Width = (5.5/7)*(Sysmetric(1)/100)
+				.Column24.Width = (5.5/7)*(Sysmetric(1)/100)
+				.Column25.Width = (5.5/7)*(Sysmetric(1)/100)
+				.Column26.Width = (5.5/7)*(Sysmetric(1)/100)
+				.Column27.Width = (5.5/7)*(Sysmetric(1)/100)
+				.Column28.Width = (5.5/7)*(Sysmetric(1)/100)
+				.Column29.Width = (5.5/7)*(Sysmetric(1)/100)
+				.Column30.Width = (5.5/7)*(Sysmetric(1)/100)
+				.Column31.Width = (5.5/7)*(Sysmetric(1)/100)
+			Endw
 		
-		  ThisForm.Grid2.Column1.Width  = (10.4/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid2.Column2.Width  = (5/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid2.Column3.Width  = (4/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid2.Column4.Width  = (3/7)*(SYSMETRIC(1)/100)    
-		  ThisForm.Grid2.Column5.Width  = (5.4/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid2.Column6.Width  = (2/7)*(SYSMETRIC(1)/100)
-		  ThisForm.Grid2.Column7.Width  = (3/7)*(SYSMETRIC(1)/100) 
-		  ThisForm.Grid2.Column8.Width  = (3.5/7)*(SYSMETRIC(1)/100) 
-		  ThisForm.Grid2.Column9.Width  = (2.5/7)*(SYSMETRIC(1)/100) 
-		  ThisForm.Grid2.Column10.Width  = (5/7)*(SYSMETRIC(1)/100) 
-		 
-		  ThisForm.Grid2.Column1.ControlSource = 'acc807.Account' 
-		  ThisForm.Grid2.Column1.Header1.Caption = 'Номер счета'
-		  ThisForm.Grid2.Column2.ControlSource = 'acc807.DateIn' 
-		  ThisForm.Grid2.Column2.Header1.Caption = 'Дата открытия счета'
-		  ThisForm.Grid2.Column3.ControlSource = 'acc807.DateOut' 
-		  ThisForm.Grid2.Column3.Header1.Caption = 'Дата исключения информации о счете участника'
-		  ThisForm.Grid2.Column4.ControlSource = 'acc807.AccountSta' 
-		  ThisForm.Grid2.Column4.Header1.Caption = 'Статус счета'
-		  ThisForm.Grid2.Column5.ControlSource = 'acc807.AccountCBR' 
-		  ThisForm.Grid2.Column5.Header1.Caption = 'БИК ПБР, обслуживающего счет участника перевода'
-		  ThisForm.Grid2.Column6.ControlSource = 'acc807.CK' 
-		  ThisForm.Grid2.Column6.Header1.Caption = 'Контрольный ключ'
-		  ThisForm.Grid2.Column7.ControlSource = 'acc807.RAccountT' 
-		  ThisForm.Grid2.Column7.Header1.Caption = 'Тип счета в соответствии с нормативом'
-		  ThisForm.Grid2.Column8.ControlSource = 'acc807.ARDat' 
-		  ThisForm.Grid2.Column8.Header1.Caption = 'Дата начала действия Ограничения операций по счету'
-		  ThisForm.Grid2.Column9.ControlSource = 'acc807.AccRs' 
-		  ThisForm.Grid2.Column9.Header1.Caption = 'Код ограничения операций по счету'
-		  ThisForm.Grid2.Column10.ControlSource = 'acc807.BIC' 
-		  ThisForm.Grid2.Column10.Header1.Caption = 'БИК'
-		  ThisForm.Grid2.Width = 46/7*(SYSMETRIC(1)/100)
+			With .Grid2
+				.RecordSourceType = 1
+				.RecordSource = (al2)
 		
-		  ThisForm.Command1.Top = (ThisForm.Grid1.Top + ThisForm.Grid1.Height + (3/19.25)*(SYSMETRIC(2)/100))/2
-		  ThisForm.Command1.Left = (ThisForm.Left + ThisForm.Width-(2/7)*(SYSMETRIC(1)/100))/2 
-		  
-		  SELECT (al)
-		  COUNT TO k_filt 
-		  GO TOP
-		  
-		  ON KEY LABEl F5 DO poisk
-		  ON KEY LABEl F6 DO act_poisk_a
-		  ON KEY LABEL F7 DO Kopi WITH 'вручную'
-		  ON KEY LABEL F1 DO myHelp
-		  ON KEY LABEL F9 DO p_exp_bnkseek
-		  
-		  IF UPPER(MyValue2)='YES'
-		   DO Kopi WITH 'программно'
-		   DO p_exp_bnkseek
-		   WAIT 'Сохранение таблиц dbf завершено!'+CHR(13)+'Экспорт в bnkseek.dbf закончен!' WINDOW NOWAIT     
-		  ENDIF 
-		  fr_start.Command2.Enabled = .F.
-		  ThisForm.label1.Caption = ''
-		*  ON KEY LABEL ESC ThisForm.Release
+				.Column1.Width  = (10.4/7)*(Sysmetric(1)/100)
+				.Column2.Width  = (5/7)*(Sysmetric(1)/100)
+				.Column3.Width  = (4/7)*(Sysmetric(1)/100)
+				.Column4.Width  = (3/7)*(Sysmetric(1)/100)
+				.Column5.Width  = (5.4/7)*(Sysmetric(1)/100)
+				.Column6.Width  = (2/7)*(Sysmetric(1)/100)
+				.Column7.Width  = (3/7)*(Sysmetric(1)/100)
+				.Column8.Width  = (3.5/7)*(Sysmetric(1)/100)
+				.Column9.Width  = (2.5/7)*(Sysmetric(1)/100)
+				.Column10.Width  = (5/7)*(Sysmetric(1)/100)
 		
-		  g1_Width  = ThisForm.Grid1.Width  
-		  g1_Height = ThisForm.Grid1.Height 
-		  g2_Height = ThisForm.Grid2.Height 
-		  g2_Top    = ThisForm.Grid2.Top 
-		  g2_Width  = ThisForm.Grid2.Width 
+				.Column1.ControlSource = 'acc807.Account'
+				.Column1.Header1.Caption = 'Номер счета'
+				.Column2.ControlSource = 'acc807.DateIn'
+				.Column2.Header1.Caption = 'Дата открытия счета'
+				.Column3.ControlSource = 'acc807.DateOut'
+				.Column3.Header1.Caption = 'Дата исключения информации о счете участника'
+				.Column4.ControlSource = 'acc807.AccountSta'
+				.Column4.Header1.Caption = 'Статус счета'
+				.Column5.ControlSource = 'acc807.AccountCBR'
+				.Column5.Header1.Caption = 'БИК ПБР, обслуживающего счет участника перевода'
+				.Column6.ControlSource = 'acc807.CK'
+				.Column6.Header1.Caption = 'Контрольный ключ'
+				.Column7.ControlSource = 'acc807.RAccountT'
+				.Column7.Header1.Caption = 'Тип счета в соответствии с нормативом'
+				.Column8.ControlSource = 'acc807.ARDat'
+				.Column8.Header1.Caption = 'Дата начала действия Ограничения операций по счету'
+				.Column9.ControlSource = 'acc807.AccRs'
+				.Column9.Header1.Caption = 'Код ограничения операций по счету'
+				.Column10.ControlSource = 'acc807.BIC'
+				.Column10.Header1.Caption = 'БИК'
+				.Width = 46/7*(Sysmetric(1)/100)
+			Endwith
+			.Command1.Top = (.Grid1.Top + .Grid1.Height + (3/19.25)*(Sysmetric(2)/100))/2
+			.Command1.Left = (.Left + .Width-(2/7)*(Sysmetric(1)/100))/2
+		
+			Select (al)
+			Count To k_filt
+			Go Top
+		
+			On Key Label F5 Do poisk
+			On Key Label F6 Do act_poisk_a
+			On Key Label F7 Do Kopi With 'вручную'
+			On Key Label F1 Do myHelp
+			On Key Label F9 Do p_exp_bnkseek
+		
+			If Upper(MyValue2)='YES'
+				Do Kopi With 'программно'
+				Do p_exp_bnkseek
+				Wait 'Сохранение таблиц dbf завершено!'+Chr(13)+'Экспорт в bnkseek.dbf закончен!' Window Nowait
+			Endif
+			fr_start.Command2.Enabled = .F.
+			.label1.Caption = ''
+		*  ON KEY LABEL ESC .Release
+		
+			g1_Width  = .Grid1.Width
+			g1_Height = .Grid1.Height
+			g2_Height = .Grid2.Height
+			g2_Top    = .Grid2.Top
+			g2_Width  = .Grid2.Width
 		*  koef  = 1
 		*  koef2 = 1
 		*  koef3 = 1
 		*  koef4 = 1
+		Endwith
 		
 	ENDPROC
 
 	PROCEDURE QueryUnload
-		IF flag_sd = 0
-		 is_exit = MESSAGEBOX('Закрыть таблицы?',4+32,'Внимание!')
-		 IF is_exit>6
-		  NODEFAULT 
-		 ENDIF 
-		ENDIF 
+		If flag_sd = 0
+			is_exit = Messagebox('Закрыть таблицы?',4+32,'Внимание!')
+			If is_exit>6
+				Nodefault
+			Endif
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Command1.Click
@@ -1271,48 +1257,50 @@ DEFINE CLASS form2 AS form
 		GO TOP 
 		ThisForm.Command1.Visible = .F.
 		
-		 WAIT 'Записей = '+ALLTRIM(STR(k_filt, 18)) WINDOW NOWAIT  && NOCLEAR 
-		_vfp.StatusBar='Записей = '+ALLTRIM(STR(k_filt, 18))
+		 WAIT 'Записей = '+Transform(k_filt) WINDOW NOWAIT  && NOCLEAR 
+		_vfp.StatusBar='Записей = '+Transform(k_filt)
 	ENDPROC
 
 	PROCEDURE Grid1.Column1.Header1.DblClick
-		SELECT (al)
-		r1=RECNO()
-		SET ORDER TO TAG BIC
-		*SET RELATION TO BIC INTO ACC807 ADDITIVE  
+		Select (al)
+		r1=Recno()
+		Set Order To Tag BIC
+		*SET RELATION TO BIC INTO ACC807 ADDITIVE
 		*SET SKIP TO ACC807
-		GO r1
-		ThisForm.Grid1.Refresh()
+		Go r1
+		Thisform.Grid1.Refresh()
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column1.Header1.MouseMove
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		ThisForm.Grid1.Column1.Header1.ToolTipText = 'Сортировка - двойной клик'
+		Lparameters nButton, nShift, nXCoord, nYCoord
+		Thisform.Grid1.Column1.Header1.ToolTipText = 'Сортировка - двойной клик'
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column1.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column1.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		*r99=RECNO()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		*GO r99
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column10.Header1.DblClick
@@ -1339,7 +1327,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1362,7 +1350,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1385,7 +1373,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1414,7 +1402,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1437,7 +1425,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1460,7 +1448,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1492,7 +1480,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1514,7 +1502,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1546,7 +1534,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1568,46 +1556,48 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
 
 	PROCEDURE Grid1.Column2.Header1.Click
-		r2=RECNO()
-		SET ORDER TO TAG NameP
-		GO r2
-		ThisForm.Grid1.Refresh()
+		r2=Recno()
+		Set Order To Tag NameP
+		Go r2
+		Thisform.Grid1.Refresh()
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column2.Header1.MouseMove
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		ThisForm.Grid1.Column1.Header1.ToolTipText = 'Сортировка - двойной клик'
+		Lparameters nButton, nShift, nXCoord, nYCoord
+		Thisform.Grid1.Column1.Header1.ToolTipText = 'Сортировка - двойной клик'
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column2.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column2.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		*r99=RECNO()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		*GO r99
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column20.Text1.MouseDown
@@ -1627,7 +1617,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1649,7 +1639,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1671,7 +1661,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1684,7 +1674,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1697,7 +1687,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1710,7 +1700,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1723,7 +1713,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1736,7 +1726,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1749,7 +1739,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1762,39 +1752,40 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
 
 	PROCEDURE Grid1.Column3.Header1.DblClick
-		SET ORDER TO TAG Rgn
-		ThisForm.Grid1.Refresh()
+		Set Order To Tag Rgn
+		Thisform.Grid1.Refresh()
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column3.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column3.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		*r99=RECNO()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		*GO r99
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column30.Text1.When
@@ -1805,7 +1796,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1818,7 +1809,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1848,7 +1839,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		*GO r99
 		SELECT (ax1)
 	ENDPROC
@@ -1873,7 +1864,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		*GO r99
 		SELECT (ax1)
 	ENDPROC
@@ -1905,7 +1896,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		*GO r99
 		SELECT (ax1)
 	ENDPROC
@@ -1933,7 +1924,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1962,7 +1953,7 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
@@ -1985,29 +1976,20 @@ DEFINE CLASS form2 AS form
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
 		
-		_vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))+'  Счетов: '+ALLTRIM(STR(g_kolac,18))
+		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
 		
 		SELECT (ax1)
 	ENDPROC
 
 	PROCEDURE Grid1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
 		
-	ENDPROC
-
-	PROCEDURE Grid1.When
-		 * SELECT (al)
-		 * COUNT TO k_filt
-		 * WAIT 'Записей БИК = '+ALLTRIM(STR(k_filt, 18)) WINDOW NOWAIT  && NOCLEAR 
-		 * _vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))
-		 * GO TOP
-		  
 	ENDPROC
 
 	PROCEDURE Grid2.Column1.Text1.MouseDown

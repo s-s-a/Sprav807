@@ -106,88 +106,96 @@ DEFINE CLASS form1 AS form
 		*< END OBJECT: BaseClass="textbox" />
 	
 	PROCEDURE Init
-		ThisForm.Text1.Value = DATE()
-		dat77=SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)
-		ThisForm.Width = SYSMETRIC(1)
+		With This
+			.Text1.Value = Date()
+		*ssa*	dat77=SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)
+			dat77=Dtos(.Text1.Value)
+			.Width = Sysmetric(1)
 		
-		IF FILE(pathdata+'a807'+dat77+'.dbf').AND.FILE(pathdata+'acc807'+dat77+'.dbf').AND.FILE(pathdata+'h807'+dat77+'.dbf')
-		 ThisForm.Command2.ForeColor = RGB(0,128,0)
-		ELSE 
-		 ThisForm.Command2.ForeColor = RGB(255,128,0)
-		ENDIF  
+			If File(pathdata+'a807'+dat77+'.dbf') And File(pathdata+'acc807'+dat77+'.dbf') And File(pathdata+'h807'+dat77+'.dbf')
+				.Command2.ForeColor = Rgb(0,128,0)
+			Else
+				.Command2.ForeColor = Rgb(255,128,0)
+			Endif
 		
-		IF MyValue3='1'
-		 ThisForm.Optiongroup1.Option1.Value = 1
-		 ThisForm.Optiongroup1.Option2.Value = 0
-		 ThisForm.Optiongroup1.Option3.Value = 0
-		ENDIF 
-		IF MyValue3='2'
-		 ThisForm.Optiongroup1.Option2.Value = 1
-		 ThisForm.Optiongroup1.Option1.Value = 0
-		 ThisForm.Optiongroup1.Option3.Value = 0 
-		ENDIF 
-		IF MyValue3='3'
-		 ThisForm.Optiongroup1.Option3.Value = 1
-		 ThisForm.Optiongroup1.Option1.Value = 0
-		 ThisForm.Optiongroup1.Option2.Value = 0
-		ENDIF 
+			If MyValue3='1'
+				.Optiongroup1.Option1.Value = 1
+				.Optiongroup1.Option2.Value = 0
+				.Optiongroup1.Option3.Value = 0
+			Endif
+			If MyValue3='2'
+				.Optiongroup1.Option2.Value = 1
+				.Optiongroup1.Option1.Value = 0
+				.Optiongroup1.Option3.Value = 0
+			Endif
+			If MyValue3='3'
+				.Optiongroup1.Option3.Value = 1
+				.Optiongroup1.Option1.Value = 0
+				.Optiongroup1.Option2.Value = 0
+			Endif
 		
-		*ON KEY LABEL ESC ThisForm.Release 
+		*ON KEY LABEL ESC ThisForm.Release
+		Endwith
 		
 	ENDPROC
 
 	PROCEDURE QueryUnload
-		NODEFAULT 
+		Nodefault
 		
 	ENDPROC
 
 	PROCEDURE Command1.Click
-		do setdat with ThisForm.Text1
+		Do SetDat With Thisform.Text1
+		
 	ENDPROC
 
 	PROCEDURE Command1.Valid
-		dat77=SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)
-		IF FILE(pathdata+'a807'+dat77+'.dbf').AND.;
-		   FILE(pathdata+'acc807'+dat77+'.dbf').AND.;
-		   FILE(pathdata+'h807'+dat77+'.dbf')
-		 ThisForm.Command2.ForeColor = RGB(0,128,0)
-		ELSE 
-		 ThisForm.Command2.ForeColor = RGB(255,128,0)
-		ENDIF 
+		With Thisform
+		*ssa*	dat77=SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)
+			dat77=Dtos(.Text1.Value)
+			If File(pathdata+'a807'+dat77+'.dbf') And ;
+					FILE(pathdata+'acc807'+dat77+'.dbf') And ;
+					FILE(pathdata+'h807'+dat77+'.dbf')
+				.Command2.ForeColor = Rgb(0,128,0)
+			Else
+				.Command2.ForeColor = Rgb(255,128,0)
+			Endif
+		Endwith
+		
 	ENDPROC
 
 	PROCEDURE Command2.Click
-		IF ThisForm.Text1.Value<CTOD('03.01.2019') && версия УФЭБС:  2019_1_0
-		  MyValue5="ed:ED807"
-		  MyValue6="ed:ED807/ed:BICDirectoryEntry"
-		  MyValue7="ed:ED807/ed:BICDirectoryEntry/ed:Accounts"
-		ENDIF 
-		IF ThisForm.Text1.Value=CTOD('03.01.2019') && версия УФЭБС: недокументированная. xml - файл с ошибкой
-		* В xml-файле нужно удалить в самом начале строку: <?xml version="1.0" encoding="WINDOWS-1251"?> и сохранить. 
+		With Thisform
+			If .Text1.Value<Ctod('03.01.2019') && версия УФЭБС:  2019_1_0
+				MyValue5="ed:ED807"
+				MyValue6="ed:ED807/ed:BICDirectoryEntry"
+				MyValue7="ed:ED807/ed:BICDirectoryEntry/ed:Accounts"
+			Endif
+			If .Text1.Value=Ctod('03.01.2019') && версия УФЭБС: недокументированная. xml - файл с ошибкой
+		* В xml-файле нужно удалить в самом начале строку: <?xml version="1.0" encoding="WINDOWS-1251"?> и сохранить.
+				MyValue5="env:Envelope/env:Body/ED807"
+				MyValue6="env:Envelope/env:Body/ED807/BICDirectoryEntry"
+				MyValue7="env:Envelope/env:Body/ED807/BICDirectoryEntry/Accounts"
+			Endif
+			If .Text1.Value>Ctod('03.01.2019') && версия УФЭБС:  2019.1.1
+				MyValue5="ED807"
+				MyValue6="ED807/BICDirectoryEntry"
+				MyValue7="ED807/BICDirectoryEntry/Accounts"
+			Endif
 		
-		  MyValue5="env:Envelope/env:Body/ED807"
-		  MyValue6="env:Envelope/env:Body/ED807/BICDirectoryEntry"
-		  MyValue7="env:Envelope/env:Body/ED807/BICDirectoryEntry/Accounts"
-		ENDIF 
-		IF ThisForm.Text1.Value>CTOD('03.01.2019') && версия УФЭБС:  2019.1.1
-		  MyValue5="ED807"
-		  MyValue6="ED807/BICDirectoryEntry"
-		  MyValue7="ED807/BICDirectoryEntry/Accounts"
-		ENDIF 
+			.Command2.Caption = 'Минутку...'
+		*ssa*	cXMLFile =pathdata+Substr(Dtoc(Thisform.Text1.Value),7,4)+Substr(Dtoc(Thisform.Text1.Value),4,2)+Substr(Dtoc(Thisform.Text1.Value),1,2)+'_ED807_full.xml'
+		*ssa*	cXMLFile2=pathdata+Substr(Dtoc(Thisform.Text1.Value),7,4)+Substr(Dtoc(Thisform.Text1.Value),4,2)+Substr(Dtoc(Thisform.Text1.Value),1,2)+'_807_full.xml'
+			cXMLFile =pathdata+Dtos(.Text1.Value)+'_ED807_full.xml'
+			cXMLFile2=pathdata+Dtos(.Text1.Value)+'_807_full.xml'
 		
-		 
-		 ThisForm.Command2.Caption = 'Минутку...'
-		 cXMLFile=pathdata+SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)+'_ED807_full.xml'
-		 cXMLFile2=pathdata+SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)+'_807_full.xml'
+			If .Optiongroup1.Option1.Value = 1  && - загрузка с сайта ЦБ
 		
-		 
-		IF ThisForm.Optiongroup1.Option1.Value = 1  && - загрузка с сайта ЦБ
-		
-		IF !IsInternetConnected()  
-		  MESSAGEBOX('Компьютер не подключен к интернету!', 48, 'Загрузка СПРАВОЧНИКА БИК с сайта WWW.CBR.RU') 
-		  ThisForm.Command2.Caption = 'Импорт' 
-		  RETURN .F.
-		ENDIF 
+				If !IsInternetConnected()
+					Messagebox('Компьютер не подключен к интернету!', 48, 'Загрузка СПРАВОЧНИКА БИК с сайта WWW.CBR.RU')
+					.Command2.Caption = 'Импорт'
+					Return .F.
+				Endif
 		
 		*-----------------Скачивание с помощью SpravMFOLoader.exe -----------------------------------------
 		*LOCAL loWshShell as Wscript.Shell   &&, 1cApplicationRootFolder as String
@@ -200,582 +208,575 @@ DEFINE CLASS form1 AS form
 		*---------------------------------------------------------------------------------------------------
 		
 		
-		uSource88 = MyValue+SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)+'ED01OSBR.zip'
-		uTaget88  = pathcur+'ZIP\'+SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)+'ED01OSBR.zip'
+		*ssa*		uSource88 = MyValue+Substr(Dtoc(Thisform.Text1.Value),7,4)+Substr(Dtoc(Thisform.Text1.Value),4,2)+Substr(Dtoc(Thisform.Text1.Value),1,2)+'ED01OSBR.zip'
+				uSource88 = MyValue+Dtos(.Text1.Value)+'ED01OSBR.zip'
+		*ssa*		uTaget88  = pathcur+'ZIP\'+Substr(Dtoc(Thisform.Text1.Value),7,4)+Substr(Dtoc(Thisform.Text1.Value),4,2)+Substr(Dtoc(Thisform.Text1.Value),1,2)+'ED01OSBR.zip'
+				uTaget88  = pathcur+'ZIP\'+Dtos(.Text1.Value)+'ED01OSBR.zip'
 		
-		IF IsFileDownloaded(uSource88, uTaget88).OR.FILE(uTaget88)
+				If IsFileDownloaded(uSource88, uTaget88) Or File(uTaget88)
 		
-		 WAIT "Закачка файла успешно завершена! Идёт разархивация файла..." WINDOW NOWAIT  
+					Wait "Закачка файла успешно завершена! Идёт разархивация файла..." Window Nowait
 		
-		 a=unzopen(uTaget88)
-		 do while .T.
-		  UnZipFile(a, pathcur+'Data\')
-		  if unzGoToNextFile(a)<>0
-		   exit
-		  endif
-		 enddo
-		 unzclose(a)
+					a = unzopen(uTaget88)
+					Do While .T.
+						UnZipFile(a, pathcur+'Data\')
+						If unzGoToNextFile(a)<>0
+							Exit
+						Endif
+					Enddo
+					unzclose(a)
 		
-		 IF !FILE(pathdata+n_FileInZip)
-		  =MESSAGEBOX('Ошибка разархивации zip-архива справочника! '+uTaget88, 48, 'Загрузка СПРАВОЧНИКА БИК')
-		   ThisForm.Command2.Caption = 'Импорт'
-		   RETURN .F. 
-		 ELSE   
-		   WAIT "XML-файл успешно разархивирован!" WINDOW NOWAIT
-		 ENDIF 
-		  
-		ELSE 
-		  WAIT "Файл архива справочника не скачан!" WINDOW NOWAIT   
-		ENDIF
+					If !File(pathdata+n_FileInZip)
+						Messagebox('Ошибка разархивации zip-архива справочника! '+uTaget88, 48, 'Загрузка СПРАВОЧНИКА БИК')
+						.Command2.Caption = 'Импорт'
+						Return .F.
+					Else
+						Wait "XML-файл успешно разархивирован!" Window Nowait
+					Endif
 		
+				Else
+					Wait "Файл архива справочника не скачан!" Window Nowait
+				Endif
 		
-		
-		ENDIF  && ThisForm.Optiongroup1.Option1.Value = 1 - загрузка с сайта ЦБ
-		 
-		
-		
-		IF (ThisForm.Optiongroup1.Option2.Value = 1).OR.(ThisForm.Optiongroup1.Option1.Value = 1)  && загрузка XML из локальной папки Data
-		
-		flag_est = 0
-		flag_est2 = 0
-		
-		IF !FILE(cXMLFile)
-		  flag_est = 1 
-		ENDIF 
-		
-		IF !FILE(cXMLFile2)
-		  flag_est2 = 1 
-		ENDIF 
-		
-		
-		IF (flag_est=1).AND.(flag_est2=1)
-		 =MESSAGEBOX('XML-файл справочника не найден! '+CHR(13)+cXMLFile+' или '+CHR(13)+cXMLFile2, 48, 'Загрузка СПРАВОЧНИКА БИК')
-		  ThisForm.Command2.Caption = 'Импорт'
-		  ThisForm.Optiongroup1.Option1.Value = 1
-		  ThisForm.Optiongroup1.Option2.Value = 0
-		  ThisForm.Optiongroup1.Option3.Value = 0
-		  RETURN .F.
-		ENDIF 
-		
-		loXML = CREATEOBJECT("MSXML2.DOMDocument")
-		
-		IF loXML.parseError.errorCode <> 0
-		  =MESSAGEBOX('Ошибка структуры XML-файла', 48, 'Загрузка СПРАВОЧНИКА БИК')
-		  ThisForm.Command2.Caption = 'Импорт'
-		  RELEASE loXML
-		  RETURN .F.
-		
-		ENDIF 
-		
-		re100 = .F.
-		
-		IF flag_est=0
-		 re100 = loXML.LOAD(cXMLFile)
-		ENDIF 
-		
-		IF flag_est2=0
-		 re100 = loXML.LOAD(cXMLFile2)
-		ENDIF 
-		
-		
-		IF !re100
-		  =MESSAGEBOX('Не подгружен xml-файл: '+CHR(13)+cXMLFile+' или '+CHR(13)+cXMLFile2+' Завершение работы...',0+48,'Внимание',2000)
-		  ThisForm.Command2.Caption = 'Импорт' 
-		  RELEASE loXML
-		  RETURN .F.
-		ENDIF 
+			Endif  && ThisForm.Optiongroup1.Option1.Value = 1 - загрузка с сайта ЦБ
 		
 		
 		
-		ThisForm.Command2.Enabled = .F.
+			If (.Optiongroup1.Option2.Value = 1) Or (.Optiongroup1.Option1.Value = 1)  && загрузка XML из локальной папки Data
+		
+				flag_est = 0
+				flag_est2 = 0
+		
+				If !File(cXMLFile)
+					flag_est = 1
+				Endif
+		
+				If !File(cXMLFile2)
+					flag_est2 = 1
+				Endif
+		
+		
+				If (flag_est=1).And.(flag_est2=1)
+					Messagebox('XML-файл справочника не найден! '+Chr(13)+cXMLFile+' или '+Chr(13)+cXMLFile2, 48, 'Загрузка СПРАВОЧНИКА БИК')
+					.Command2.Caption = 'Импорт'
+					.Optiongroup1.Option1.Value = 1
+					.Optiongroup1.Option2.Value = 0
+					.Optiongroup1.Option3.Value = 0
+					Return .F.
+				Endif
+		
+				loXML = Createobject("MSXML2.DOMDocument")
+		
+				If loXML.parseError.errorCode <> 0
+					=Messagebox('Ошибка структуры XML-файла', 48, 'Загрузка СПРАВОЧНИКА БИК')
+					.Command2.Caption = 'Импорт'
+					Release loXML
+					Return .F.
+		
+				Endif
+		
+				re100 = .F.
+		
+				If flag_est=0
+					re100 = loXML.Load(cXMLFile)
+				Endif
+		
+				If flag_est2=0
+					re100 = loXML.Load(cXMLFile2)
+				Endif
+		
+				If !re100
+					Messagebox('Не подгружен xml-файл: '+Chr(13)+cXMLFile+' или '+Chr(13)+cXMLFile2+' Завершение работы...',0+48,'Внимание',2000)
+					.Command2.Caption = 'Импорт'
+					Release loXML
+					Return .F.
+				Endif
+		
+				.Command2.Enabled = .F.
 		*-------------------------------------------------------------------------------------------------------------------
 		
-		loXMLNodes =  loXML.getElementsByTagName(MyValue5)
-		loNodeList =  loXML.selectNodes(MyValue6)  
-		loNodeAcc  =  loXML.selectNodes(MyValue7)  
+				loXMLNodes =  loXML.getElementsByTagName(MyValue5)
+				loNodeList =  loXML.selectNodes(MyValue6)
+				loNodeAcc  =  loXML.selectNodes(MyValue7)
 		
 		
 		* Устанавливаем внутренний указатель на позицию перед первым узлом в наборе
-		  loXMLNodes.reset
+				loXMLNodes.Reset
 		
-		  loNodes = loXMLNodes.nextNode
+				loNodes = loXMLNodes.nextNode
 		* ЗАГОЛОВОК
-		  m_InfoTypeCode      = loNodes.getAttribute("InfoTypeCode") 
-		  m_EDAuthor          = loNodes.getAttribute("EDAuthor")
-		  m_EDDate            = loNodes.getAttribute("EDDate")
-		  m_EDNo              = loNodes.getAttribute("EDNo")
+				m_InfoTypeCode      = loNodes.getAttribute("InfoTypeCode")
+				m_EDAuthor          = loNodes.getAttribute("EDAuthor")
+				m_EDDate            = loNodes.getAttribute("EDDate")
+				m_EDNo              = loNodes.getAttribute("EDNo")
 		
 		
 		*=MESSAGEBOX(m_EDDate)
 		
+				Try
+					m_EDReceiver        = loNodes.getAttribute("EDReceiver")
+				Catch When .T.
+					m_EDReceiver        =' '
+				Endtry
+				Try
+					m_CreationReason    = loNodes.getAttribute("CreationReason")
+				Catch When .T.
+					m_CreationReason    =' '
+				Endtry
+				Try
+					m_CreationDateTime  = loNodes.getAttribute("CreationDateTime")
+				Catch When .T.
+					m_CreationDateTime  =' '
+				Endtry
+				Try
+					m_InfoTypeCode      = loNodes.getAttribute("InfoTypeCode")
+				Catch When .T.
+					m_InfoTypeCode      =' '
+				Endtry
+				Try
+					m_BusinessDay       = loNodes.getAttribute("BusinessDay")
+				Catch When .T.
+					m_BusinessDay       =' '
+				Endtry
+				Try
+					m_DirectoryVersion  = loNodes.getAttribute("DirectoryVersion")
+				Catch When .T.
+					m_DirectoryVersion  =' '
+				Endtry
 		
-		  TRY
-		   m_EDReceiver        = loNodes.getAttribute("EDReceiver")
-		  CATCH WHEN .T.
-		   m_EDReceiver        =' '
-		  ENDTRY
-		  TRY
-		   m_CreationReason    = loNodes.getAttribute("CreationReason")                  
-		  CATCH WHEN .T.
-		   m_CreationReason    =' '
-		  ENDTRY
-		  TRY
-		   m_CreationDateTime  = loNodes.getAttribute("CreationDateTime")
-		  CATCH WHEN .T.
-		   m_CreationDateTime  =' '
-		  ENDTRY
-		  TRY
-		   m_InfoTypeCode      = loNodes.getAttribute("InfoTypeCode")
-		  CATCH WHEN .T.
-		   m_InfoTypeCode      =' '
-		  ENDTRY
-		  TRY
-		   m_BusinessDay       = loNodes.getAttribute("BusinessDay")
-		  CATCH WHEN .T.
-		   m_BusinessDay       =' '
-		  ENDTRY
-		  TRY
-		   m_DirectoryVersion  = loNodes.getAttribute("DirectoryVersion")
-		  CATCH WHEN .T.
-		   m_DirectoryVersion  =' '
-		  ENDTRY
-		
-		
-		
-		
-		
-		SELECT 1
+				Select 1
 		*---------------- создание курсора a807 --- количество полей = 31 --------
-		CREATE CURSOR a807 (BIC C(9),;             
-		                    NameP C(160),;
-		                    Adr C(160),;
-		                    Tnp C(20),;
-		                    Nnp C(25),;
-		                    Ind C(6),;
-		                    Rgn C(2),;
-		                    UID C(10),;
-		                    Participan C(4),;
-		                    NPSPartici C(1),;  
-		                    XchType C(1),;         
-		                    Srvcs C(1),;           
-		                    PtType C(2),;          
-		                    DateIn C(10),;          
-		                    PrntBIC C(9),;         
-		                    DateOut C(10),;
-		                    PartNo C(6),;
-		                    PartQuanti C(6),;
-		                    PartAggreg C(27),;
-		                    EDNo C(9),;
-		                    EDDate C(10),;
-		                    EDAuthor C(10),;
-		                    ChangeType C(4),;
-		                    EnglName C(140),;
-		                    RegN C(9),;
-		                    CntrCd C(2),;
-		                    Rstr C(4),;
-		                    RstrDate C(10),;
-		                    SWBIC C(11),;
-		                    DefaultSWB C(1),;
-		                    ToNPSDate C(10))
+				Create Cursor a807 (BIC C(9),;
+					NameP C(160),;
+					Adr C(160),;
+					Tnp C(20),;
+					Nnp C(25),;
+					Ind C(6),;
+					Rgn C(2),;
+					UID C(10),;
+					Participan C(4),;
+					NPSPartici C(1),;
+					XchType C(1),;
+					Srvcs C(1),;
+					PtType C(2),;
+					DateIn C(10),;
+					PrntBIC C(9),;
+					DateOut C(10),;
+					PartNo C(6),;
+					PartQuanti C(6),;
+					PartAggreg C(27),;
+					EDNo C(9),;
+					EDDate C(10),;
+					EDAuthor C(10),;
+					ChangeType C(4),;
+					EnglName C(140),;
+					RegN C(9),;
+					CntrCd C(2),;
+					Rstr C(4),;
+					RstrDate C(10),;
+					SWBIC C(11),;
+					DefaultSWB C(1),;
+					ToNPSDate C(10))
 		
 		
-		          
-		al=ALIAS()
-		SELECT 2
+				al = Alias()
+				Select 2
 		*-------------- создание курсора acc807 ----------- 9+1 полей -------------
-		CREATE CURSOR acc807 (Account C(20), DateIn C(10), DateOut C(10),;
-		                      AccountSta C(4), AccountCBR C(9), CK C(2),;
-		                      RAccountT C(4), ARDat C(10), AccRs C(4), BIC C(9))    
+				Create Cursor acc807 (Account C(20), DateIn C(10), DateOut C(10),;
+					AccountSta C(4), AccountCBR C(9), CK C(2),;
+					RAccountT C(4), ARDat C(10), AccRs C(4), BIC C(9))
 		
+				al2 = Alias()
 		
-		al2=ALIAS()
-		
-		SELECT (al)
+				Select (al)
 		*COPY STRUCTURE EXTENDED TO tmp807
 		*SELECT tmp807
 		*kol807 = FCOUNT()
 		*LOCAL ARRAY pole807(FCOUNT())
-		*FOR gnCount = 1 TO kol807 && Цикл с перебором номеров всех полей 
+		*FOR gnCount = 1 TO kol807 && Цикл с перебором номеров всех полей
 		*  pole807(gnCount) = FIELD(gnCount) && массив имен полей
 		*ENDFOR
 		
-		m=1
-		m_DateIn  = ''
-		m_DateOut = ''
-		m_RAccountType = ''
+				m = 1
+				m_DateIn  = ''
+				m_DateOut = ''
+				m_RAccountType = ''
 		
 		
-		mBIC = ''
-		x=1
+				mBIC = ''
+				x = 1
 		
-		 For Each loNode In loNodeAcc  &&  ED807/BICDirectoryEntry/Accounts
-		 WAIT 'Заполнение таблицы счетов (1/2)...  '+STR(x,10)+ ' из '+ALLTRIM(STR(loNodeAcc.Length,18)) WINDOW NOWAIT
-		        SELECT (al2)
+				For Each loNode In loNodeAcc  &&  ED807/BICDirectoryEntry/Accounts
+		*ssa*			Wait 'Заполнение таблицы счетов (1/2)...  '+Str(x,10)+ ' из '+Alltrim(Str(loNodeAcc.Length,18)) Window Nowait
+					Wait 'Заполнение таблицы счетов (1/2)...  '+Str(x,10)+ ' из '+Transform(loNodeAcc.Length) Window Nowait
+					Select (al2)
 		
-		        APPEND BLANK
+					Append Blank
 		
-		        mBIC = loNode.ParentNode.getAttribute("BIC")
+					mBIC = loNode.ParentNode.getAttribute("BIC")
 		
-		        m.Account               = LoNode.Attributes.getNamedItem("Account").Text
-		        m_DateIn                = LoNode.Attributes.getNamedItem("DateIn").Text
-		        m_DateOut               = loNode.getAttribute("DateOut")        
-		        m_RAccountType          = LoNode.Attributes.getNamedItem("RegulationAccountType").Text
-		        m.AccountStatus         = LoNode.Attributes.getNamedItem("AccountStatus").Text
-		        m.AccountCBRBIC         = LoNode.Attributes.getNamedItem("AccountCBRBIC").Text
-		        m.CK                    = loNode.getAttribute("CK")
-		        
-		        IF ISNULL(m_DateOut)
-		         m_DateOut = ''
-		        ENDIF 
-		        IF ISNULL(m.CK)
-		         m.CK = ''
-		        ENDIF 
-		        
-		        REPLACE Account WITH m.Account,;
-		                DateIn WITH m_DateIn,; 
-		                AccountSta WITH m.AccountStatus,; 
-		                AccountCBR WITH m.AccountCBRBIC,;
-		                CK WITH m.CK,;
-		                RAccountT WITH m_RAccountType,;
-		                DateOut WITH m_DateOut,;
-		                BIC WITH mBic
+					m.Account               = loNode.Attributes.getNamedItem("Account").Text
+					m_DateIn                = loNode.Attributes.getNamedItem("DateIn").Text
+					m_DateOut               = loNode.getAttribute("DateOut")
+					m_RAccountType          = loNode.Attributes.getNamedItem("RegulationAccountType").Text
+					m.AccountStatus         = loNode.Attributes.getNamedItem("AccountStatus").Text
+					m.AccountCBRBIC         = loNode.Attributes.getNamedItem("AccountCBRBIC").Text
+					m.CK                    = loNode.getAttribute("CK")
 		
-		        
-		        FOR j=0 TO LoNode.ChildNodes.Length-1
-		         
-		         FOR i=0 TO 1 && LoNode.ChildNodes[j].Attributes.Length-1
+					If Isnull(m_DateOut)
+						m_DateOut = ''
+					Endif
+					If Isnull(m.CK)
+						m.CK = ''
+					Endif
 		
-		          IF (LoNode.ChildNodes[j].Attributes.Item(i).Name='AccRstr').AND.(i<1)
-		           REPLACE AccRs WITH LoNode.ChildNodes[j].Attributes.Item(i).Text
+					Replace Account With m.Account,;
+						DateIn With m_DateIn,;
+						AccountSta With m.AccountStatus,;
+						AccountCBR With m.AccountCBRBIC,;
+						CK With m.CK,;
+						RAccountT With m_RAccountType,;
+						DateOut With m_DateOut,;
+						BIC With mBIC
+		
+		
+					For j=0 To loNode.ChildNodes.Length-1
+		
+						For i=0 To 1 && LoNode.ChildNodes[j].Attributes.Length-1
+		
+							If (loNode.ChildNodes[j].Attributes.Item(i).Name='AccRstr').And.(i<1)
+								Replace AccRs With loNode.ChildNodes[j].Attributes.Item(i).Text
 		*             ? 'BIC= '+mBIC+' '+'AccRstr= '+AccRs
-		          ENDIF
+							Endif
 		
-		          IF (LoNode.ChildNodes[j].Attributes.Item(i).Name='AccRstrDate').AND.(i<=1)
-		           REPLACE ARDat WITH LoNode.ChildNodes[j].Attributes.Item(i).Text
-		          ENDIF
-		         
-		         ENDFOR
-		        ENDFOR
+							If (loNode.ChildNodes[j].Attributes.Item(i).Name='AccRstrDate').And.(i<=1)
+								Replace ARDat With loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        SELECT (al)
+						Endfor
+					Endfor
 		
-		 x=x+1
-		 NEXT  &&  ED807/BICDirectoryEntry/Accounts
+					Select (al)
 		
+					x=x+1
+				Next  &&  ED807/BICDirectoryEntry/Accounts
 		
+				For Each loNode In loNodeList &&  loXML.selectNodes("ED807/BICDirectoryEntry")
 		
+					Wait 'Заполнение таблицы БИК-ов (2/2)... '+Alltrim(Str(m,10))+' из '+Alltrim(Str(loNodeList.Length,18)) Window Nowait
+					Select (al)
+					m.BIC = loNode.Attributes.getNamedItem("BIC").Text
+					m_Bic = m.BIC
+					Append Blank
 		
-		
-		
-		
-		
-		
-		
-		For Each loNode In loNodeList &&  loXML.selectNodes("ED807/BICDirectoryEntry") 
-		
-		WAIT 'Заполнение таблицы БИК-ов (2/2)... '+ALLTRIM(STR(m,10))+' из '+ALLTRIM(STR(loNodeList.Length,18)) WINDOW NOWAIT
-		SELECT (al)  
-		  m.Bic = LoNode.Attributes.getNamedItem("BIC").Text
-		  m_Bic = m.Bic
-		  APPEND BLANK
-		
-		 m.NameP               = ''    
-		 m.Adr                 = ''    
-		 m.Tnp                 = ''    
-		 m.Nnp                 = ''    
-		 m.Ind                 = ''    
-		 m.Rgn                 = ''    
-		 m.UID                 = ''    
-		 m.ParticipantStatus   = ''    
-		 m.NPSParticipant      = ''    
-		 m.XchType             = ''           
-		 m.Srvcs               = ''             
-		 m.PtType              = ''            
-		 m.DateIn              = ''             
-		 m.PrntBIC             = ''           
-		 m.DateOut             = ''    
-		 m.PartNo              = ''    
-		 m.PartQuantity        = ''    
-		 m.PartAggregateID     = ''    
-		 m.EDNo                = ''    
-		 m.EDDate              = ''    
-		 m.EDAuthor            = ''    
-		 m.ChangeType          = ''    
-		 m.EnglName            = ''    
-		 m.RegN                = ''    
-		 m.CntrCd              = ''    
-		 m.Rstr                = ''    
-		 m.RstrDate            = ''    
-		 m.SWBIC               = ''    
-		 m.DefaultSWBIC        = ''    
-		 m.ToNPSDate           = ''    
+					m.NameP               = ''
+					m.Adr                 = ''
+					m.Tnp                 = ''
+					m.Nnp                 = ''
+					m.Ind                 = ''
+					m.Rgn                 = ''
+					m.UID                 = ''
+					m.ParticipantStatus   = ''
+					m.NPSParticipant      = ''
+					m.XchType             = ''
+					m.Srvcs               = ''
+					m.PtType              = ''
+					m.DateIn              = ''
+					m.PrntBIC             = ''
+					m.DateOut             = ''
+					m.PartNo              = ''
+					m.PartQuantity        = ''
+					m.PartAggregateID     = ''
+					m.EDNo                = ''
+					m.EDDate              = ''
+					m.EDAuthor            = ''
+					m.ChangeType          = ''
+					m.EnglName            = ''
+					m.RegN                = ''
+					m.CntrCd              = ''
+					m.Rstr                = ''
+					m.RstrDate            = ''
+					m.SWBIC               = ''
+					m.DefaultSWBIC        = ''
+					m.ToNPSDate           = ''
 		
 		
-		  FOR j=0 TO LoNode.ChildNodes.Length-1
+					For j=0 To loNode.ChildNodes.Length-1
 		* здесь добавить для скорости, если имя тэга изменится !!! --->
-		    IF ((LoNode.ChildNodes[j].NodeName='Accounts').OR.(LoNode.ChildNodes[j].NodeName='ed:Accounts')).OR.;
-		       ((LoNode.ChildNodes[j].NodeName='AccRstrList').OR.(LoNode.ChildNodes[j].NodeName='ed:AccRstrList'))
-		     EXIT
-		    ENDIF
+						If ((loNode.ChildNodes[j].NodeName='Accounts') Or (loNode.ChildNodes[j].NodeName='ed:Accounts')) Or ;
+								((loNode.ChildNodes[j].NodeName='AccRstrList') Or (loNode.ChildNodes[j].NodeName='ed:AccRstrList'))
+							Exit
+						Endif
 		* <---  здесь добавить для скорости, если имя тэга изменится !!!
 		
-		    FOR i=0 TO LoNode.ChildNodes[j].Attributes.Length-1
+						For i=0 To loNode.ChildNodes[j].Attributes.Length-1
 		
 		
-		        SELECT (al)
+							Select (al)
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='ParticipantStatus'
-		         m.ParticipantStatus = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='ParticipantStatus'
+								m.ParticipantStatus = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='NPSParticipant'
-		         m.NPSParticipant = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='NPSParticipant'
+								m.NPSParticipant = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='UID'
-		         m.UID = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='UID'
+								m.UID = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='XchType'
-		         m.XchType = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='XchType'
+								m.XchType = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='Srvcs'
-		         m.Srvcs = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='Srvcs'
+								m.Srvcs = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='PtType'
-		         m.PtType = LoNode.ChildNodes[j].Attributes.Item(i).Text 
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='PtType'
+								m.PtType = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='DateIn'
-		         m.DateIn = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='DateIn'
+								m.DateIn = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='PrntBIC'
-		         m.PrntBIC = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='PrntBIC'
+								m.PrntBIC = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='Adr'
-		         m.Adr = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='Adr'
+								m.Adr = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='Nnp'
-		         m.Nnp = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='Nnp'
+								m.Nnp = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='Tnp'
-		         m.Tnp = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='Tnp'
+								m.Tnp = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='Ind'
-		         m.Ind = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='Ind'
+								m.Ind = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='Rgn'
-		         m.Rgn = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='Rgn'
+								m.Rgn = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='NameP'
-		         m.NameP = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='NameP'
+								m.NameP = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='DateOut'
-		         m.DateOut = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='DateOut'
+								m.DateOut = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='PartNo'
-		         m.PartNo = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='PartNo'
+								m.PartNo = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='PartQuantity'
-		         m.PartQuantity = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='PartQuantity'
+								m.PartQuantity = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='PartAggregateID'
-		         m.PartAggregateID = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='PartAggregateID'
+								m.PartAggregateID = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='EDNo'
-		         m.EDNo = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='EDNo'
+								m.EDNo = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='EDDate'
-		         m.EDDate = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='EDDate'
+								m.EDDate = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='EDAuthor'
-		         m.EDAuthor = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='EDAuthor'
+								m.EDAuthor = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='ChangeType'
-		         m.ChangeType = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
-		        
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='EnglName'
-		         m.EnglName = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='ChangeType'
+								m.ChangeType = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='RegN'
-		         m.RegN = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='EnglName'
+								m.EnglName = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='CntrCd'
-		         m.CntrCd = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='RegN'
+								m.RegN = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='Rstr'
-		         m.Rstr = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='CntrCd'
+								m.CntrCd = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='RstrDate'
-		         m.RstrDate = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='Rstr'
+								m.Rstr = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='SWBIC'
-		         m.SWBIC = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='RstrDate'
+								m.RstrDate = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='DefaultSWBIC'
-		         m.DefaultSWBIC = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='SWBIC'
+								m.SWBIC = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
-		        IF LoNode.ChildNodes[j].Attributes.Item(i).Name='ToNPSDate'
-		         m.ToNPSDate = LoNode.ChildNodes[j].Attributes.Item(i).Text
-		        ENDIF
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='DefaultSWBIC'
+								m.DefaultSWBIC = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
+							If loNode.ChildNodes[j].Attributes.Item(i).Name='ToNPSDate'
+								m.ToNPSDate = loNode.ChildNodes[j].Attributes.Item(i).Text
+							Endif
 		
+						Endfor
+						Select (al2)
 		
-		    ENDFOR
-		     SELECT (al2)
+					Endfor
 		
-		  ENDFOR
-		            
-		
-		 SELECT (al)
+					Select (al)
 		* GATHER memvar
-		 REPLACE BIC WITH m.BIC, NameP WITH m.NameP, Adr WITH m.Adr, Tnp WITH m.Tnp,;
-		         Nnp WITH m.Nnp, Ind WITH m.Ind, Rgn WITH m.Rgn, UID WITH m.UID,;
-		         Participan WITH m.ParticipantStatus, NPSPartici WITH m.NPSParticipant,;
-		         XchType WITH m.XchType, Srvcs WITH m.Srvcs, PtType WITH m.PtType,;
-		         DateIn WITH m.DateIn, PrntBIC WITH m.PrntBIC, DateOut WITH m.DateOut,;
-		         PartNo WITH m.PartNo, PartQuanti WITH m.PartQuantity,;
-		         PartAggreg WITH m.PartAggregateID, EDNo WITH m.EDNo,;
-		         EDDate WITH m.EDDate, EDAuthor WITH m.EDAuthor, ChangeType WITH m.ChangeType,;
-		         EnglName WITH m.EnglName, RegN WITH m.RegN, CntrCd WITH m.CntrCd,;
-		         Rstr WITH m.Rstr, RstrDate WITH m.RstrDate, SWBIC WITH m.SWBIC,;
-		         DefaultSWB WITH m.DefaultSWBIC, ToNPSDate WITH m.ToNPSDate
+					Replace BIC With m.BIC, NameP With m.NameP, Adr With m.Adr, Tnp With m.Tnp,;
+						Nnp With m.Nnp, Ind With m.Ind, Rgn With m.Rgn, UID With m.UID,;
+						Participan With m.ParticipantStatus, NPSPartici With m.NPSParticipant,;
+						XchType With m.XchType, Srvcs With m.Srvcs, PtType With m.PtType,;
+						DateIn With m.DateIn, PrntBIC With m.PrntBIC, DateOut With m.DateOut,;
+						PartNo With m.PartNo, PartQuanti With m.PartQuantity,;
+						PartAggreg With m.PartAggregateID, EDNo With m.EDNo,;
+						EDDate With m.EDDate, EDAuthor With m.EDAuthor, ChangeType With m.ChangeType,;
+						EnglName With m.EnglName, RegN With m.RegN, CntrCd With m.CntrCd,;
+						Rstr With m.Rstr, RstrDate With m.RstrDate, SWBIC With m.SWBIC,;
+						DefaultSWB With m.DefaultSWBIC, ToNPSDate With m.ToNPSDate
 		*~~~~~~~~~~~~~~~~~~~~~
 		
+					m=m+1
+				Next && конец цикла БИКов &&  loXML.selectNodes("ED807/BICDirectoryEntry")
 		
-		
-		 m=m+1
-		Next && конец цикла БИКов &&  loXML.selectNodes("ED807/BICDirectoryEntry") 
-		
-		SELECT (al)
+				Select (al)
 		*SET ORDER TO TAG BIC
-		*SET RELATION TO BIC INTO (al2) ADDITIVE 
+		*SET RELATION TO BIC INTO (al2) ADDITIVE
 		*SET SKIP TO (al2)
-		RELEASE loXML
+				Release loXML
 		
-		ENDIF && - загрузка XML из локальной папки Data
-		
-		
-		IF ThisForm.Optiongroup1.Option3.Value = 1  && открытие ранее сохраненных DBF
-		IF (!FILE(pathdata+'a807'+dat77+'.dbf')).OR.(!FILE(pathdata+'acc807'+dat77+'.dbf')).OR.(!FILE(pathdata+'h807'+dat77+'.dbf'))
-		 =MESSAGEBOX('Нет DBF-таблиц ранее сохраненного справочника!'+CHR(13)+'Открытие невозможно!', 0+48, 'Открытие DBF СПРАВОЧНИКА БИК')
-		 ThisForm.Command2.Caption = 'Импорт'
-		 ThisForm.Optiongroup1.Option1.Value = 1
-		 ThisForm.Optiongroup1.Option2.Value = 0
-		 ThisForm.Optiongroup1.Option3.Value = 0
-		 RETURN .F.
-		ENDIF 
-		
-		 vq_tmp  = pathdata+'a807'+dat77+'.dbf'
-		 vq_tmp2 = pathdata+'acc807'+dat77+'.dbf'
-		 vq_tmp3 = pathdata+'h807'+dat77+'.dbf'
-		
-		 CLOSE TABLES 
-		 CLOSE INDEXES 
-		 
-		 SELECT 1
-		 USE (vq_tmp) ALIAS a807
-		 al=ALIAS()
-		 
-		 SELECT 2
-		 USE (vq_tmp2) ALIAS acc807
-		 al2=ALIAS()
-		
-		 SELECT 0
-		 USE (vq_tmp3) ALIAS h807
-		
-		 m_EDNo              = EDNo
-		 m_EDDate            = EDDate 
-		 m_EDAuthor          = EDAuthor 
-		 m_CreationReason    = CreationRe 
-		 m_CreationDateTime  = CreationDT 
-		 m_InfoTypeCode      = InfoTypeCo 
-		 IF EMPTY(EDReceiver)
-		  m_EDReceiver        = ' '
-		 ELSE 
-		  m_EDReceiver        = EDReceiver
-		 ENDIF   
-		 IF EMPTY(BusinessDa)
-		  m_BusinessDay       = ' '
-		 ELSE  
-		  m_BusinessDay       = BusinessDa 
-		 ENDIF 
-		 IF EMPTY(DirectoryV)
-		  m_DirectoryVersion  = ' '
-		 ELSE  
-		  m_DirectoryVersion  = DirectoryV 
-		 ENDIF 
-		 
-		 SELECT (al)
-		ENDIF && - открытие ранее сохраненных DBF
-		
-		INDEX ON BIC TAG BIC
-		INDEX ON NameP TAG NameP
-		INDEX ON PtType TAG PtType
-		INDEX ON Adr TAG Adr
-		INDEX ON Ind TAG Ind
-		INDEX ON Nnp TAG Nnp
-		INDEX ON Rgn TAG Rgn
-		INDEX ON UID TAG UID
-		INDEX ON Regn TAG Regn
-		INDEX ON SWBIC TAG SWBIC
-		INDEX ON PrntBIC TAG PrntBIC
+			Endif && - загрузка XML из локальной папки Data
 		
 		
-		SET ORDER TO TAG BIC
-		SELECT (al2)
-		INDEX ON Account+BIC TAG Account
-		INDEX ON BIC TAG BIC
-		SELECT (al)
-		SET RELATION TO BIC INTO ACC807 ADDITIVE  
+			If .Optiongroup1.Option3.Value = 1  && открытие ранее сохраненных DBF
+				If (!File(pathdata+'a807'+dat77+'.dbf')) Or (!File(pathdata+'acc807'+dat77+'.dbf')) Or (!File(pathdata+'h807'+dat77+'.dbf'))
+					=Messagebox('Нет DBF-таблиц ранее сохраненного справочника!'+Chr(13)+'Открытие невозможно!', 0+48, 'Открытие DBF СПРАВОЧНИКА БИК')
+					.Command2.Caption = 'Импорт'
+					.Optiongroup1.Option1.Value = 1
+					.Optiongroup1.Option2.Value = 0
+					.Optiongroup1.Option3.Value = 0
+					Return .F.
+				Endif
+		
+				vq_tmp  = pathdata+'a807'+dat77+'.dbf'
+				vq_tmp2 = pathdata+'acc807'+dat77+'.dbf'
+				vq_tmp3 = pathdata+'h807'+dat77+'.dbf'
+		
+				Close Tables
+		*ssa*			Close Indexes
+		
+		*ssa*			Select 1
+				Use (vq_tmp) Alias a807
+				al = Alias()
+		
+				Select 2
+				Use (vq_tmp2) Alias acc807
+				al2 = Alias()
+		
+				Select 0
+				Use (vq_tmp3) Alias h807
+		
+				m_EDNo              = EDNo
+				m_EDDate            = EDDate
+				m_EDAuthor          = EDAuthor
+				m_CreationReason    = CreationRe
+				m_CreationDateTime  = CreationDT
+				m_InfoTypeCode      = InfoTypeCo
+		*ssa*		If Empty(EDReceiver)
+		*ssa*			m_EDReceiver        = ' '
+		*ssa*		Else
+		*ssa*			m_EDReceiver        = EDReceiver
+		*ssa*		EndIf
+				m_EDReceiver        = Evl(EDReceiver, ' ')
+		*ssa*		If Empty(BusinessDa)
+		*ssa*			m_BusinessDay       = ' '
+		*ssa*		Else
+		*ssa*			m_BusinessDay       = BusinessDa
+		*ssa*		EndIf
+				m_BusinessDay       = Evl(BusinessDa, ' ')
+		*ssa*		If Empty(DirectoryV)
+		*ssa*			m_DirectoryVersion  = ' '
+		*ssa*		Else
+		*ssa*			m_DirectoryVersion  = DirectoryV
+		*ssa*		Endif
+				m_DirectoryVersion  = Evl(DirectoryV, ' ')
+				Select (al)
+			Endif && - открытие ранее сохраненных DBF
+		
+			Index On BIC Tag BIC
+			Index On NameP Tag NameP
+			Index On PtType Tag PtType
+			Index On Adr Tag Adr
+			Index On Ind Tag Ind
+			Index On Nnp Tag Nnp
+			Index On Rgn Tag Rgn
+			Index On UID Tag UID
+			Index On RegN Tag RegN
+			Index On SWBIC Tag SWBIC
+			Index On PrntBIC Tag PrntBIC
+		
+			Set Order To Tag BIC
+			Select (al2)
+			Index On Account+BIC Tag Account
+			Index On BIC Tag BIC
+			Select (al)
+			Set Relation To BIC Into acc807 Additive
 		*SET SKIP TO ACC807
 		
 		
 		*ThisForm.Command2.Enabled = .T.
-		ThisForm.Command2.Caption = 'Импорт'
+			Thisform.Command2.Caption = 'Импорт'
 		
 		
-		DO FORM Form2 NAME fr_2
+			Do Form Form2 Name fr_2
 		
+		Endwith
 		*CLOSE ALL
 		*---------------------------------------------
+		
+		
+		*ssa*	ox = Createobject('xmladapter')
+		*ssa*	?ox.XMLSchemaLocation = '20190117_ED807_.xsd'
+		*ssa*	?ox.LoadXML('20190117_ED807_full.xml', .T., .T.)
+		
+		*ssa*	If ox.Tables.Count > 0
+		*ssa*		ox.Tables.Item(5).ToCursor() && BICdirectoryEntry
+		*ssa*		ox.Tables.Item(2).ToCursor() && ParticipantInfo
+		*ssa*	Endif
 		
 	ENDPROC
 
 	PROCEDURE Text1.Valid
-		dat77=SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)
-		IF FILE(pathdata+'a807'+dat77+'.dbf').AND.;
-		   FILE(pathdata+'acc807'+dat77+'.dbf').AND.;
-		   FILE(pathdata+'h807'+dat77+'.dbf')
-		 ThisForm.Command2.ForeColor = RGB(0,128,0)
-		ELSE 
-		 ThisForm.Command2.ForeColor = RGB(255,128,0)
-		ENDIF 
+		With Thisform
+		*ssa*	dat77=SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)
+			dat77=Dtos(.Text1.Value)
+			If File(pathdata+'a807'+dat77+'.dbf') And ;
+					FILE(pathdata+'acc807'+dat77+'.dbf') And ;
+					FILE(pathdata+'h807'+dat77+'.dbf')
+				.Command2.ForeColor = Rgb(0,128,0)
+			Else
+				.Command2.ForeColor = Rgb(255,128,0)
+			Endif
+		Endwith
+		
 	ENDPROC
 
 ENDDEFINE

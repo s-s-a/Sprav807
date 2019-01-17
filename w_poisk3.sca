@@ -55,40 +55,47 @@ DEFINE CLASS form_uid AS form
 		*< END OBJECT: BaseClass="textbox" />
 	
 	PROCEDURE Destroy
-		ON KEY LABEL F5
-		POP KEY 
+		On Key Label F5
+		Pop Key
 		
 	ENDPROC
 
 	PROCEDURE Init
-		ThisForm.Left = 8/7*(SYSMETRIC(1)/100) 
-		ThisForm.Top  = 6/19.5*(SYSMETRIC(2)/100)
-		PUSH KEY CLEAR 
-		ON KEY LABEL F5 DO act_poisk3
+		With This
+			.Left = 8/7*(Sysmetric(1)/100)
+			.Top  = 6/19.5*(Sysmetric(2)/100)
+		Endwith
+		Push Key Clear
+		On Key Label F5 Do act_poisk3
+		
 	ENDPROC
 
 	PROCEDURE Command1.Click
-		SELECT (al)
-		  trec = RECNO()
-		  SET ORDER TO TAG UID
-		  SEEK ThisForm.Text1.Value
-		  
-		  IF !FOUND()
-		   =MESSAGEBOX('УИС НЕ НАЙДЕН!',0+48,'Внимание!',2000)
-		   GO trec
-		   ThisForm.Text1.SetFocus 
-		  ELSE 
-		   ThisForm.Release  
-		  ENDIF
+		With Thisform
+			Select (al)
+			trec = Recno()
+			Set Order To Tag UID
+			Seek .Text1.Value
+		
+			If !Found()
+				=Messagebox('УИС НЕ НАЙДЕН!',0+48,'Внимание!',2000)
+				Go trec
+				.Text1.SetFocus
+			Else
+				.Release
+			Endif
+		Endwith
+		
 	ENDPROC
 
 	PROCEDURE Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 ENDDEFINE

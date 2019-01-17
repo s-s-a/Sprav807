@@ -293,6 +293,7 @@ DEFINE CLASS form4 AS form
 		*< END OBJECT: BaseClass="textbox" />
 
 	ADD OBJECT 'Text8' AS textbox WITH ;
+		Alignment = 3, ;
 		FontShadow = .F., ;
 		FontSize = 11, ;
 		Format = "", ;
@@ -302,6 +303,7 @@ DEFINE CLASS form4 AS form
 		Name = "Text8", ;
 		TabIndex = 9, ;
 		Top = 22.75, ;
+		Value = {}, ;
 		Width = 88.00
 		*< END OBJECT: BaseClass="textbox" />
 
@@ -319,250 +321,266 @@ DEFINE CLASS form4 AS form
 		*< END OBJECT: BaseClass="textbox" />
 	
 	PROCEDURE Destroy
-		IF LEN(FILTER())=0
-		 COUNT TO k_filt 
-		 WAIT 'Записей БИК = '+ALLTRIM(STR(k_filt, 18)) WINDOW NOWAIT  && NOCLEAR 
-		 _vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))
-		 GO TOP 
-		ENDIF 
+		If Len(Filter())=0
+			Count To k_filt
+			Wait 'Записей БИК = '+Transform(k_filt) Window Nowait  && NOCLEAR
+			_vfp.StatusBar='Записей БИК = '+Transform(k_filt)
+			Go Top
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Init
-		SET FILTER TO 
-		zs1 = ThisForm.Text2.Top-ThisForm.Text1.Top
-		ThisForm.Text2.Top=ThisForm.Text1.Top+zs1
-		ThisForm.Text3.Top=ThisForm.Text2.Top+zs1
-		ThisForm.Text4.Top=ThisForm.Text3.Top+zs1
-		ThisForm.Text5.Top=ThisForm.Text4.Top+zs1
-		ThisForm.Text6.Top=ThisForm.Text5.Top+zs1
-		ThisForm.Text7.Top=ThisForm.Text6.Top+zs1
-		ThisForm.Check1.Top=ThisForm.Text7.Top+zs1/2
-		ThisForm.Text8.Top=ThisForm.Text7.Top+zs1
-		ThisForm.Text9.Top=ThisForm.Text8.Top+zs1
+		With This
+			Set Filter To
+			zs1 = .Text2.Top-.Text1.Top
+			.Text2.Top=.Text1.Top+zs1
+			.Text3.Top=.Text2.Top+zs1
+			.Text4.Top=.Text3.Top+zs1
+			.Text5.Top=.Text4.Top+zs1
+			.Text6.Top=.Text5.Top+zs1
+			.Text7.Top=.Text6.Top+zs1
+			.Check1.Top=.Text7.Top+zs1/2
+			.Text8.Top=.Text7.Top+zs1
+			.Text9.Top=.Text8.Top+zs1
 		
-		ThisForm.Label2.Top=ThisForm.Label1.Top+zs1
-		ThisForm.Label3.Top=ThisForm.Label2.Top+2/19.5*(SYSMETRIC(2)/100)
-		ThisForm.Label4.Top=ThisForm.Label2.Top+zs1
-		ThisForm.Label5.Top=ThisForm.Label4.Top+zs1
-		ThisForm.Label6.Top=ThisForm.Label5.Top+zs1
-		ThisForm.Label7.Top=ThisForm.Label6.Top+zs1
-		ThisForm.Label8.Top=ThisForm.Label7.Top+2/19.5*(SYSMETRIC(2)/100)
-		ThisForm.Label9.Top=ThisForm.Label7.Top+zs1
-		ThisForm.Label10.Top=ThisForm.Label9.Top+zs1
-		ThisForm.Label11.Top=ThisForm.Label10.Top+zs1
+			.Label2.Top=.Label1.Top+zs1
+			.Label3.Top=.Label2.Top+2/19.5*(Sysmetric(2)/100)
+			.Label4.Top=.Label2.Top+zs1
+			.Label5.Top=.Label4.Top+zs1
+			.Label6.Top=.Label5.Top+zs1
+			.Label7.Top=.Label6.Top+zs1
+			.Label8.Top=.Label7.Top+2/19.5*(Sysmetric(2)/100)
+			.Label9.Top=.Label7.Top+zs1
+			.Label10.Top=.Label9.Top+zs1
+			.Label11.Top=.Label10.Top+zs1
 		
-		ThisForm.Command1.Top=ThisForm.Label11.Top+zs1
+			.Command1.Top=Thisform.Label11.Top+zs1
 		
-		ThisForm.Text8.Value = CTOD('  .  .    ')
+		*ssa*	.Text8.Value = CTOD('  .  .    ')
+		Endwith
+		
 	ENDPROC
 
 	PROCEDURE Check1.Click
-		IF ThisForm.Check1.Value=1
-		 ThisForm.Text7.Value = ''
-		 ThisForm.Text7.Visible = .F.
-		 ThisForm.Check1.Top = ThisForm.Text7.Top+ThisForm.Text7.Height/4
-		ELSE 
-		 ThisForm.Text7.Visible = .T.
-		 ThisForm.Check1.Top = ThisForm.Text7.Top+(ThisForm.Text2.Top-ThisForm.Text1.Top)/2
-		ENDIF 
+		With Thisform
+			If .Check1.Value=1
+				.Text7.Value = ''
+				.Text7.Visible = .F.
+				.Check1.Top = .Text7.Top+.Text7.Height/4
+			Else
+				.Text7.Visible = .T.
+				.Check1.Top = .Text7.Top+(.Text2.Top-.Text1.Top)/2
+			Endif
+		Endwith
+		
 	ENDPROC
 
 	PROCEDURE Command1.Click
-		SELECT (al)
-		tx1 = ALLTRIM(Thisform.Text1.Value)
-		tx2 = ALLTRIM(Thisform.Text2.Value)
-		tx3 = ALLTRIM(Thisform.Text3.Value)
-		tx4 = ALLTRIM(Thisform.Text4.Value)
-		tx5 = ALLTRIM(Thisform.Text5.Value)
-		tx6 = ALLTRIM(Thisform.Text6.Value)
-		tx7 = ALLTRIM(Thisform.Text7.Value)
-		tx8 = DTOC(Thisform.Text8.Value)
-		tx9 = ALLTRIM(Thisform.Text9.Value)
+		With Thisform
+			Select (al)
+			tx1 = Alltrim(.Text1.Value)
+			tx2 = Alltrim(.Text2.Value)
+			tx3 = Alltrim(.Text3.Value)
+			tx4 = Alltrim(.Text4.Value)
+			tx5 = Alltrim(.Text5.Value)
+			tx6 = Alltrim(.Text6.Value)
+			tx7 = Alltrim(.Text7.Value)
+			tx8 = Dtoc(.Text8.Value)
+			tx9 = Alltrim(.Text9.Value)
 		
-		tf1=''
+			tf1=''
 		
-		IF LEN(tx1)=0
-		 tf1 = ''
-		ELSE  
-		 tf1 = 'ATC(tx1, NameP)>0'
-		ENDIF 
-		IF LEN(tx2)=0
-		 tf2 = ''
-		ELSE 
-		 tf2 = 'ATC(tx2, Nnp)>0'
-		ENDIF
-		IF LEN(tx3)=0
-		 tf3 = ''
-		ELSE 
-		 tf3 = 'ATC(tx3, Adr)>0'
-		ENDIF 
-		IF LEN(tx4)=0
-		 tf4 = ''
-		ELSE 
-		 tf4 = 'ATC(tx4, Rgn )>0'
-		ENDIF 
-		IF LEN(tx5)=0
-		 tf5 = ''
-		ELSE 
-		 tf5 = 'ATC(tx5, PtType)>0'
-		ENDIF 
+		*ssa*		If Len(tx1)=0
+		*ssa*			tf1 = ''
+		*ssa*		Else
+		*ssa*			tf1 = 'ATC(tx1, NameP)>0'
+		*ssa*		EndIf
+			tf1 = Iif(Len(tx1)=0, 'ATC(tx1, NameP)>0', '')
+		*ssa*		If Len(tx2)=0
+		*ssa*			tf2 = ''
+		*ssa*		Else
+		*ssa*			tf2 = 'ATC(tx2, Nnp)>0'
+		*ssa*		EndIf
+			tf2 = Iif(Len(tx2)=0, 'ATC(tx2, Nnp)>0', '')
+		*ssa*		If Len(tx3)=0
+		*ssa*			tf3 = ''
+		*ssa*		Else
+		*ssa*			tf3 = 'ATC(tx3, Adr)>0'
+		*ssa*		EndIf
+			tf3 = Iif(Len(tx3)=0, 'ATC(tx3, Adr)>0', '')
+		*ssa*		If Len(tx4)=0
+		*ssa*			tf4 = ''
+		*ssa*		Else
+		*ssa*			tf4 = 'ATC(tx4, Rgn )>0'
+		*ssa*		EndIf
+			tf4 = Iif(Len(tx4)=0, 'ATC(tx4, Rgn )>0', '')
+		*ssa*		If Len(tx5)=0
+		*ssa*			tf5 = ''
+		*ssa*		Else
+		*ssa*			tf5 = 'ATC(tx5, PtType)>0'
+		*ssa*		Endif
+		tf5 = Iif(Len(tx5)=0, 'ATC(tx5, PtType)>0', '')
+		*ssa*		If Len(tx6)=0
+		*ssa*			tf6 = ''
+		*ssa*		Else
+		*ssa*			tf6 = 'ATC(tx6, EnglName)>0'
+		*ssa*		Endif
+		tf6 = Iif(Len(tx6)=0, 'ATC(tx6, EnglName)>0', '')
+		*ssa*		If Len(tx7)=0
+		*ssa*			tf7 = ''
+		*ssa*		Else
+		*ssa*			tf7 = 'ATC(tx7, PrntBIC)=1'
+		*ssa*		EndIf
+			tf7 = Iif(Len(tx7)=0, 'ATC(tx7, PrntBIC)=1', '')
+			If Thisform.Check1.Value = 1
+				tf7 = 'EMPTY(PrntBIC)'
+				tx7 = 'ПУСТОЙ БИК головной организации'
+			Endif
 		
-		IF LEN(tx6)=0
-		 tf6 = ''
-		ELSE 
-		 tf6 = 'ATC(tx6, EnglName)>0'
-		ENDIF 
+			kus1=Substr(Dtoc(.Text8.Value),7,4)
+			kus2=Substr(Dtoc(.Text8.Value),4,2)
+			kus3=Substr(Dtoc(.Text8.Value),1,2)
+			kus4=kus1+'-'+kus2+'-'+kus3
 		
-		IF LEN(tx7)=0
-		 tf7 = ''
-		ELSE 
-		 tf7 = 'ATC(tx7, PrntBIC)=1'
-		ENDIF 
-		IF ThisForm.Check1.Value = 1
-		 tf7 = 'EMPTY(PrntBIC)'
-		 tx7 = 'ПУСТОЙ БИК головной организации'
-		ENDIF 
+			If !Empty(.Text8.Value)
+				tf8 = "kus4=DateIn"
+			Else
+				tf8 = ''
+			Endif
 		
-		kus1=SUBSTR(DTOC(ThisForm.Text8.Value),7,4)
-		kus2=SUBSTR(DTOC(ThisForm.Text8.Value),4,2)
-		kus3=SUBSTR(DTOC(ThisForm.Text8.Value),1,2)
-		kus4=kus1+'-'+kus2+'-'+kus3
+		*ssa*		If Len(tx9)=0
+		*ssa*			tf9 = ''
+		*ssa*		Else
+		*ssa*			tf9 = 'tx9=XchType'
+		*ssa*		EndIf
+			tf9 = Iif(Len(tx9)=0, 'tx9=XchType', '')
 		
-		IF !EMPTY(ThisForm.Text8.Value)
-		 tf8 = "kus4=DateIn"
-		ELSE
-		 tf8 = ''
-		ENDIF 
+			tan1 = Iif(Len(tf2)>0 OR Len(tf3)>0 OR Len(tf4)>0 OR Len(tf5)>0 OR Len(tf6)>0 OR Len(tf7)>0 OR Len(tf8)>0 OR Len(tf9)>0,  ' AND '  ,'')
+			tff1 = Iif(Len(tf1)=0,'',tf1+tan1)
+			tan2 = Iif(Len(tf3)>0 OR Len(tf4)>0 OR Len(tf5)>0 OR Len(tf6)>0 OR Len(tf7)>0 OR Len(tf8)>0 OR Len(tf9)>0,  ' AND ',  '')
+			tff2 = Iif(Len(tf2)=0,'',tf2+tan2)
+			tan3 = Iif(Len(tf4)>0 OR Len(tf5)>0 OR Len(tf6)>0 OR Len(tf7)>0 OR Len(tf8)>0 OR Len(tf9)>0,  ' AND ',  '')
+			tff3 = Iif(Len(tf3)=0,'',tf3+tan3)
+			tan4 = Iif(Len(tf5)>0 OR Len(tf6)>0 OR Len(tf7)>0 OR Len(tf8)>0 OR Len(tf9)>0,  ' AND ',  '')
+			tff4 = Iif(Len(tf4)=0,'',tf4+tan4)
+			tan5 = Iif(Len(tf6)>0 OR Len(tf7)>0 OR Len(tf8)>0 OR Len(tf9)>0, ' AND ',  '')
+			tff5 = Iif(Len(tf5)=0,'',tf5+tan5)
+			tan6 = Iif(Len(tf7)>0 OR Len(tf8)>0 OR Len(tf9)>0, ' AND ',  '')
+			tff6 = Iif(Len(tf6)=0,'',tf6+tan6)
+			tan7 = Iif(Len(tf8)>0 OR Len(tf9)>0, ' AND ',  '')
+			tff7 = Iif(Len(tf7)=0,'',tf7+tan7)
+			tan8 = Iif(Len(tf9)>0, ' AND ',  '')
+			tff8 = Iif(Len(tf8)=0,'',tf8+tan8)
+			tff9 =tf9
 		
-		IF LEN(tx9)=0
-		 tf9 = ''
-		ELSE 
-		 tf9 = 'tx9=XchType'
-		ENDIF 
-		
-		
-		
-		tan1=IIF(LEN(tf2)>0.OR.LEN(tf3)>0.OR.LEN(tf4)>0.OR.LEN(tf5)>0.OR.LEN(tf6)>0.OR.LEN(tf7)>0.OR.LEN(tf8)>0.OR.LEN(tf9)>0,  '.AND.'  ,'')
-		tff1= IIF(LEN(tf1)=0,'',tf1+tan1)
-		tan2=IIF(LEN(tf3)>0.OR.LEN(tf4)>0.OR.LEN(tf5)>0.OR.LEN(tf6)>0.OR.LEN(tf7)>0.OR.LEN(tf8)>0.OR.LEN(tf9)>0,  '.AND.',  '')
-		tff2= IIF(LEN(tf2)=0,'',tf2+tan2)
-		tan3=IIF(LEN(tf4)>0.OR.LEN(tf5)>0.OR.LEN(tf6)>0.OR.LEN(tf7)>0.OR.LEN(tf8)>0.OR.LEN(tf9)>0,  '.AND.',  '')
-		tff3= IIF(LEN(tf3)=0,'',tf3+tan3)
-		tan4=IIF(LEN(tf5)>0.OR.LEN(tf6)>0.OR.LEN(tf7)>0.OR.LEN(tf8)>0.OR.LEN(tf9)>0,  '.AND.',  '')
-		tff4= IIF(LEN(tf4)=0,'',tf4+tan4)
-		tan5=IIF(LEN(tf6)>0.OR.LEN(tf7)>0.OR.LEN(tf8)>0.OR.LEN(tf9)>0, '.AND.',  '')
-		tff5= IIF(LEN(tf5)=0,'',tf5+tan5)
-		tan6=IIF(LEN(tf7)>0.OR.LEN(tf8)>0.OR.LEN(tf9)>0, '.AND.',  '')
-		tff6= IIF(LEN(tf6)=0,'',tf6+tan6)
-		tan7=IIF(LEN(tf8)>0.OR.LEN(tf9)>0, '.AND.',  '')
-		tff7= IIF(LEN(tf7)=0,'',tf7+tan7)
-		tan8=IIF(LEN(tf9)>0, '.AND.',  '')
-		tff8=IIF(LEN(tf8)=0,'',tf8+tan8)
-		tff9=tf9
-		
-		flt= tff1+tff2+tff3+tff4+tff5+tff6+tff7+tff8+tff9
+			flt = tff1+tff2+tff3+tff4+tff5+tff6+tff7+tff8+tff9
 		*=MESSAGEBOX(flt)
-		SET FILTER TO &flt
+			Set Filter To &flt
 		
-		COUNT TO k_filt  
-		IF k_filt=0
-		 g_filt=1
-		 
+			Count To k_filt
+			If k_filt=0
+				g_filt=1
 		
-		  fr_2.Command1.Visible = .T.
+				fr_2.Command1.Visible = .T.
 		
+			Endif
 		
-		                  
-		ENDIF 
+			Go Top
+			.Release()
+		Endwith
 		
-		
-		                   
-		GO TOP
-		ThisForm.Release 
-		
-		              
 	ENDPROC
 
 	PROCEDURE Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF 
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Text2.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF 
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Text3.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF 
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Text4.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF 
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Text5.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF 
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Text6.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF 
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Text7.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF 
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Text8.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF 
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Text9.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF 
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 ENDDEFINE

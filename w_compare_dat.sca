@@ -55,62 +55,62 @@ DEFINE CLASS w_com_d AS form
 		*< END OBJECT: BaseClass="label" />
 
 	ADD OBJECT 'Text1' AS textbox WITH ;
+		Alignment = 3, ;
 		FontSize = 13, ;
 		Height = 30, ;
 		Left = 184, ;
 		Name = "Text1", ;
 		Top = 89, ;
+		Value = {}, ;
 		Width = 116
 		*< END OBJECT: BaseClass="textbox" />
 	
 	PROCEDURE Init
-		ThisForm.Left = 30*(SYSMETRIC(1)/100) 
-		ThisForm.Top  = 6*(SYSMETRIC(2)/100) 
-		ThisForm.Text1.Value = CTOD('  .  .    ')
+		With This
+			.Left = 30*(Sysmetric(1)/100)
+			.Top  = 6*(Sysmetric(2)/100)
+		*ssa*	.Text1.Value = CTOD('  .  .    ')
+		Endwith
+		
 	ENDPROC
 
 	PROCEDURE Command1.Click
-		IF ThisForm.Text1.Value > DATE()
-		 =MESSAGEBOX('Сравнить с датой больше системной невозможно!',0+16,'Некорректная дата',3000)
-		 RETURN 
-		ENDIF 
-		qqo=pathdata+'a807'+SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)+'.dbf'
-		qqk=pathdata+'a807'+SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)+'.cdx'
+		With Thisform
+			If .Text1.Value > Date()
+				=Messagebox('Сравнить с датой больше системной невозможно!',0+16,'Некорректная дата',3000)
+				Return
+			Endif
+		*ssa*	qqo=pathdata+'a807'+SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)+'.dbf'
+		*ssa*	qqk=pathdata+'a807'+SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)+'.cdx'
+			qqo=pathdata+'a807'+Dtos(.Text1.Value)+'.dbf'
+			qqk=pathdata+'a807'+Dtos(.Text1.Value)+'.cdx'
 		
 		*=MESSAGEBOX(qqo+CHR(13)+qqk)
 		
-		IF (!(FILE(qqo))) &&.OR.(!(FILE(qqk)))
-		 =MESSAGEBOX('Отсутстует DBF-таблица БИК-ов (или индексный файл)!'+CHR(13)+;
-		             'Необходимо сначала скачать справочник за указанную дату и сохранить по F7 !',0+48,'Внимание!',8000)
-		 RETURN 
-		ENDIF 
+			If (!(File(qqo))) &&.OR.(!(FILE(qqk)))
+				=Messagebox('Отсутстует DBF-таблица БИК-ов (или индексный файл)!'+Chr(13)+;
+					'Необходимо сначала скачать справочник за указанную дату и сохранить по F7 !',0+48,'Внимание!',8000)
+				Return
+			Endif
 		
-		IF ThisForm.Text1.Value = fr_start.Text1.Value
-		 =MESSAGEBOX('Сравнивать две одинаковые даты не нужно!',0+16,'Некорректная дата',3000)
-		 RETURN 
-		ENDIF 
+			If .Text1.Value = fr_start.Text1.Value
+				=Messagebox('Сравнивать две одинаковые даты не нужно!',0+16,'Некорректная дата',3000)
+				Return
+			Endif
 		
+			=frtfcompare(.T., "Data\lstcompare.RTF")
+			.Release
+		Endwith
 		
-		
-		
-		
-		=frtfcompare(.T., "Data\lstcompare.RTF")
-		
-		
-		
-		ThisForm.Release
-		 
-		* LOCAL loF as Wscript.Shell  
+		* LOCAL loF as Wscript.Shell
 		* ff1=pathdata+'compdat.txt'
 		* prms = 'notepad.exe'+' '+ff1
 		* loF=CREATEOBJECT("WScript.Shell")
 		* loF.Run(prms, 1, .F.) && .F. не ждать выполнения notepad.exe
 		* Release loF
 		
-		
-		
-		
 		*-----------------------------
+		
 	ENDPROC
 
 ENDDEFINE

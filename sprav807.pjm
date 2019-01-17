@@ -50,18 +50,18 @@ MODIFY PROJECT 'sprav807.pjx' NOWAIT NOSHOW NOPROJECTHOOK
 loProject = _VFP.Projects('sprav807.pjx')
 
 WITH loProject.FILES
+	.ADD('c:\program files\microsoft visual foxpro 9\config.fpw')		&& *< FileMetadata: Type="T" Cpid="1251" Timestamp="0" ID="0" ObjRev="0" User="" />
+	.ADD('exprog.prg')		&& *< FileMetadata: Type="P" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
 	.ADD('form1.scx')		&& *< FileMetadata: Type="K" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
 	.ADD('form2.scx')		&& *< FileMetadata: Type="K" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
 	.ADD('form3.scx')		&& *< FileMetadata: Type="K" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
 	.ADD('form4.scx')		&& *< FileMetadata: Type="K" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
 	.ADD('logo3.ico')		&& *< FileMetadata: Type="x" Cpid="0" Timestamp="0" ID="0" ObjRev="0" User="" />
-	.ADD('ohter\config.fpw')		&& *< FileMetadata: Type="T" Cpid="1251" Timestamp="0" ID="0" ObjRev="0" User="" />
-	.ADD('progs\exprog.prg')		&& *< FileMetadata: Type="P" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
-	.ADD('progs\main.prg')		&& *< FileMetadata: Type="P" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
-	.ADD('progs\make_rtf.prg')		&& *< FileMetadata: Type="P" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
-	.ADD('progs\procfile.prg')		&& *< FileMetadata: Type="P" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
-	.ADD('progs\setdat.prg')		&& *< FileMetadata: Type="P" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
+	.ADD('main.prg')		&& *< FileMetadata: Type="P" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
+	.ADD('make_rtf.prg')		&& *< FileMetadata: Type="P" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
+	.ADD('procfile.prg')		&& *< FileMetadata: Type="P" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
 	.ADD('rtf.h')		&& *< FileMetadata: Type="T" Cpid="1251" Timestamp="0" ID="0" ObjRev="0" User="" />
+	.ADD('setdat.prg')		&& *< FileMetadata: Type="P" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
 	.ADD('w_compare_dat.scx')		&& *< FileMetadata: Type="K" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
 	.ADD('w_poisk.scx')		&& *< FileMetadata: Type="K" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
 	.ADD('w_poisk2.scx')		&& *< FileMetadata: Type="K" Cpid="1251" Timestamp="0" ID="0" ObjRev="544" User="" />
@@ -82,14 +82,14 @@ WITH loProject.FILES
 	*</ExcludedFiles>
 
 	*<TextFiles>
-	.ITEM(lcCurdir + 'ohter\config.fpw').Type = 'T'
+	.ITEM(lcCurdir + 'c:\program files\microsoft visual foxpro 9\config.fpw').Type = 'T'
 	.ITEM(lcCurdir + 'rtf.h').Type = 'T'
 	*</TextFiles>
 ENDWITH
 
 WITH loProject
 	*<ProjectProperties>
-	.SetMain(lcCurdir + 'progs\main.prg')
+	.SetMain(lcCurdir + 'main.prg')
 	.Icon = lcCurdir + 'logo3.ico'
 	.Debug = .T.
 	.Encrypted = .F.

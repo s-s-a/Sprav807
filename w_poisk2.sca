@@ -95,87 +95,93 @@ DEFINE CLASS form_naim AS form
 		*< END OBJECT: BaseClass="textbox" />
 	
 	PROCEDURE Destroy
-		ON KEY LABEL F5
-		POP KEY 
+		On Key Label F5
+		Pop Key
 		
 	ENDPROC
 
 	PROCEDURE Init
-		ThisForm.Left = 30/7*(SYSMETRIC(1)/100) && делим на 7 (Foxels)
-		ThisForm.Top  = 6/19.5*(SYSMETRIC(2)/100) && делим на 19.5 (Foxels)
+		With This
+			.Left = 30/7*(Sysmetric(1)/100) && делим на 7 (Foxels)
+			.Top  = 6/19.5*(Sysmetric(2)/100) && делим на 19.5 (Foxels)
 		
-		IF f_p_n = 0 
-		 ThisForm.Optiongroup1.Option1.Value = 0
-		 ThisForm.Optiongroup1.Option2.Value = 1
-		ELSE
-		  ThisForm.Optiongroup1.Option1.Value = g_opt1  
-		  ThisForm.Optiongroup1.Option2.Value = g_opt2
-		ENDIF 
+			If f_p_n = 0
+				.Optiongroup1.Option1.Value = 0
+				.Optiongroup1.Option2.Value = 1
+			Else
+				.Optiongroup1.Option1.Value = g_opt1
+				.Optiongroup1.Option2.Value = g_opt2
+			Endif
 		
-		ThisForm.Text1.Value = g_naimenovanie
+			.Text1.Value = g_naimenovanie
 		
-		ThisForm.Text1.SetFocus()
-		f_p_n = f_p_n+1
-		PUSH KEY CLEAR 
-		ON KEY LABEL F5 DO act_poisk2
+			.Text1.SetFocus()
+			f_p_n = f_p_n+1
+			Push Key Clear
+			On Key Label F5 Do act_poisk2
+		Endwith
+		
 	ENDPROC
 
 	PROCEDURE Command1.Click
-		SELECT (al)
-		trec = RECNO()
-		  SET ORDER TO TAG NameP
-		  SET NEAR ON  
+		With Thisform
+			Select (al)
+			trec = Recno()
+			Set Order To Tag NameP
+			Set Near On
 		*  SEEK ThisForm.Text1.Value
 		
-		*------------------------  
+		*------------------------
 		*  IF !FOUND()
 		*   SEEK UPPER(ThisForm.Text1.Value)
 		*   IF !FOUND()
 		*    =MESSAGEBOX('ЗАПИСЬ НЕ НАЙДЕНА!',0+48,'Внимание!',5)
 		*    GO trec
-		*    ThisForm.Text1.SetFocus 
-		*   ELSE 
-		*    SET NEAR OFF  
-		*    ThisForm.Release  
-		*   ENDIF  
-		*  ELSE 
-		*   SET NEAR OFF  
-		*   ThisForm.Release  
+		*    ThisForm.Text1.SetFocus
+		*   ELSE
+		*    SET NEAR OFF
+		*    ThisForm.Release
+		*   ENDIF
+		*  ELSE
+		*   SET NEAR OFF
+		*   ThisForm.Release
 		*  ENDIF
 		
 		*-------------------------
-		  g_naimenovanie = ALLTRIM(ThisForm.Text1.Value)
+			g_naimenovanie = Alltrim(.Text1.Value)
 		
-		  IF ThisForm.Optiongroup1.Option1.Value = 1
-		   GO TOP   
-		  ELSE 
-		   g_naimenovanie = ALLTRIM(ThisForm.Text1.Value)
+			If .Optiongroup1.Option1.Value = 1
+				Go Top
+			Else
+				g_naimenovanie = Alltrim(.Text1.Value)
 		*   =MESSAGEBOX(STR(f_p_n,10))
-		   IF f_p_n>1
-		    SKIP 
-		   ENDIF  
-		  ENDIF
-		  
-		  IF !EOF()
-		   LOCATE FOR (ATC(ALLTRIM(ThisForm.Text1.Value),NameP)>0.OR.;
-		            ATC(ALLTRIM(UPPER(ThisForm.Text1.Value)),NameP)>0.OR.;
-		            ATC(ALLTRIM(LOWER(ThisForm.Text1.Value)),NameP)>0) REST
-		  ENDIF           
-		 
-		 g_opt1=ThisForm.Optiongroup1.Option1.Value 
-		 g_opt2=ThisForm.Optiongroup1.Option2.Value  
-		 SET NEAR OFF 
-		 ThisForm.Release 
-		  
+				If f_p_n>1
+					Skip
+				Endif
+			Endif
+		
+			If !Eof()
+				Locate For (Atc(Alltrim(.Text1.Value),NameP)>0 Or ;
+					ATC(Alltrim(Upper(.Text1.Value)),NameP)>0 Or ;
+					ATC(Alltrim(Lower(.Text1.Value)),NameP)>0) Rest
+			Endif
+		
+			g_opt1=.Optiongroup1.Option1.Value
+			g_opt2=.Optiongroup1.Option2.Value
+			Set Near Off
+			.Release
+		Endwith
+		
 	ENDPROC
 
 	PROCEDURE Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_q_my=nXCoord
 		y_q_my=nYCoord
-		IF nButton=2
-		 DO vs_menu
-		ENDIF
+		If nButton=2
+			Do vs_menu
+		Endif
+		
 	ENDPROC
 
 ENDDEFINE
