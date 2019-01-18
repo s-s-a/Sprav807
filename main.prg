@@ -197,6 +197,14 @@ pathdata = pathcur+'Data\'
 path_tmp = pathcur+'TMP\'
 path_zip = pathcur+'ZIP\'
 
+*ssa*	создание нужных каталогов
+Try
+	Md (pathdata)
+	Md (path_tmp)
+	Md (path_zip)
+Catch
+EndTry
+
 *-----------------Получение списка файлов данных в папке Data и ZIP и очистка старых----------------------
 Local loWshShell As Wscript.Shell
 If File(path_tmp+'flst')
@@ -233,7 +241,8 @@ Try
 			yqq1 = Substr(bufe,5,4)
 			mqq1 = Substr(bufe,9,2)
 			dqq1 = Substr(bufe,11,2)
-			datqq1 = Ctod(dqq1+'.'+mqq1+'.'+yqq1)
+*ssa*				datqq1 = Ctod(dqq1+'.'+mqq1+'.'+)
+			datqq1 = date(yqq1, mqq1, dqq1)
 			If datqq1<datdel
 				flag_qh=flag_qh+1
 				=Fputs(hnd1,'del '+pathdata+ bufe)
@@ -244,7 +253,8 @@ Try
 			yqq1 = Substr(bufe,7,4)
 			mqq1 = Substr(bufe,11,2)
 			dqq1 = Substr(bufe,13,2)
-			datqq1 = Ctod(dqq1+'.'+mqq1+'.'+yqq1)
+*ssa*				datqq1 = Ctod(dqq1+'.'+mqq1+'.'+)
+			datqq1 = date(yqq1, mqq1, dqq1)
 			If datqq1<datdel
 				flag_qh=flag_qh+1
 				=Fputs(hnd1,'del '+pathdata+ bufe)
@@ -255,7 +265,8 @@ Try
 			yqq1 = Substr(bufe,1,4)
 			mqq1 = Substr(bufe,5,2)
 			dqq1 = Substr(bufe,7,2)
-			datqq1 = Ctod(dqq1+'.'+mqq1+'.'+yqq1)
+*ssa*				datqq1 = Ctod(dqq1+'.'+mqq1+'.'+)
+			datqq1 = date(yqq1, mqq1, dqq1)
 			If datqq1<datdel
 				flag_qh=flag_qh+1
 				=Fputs(hnd1,'del '+pathdata+ bufe)
@@ -266,7 +277,8 @@ Try
 			yqq1 = Substr(bufe,1,4)
 			mqq1 = Substr(bufe,5,2)
 			dqq1 = Substr(bufe,7,2)
-			datqq1 = Ctod(dqq1+'.'+mqq1+'.'+yqq1)
+*ssa*				datqq1 = Ctod(dqq1+'.'+mqq1+'.'+)
+			datqq1 = date(yqq1, mqq1, dqq1)
 			If datqq1<datdel
 				flag_qh=flag_qh+1
 				=Fputs(hnd1,'del '+path_zip+ bufe)
