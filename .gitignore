@@ -42,6 +42,7 @@ Source/Hold/*
 Tests/FXU*.*
 Data/*
 ZIP/*
+tmp/*
 *_MetaData.*
 *_ref.*
 
@@ -80,7 +81,7 @@ packages/
 **/.vscode
 
 # Masclaneus folders
-tmp/*
+
 
 # VFP binary files
 **/*.[Pp][Jj][XxTt]
