@@ -64,7 +64,6 @@ DEFINE CLASS form_swbic AS form
 			.Top  = 10/19.5*(Sysmetric(2)/100)
 		Endwith
 		Push Key Clear
-		
 		On Key Label F5 Do act_poisk5
 		
 	ENDPROC

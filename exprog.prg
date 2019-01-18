@@ -11,5 +11,7 @@ Clear Events
 On Shutdown
 * CLEAR ALL
 fr_start.Release
-Close All
-Quit
+
+*ssa*	Для ехе без разницы, а отлаживать удобнее
+*ssa*	Close All
+Cancel && Quit 
