@@ -129,24 +129,6 @@ DEFINE CLASS form_naim AS form
 			trec = Recno()
 			Set Order To Tag NameP
 			Set Near On
-		*  SEEK ThisForm.Text1.Value
-		
-		*------------------------
-		*  IF !FOUND()
-		*   SEEK UPPER(ThisForm.Text1.Value)
-		*   IF !FOUND()
-		*    =MESSAGEBOX('ЗАПИСЬ НЕ НАЙДЕНА!',0+48,'Внимание!',5)
-		*    GO trec
-		*    ThisForm.Text1.SetFocus
-		*   ELSE
-		*    SET NEAR OFF
-		*    ThisForm.Release
-		*   ENDIF
-		*  ELSE
-		*   SET NEAR OFF
-		*   ThisForm.Release
-		*  ENDIF
-		
 		*-------------------------
 			g_naimenovanie = Alltrim(.Text1.Value)
 		
@@ -154,7 +136,6 @@ DEFINE CLASS form_naim AS form
 				Go Top
 			Else
 				g_naimenovanie = Alltrim(.Text1.Value)
-		*   =MESSAGEBOX(STR(f_p_n,10))
 				If f_p_n>1
 					Skip
 				Endif

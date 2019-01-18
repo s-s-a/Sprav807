@@ -48,7 +48,7 @@ Public al,al2, x_p_my, y_p_my, x_q_my, y_q_my, y_i_my, x_i_my, tx1, tx2, tx3, tx
 *        koef, koef2, koef3, koef4
 
 On Shutdown Do ExProg
-On Error Do errHandler With Error( ), Message( ), Message(1), Program( ), Lineno( )
+*ssa*	On Error Do errHandler With Error( ), Message( ), Message(1), Program( ), Lineno( )
 
 flag_sd = 0 && flag shutdown
 *flag_sd2 = 0  && flag shutdown для закрытия второго экземпляра программы

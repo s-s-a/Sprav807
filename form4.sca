@@ -355,7 +355,7 @@ DEFINE CLASS form4 AS form
 			.Label10.Top=.Label9.Top+zs1
 			.Label11.Top=.Label10.Top+zs1
 		
-			.Command1.Top=Thisform.Label11.Top+zs1
+			.Command1.Top=.Label11.Top+zs1
 		
 		*ssa*	.Text8.Value = CTOD('  .  .    ')
 		Endwith
@@ -494,7 +494,6 @@ DEFINE CLASS form4 AS form
 
 	PROCEDURE Text1.MouseDown
 		Lparameters nButton, nShift, nXCoord, nYCoord
-		
 		x_q_my=nXCoord
 		y_q_my=nYCoord
 		If nButton=2

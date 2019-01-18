@@ -66,7 +66,6 @@ DEFINE CLASS form_ind AS form
 			.Top  = 6/19.5*(Sysmetric(2)/100)
 		Endwith
 		Push Key Clear
-		
 		On Key Label F5 Do act_poisk6
 		
 	ENDPROC
