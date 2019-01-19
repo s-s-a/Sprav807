@@ -66,6 +66,7 @@ DEFINE CLASS form_bic AS form
 			.Top  = 6/19.5*(Sysmetric(2)/100) && делим на 19.5, если ScalableMode= Foxels
 		Endwith
 		Push Key Clear
+		
 		On Key Label F5 Do act_poisk
 		
 		
@@ -79,7 +80,7 @@ DEFINE CLASS form_bic AS form
 			Seek .Text1.Value
 		
 			If !Found()
-				Messagebox('БИК НЕ НАЙДЕН!',0+48,'Внимание!',2000)
+				=Messagebox('БИК НЕ НАЙДЕН!',0+48,'Внимание!',2000)
 				Go trec
 				.Text1.SetFocus()
 			Else

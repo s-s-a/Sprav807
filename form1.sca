@@ -30,13 +30,13 @@ DEFINE CLASS form1 AS form
 	Caption = "Загрузка справочника БИК"
 	DoCreate = .T.
 	FontSize = 9
-	Height = 214
+	Height = 221
 	Icon = logo3.ico
 	Left = 2
 	Name = "FORM1"
 	ShowTips = .T.
 	Top = 0
-	Width = 378
+	Width = 366
 	WindowState = 2
 
 	ADD OBJECT 'Command1' AS commandbutton WITH ;
@@ -109,7 +109,7 @@ DEFINE CLASS form1 AS form
 		With This
 			.Text1.Value = Date()
 		*ssa*	dat77=SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)
-			dat77 = Dtos(.Text1.Value)
+			dat77=Dtos(.Text1.Value)
 			.Width = Sysmetric(1)
 		
 			If File(pathdata+'a807'+dat77+'.dbf') And File(pathdata+'acc807'+dat77+'.dbf') And File(pathdata+'h807'+dat77+'.dbf')
@@ -152,7 +152,7 @@ DEFINE CLASS form1 AS form
 	PROCEDURE Command1.Valid
 		With Thisform
 		*ssa*	dat77=SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)
-			dat77 = Dtos(.Text1.Value)
+			dat77=Dtos(.Text1.Value)
 			If File(pathdata+'a807'+dat77+'.dbf') And ;
 					FILE(pathdata+'acc807'+dat77+'.dbf') And ;
 					FILE(pathdata+'h807'+dat77+'.dbf')
@@ -207,6 +207,7 @@ DEFINE CLASS form1 AS form
 		*Release loWshShell
 		*---------------------------------------------------------------------------------------------------
 		
+		
 		*ssa*		uSource88 = MyValue+Substr(Dtoc(Thisform.Text1.Value),7,4)+Substr(Dtoc(Thisform.Text1.Value),4,2)+Substr(Dtoc(Thisform.Text1.Value),1,2)+'ED01OSBR.zip'
 				uSource88 = MyValue+Dtos(.Text1.Value)+'ED01OSBR.zip'
 		*ssa*		uTaget88  = pathcur+'ZIP\'+Substr(Dtoc(Thisform.Text1.Value),7,4)+Substr(Dtoc(Thisform.Text1.Value),4,2)+Substr(Dtoc(Thisform.Text1.Value),1,2)+'ED01OSBR.zip'
@@ -239,6 +240,8 @@ DEFINE CLASS form1 AS form
 		
 			Endif  && ThisForm.Optiongroup1.Option1.Value = 1 - загрузка с сайта ЦБ
 		
+		
+		
 			If (.Optiongroup1.Option2.Value = 1) Or (.Optiongroup1.Option1.Value = 1)  && загрузка XML из локальной папки Data
 		
 				flag_est = 0
@@ -251,6 +254,7 @@ DEFINE CLASS form1 AS form
 				If !File(cXMLFile2)
 					flag_est2 = 1
 				Endif
+		
 		
 				If (flag_est=1).And.(flag_est2=1)
 					Messagebox('XML-файл справочника не найден! '+Chr(13)+cXMLFile+' или '+Chr(13)+cXMLFile2, 48, 'Загрузка СПРАВОЧНИКА БИК')
@@ -295,6 +299,7 @@ DEFINE CLASS form1 AS form
 				loNodeList =  loXML.selectNodes(MyValue6)
 				loNodeAcc  =  loXML.selectNodes(MyValue7)
 		
+		
 		* Устанавливаем внутренний указатель на позицию перед первым узлом в наборе
 				loXMLNodes.Reset
 		
@@ -304,6 +309,7 @@ DEFINE CLASS form1 AS form
 				m_EDAuthor          = loNodes.getAttribute("EDAuthor")
 				m_EDDate            = loNodes.getAttribute("EDDate")
 				m_EDNo              = loNodes.getAttribute("EDNo")
+		
 		
 		*=MESSAGEBOX(m_EDDate)
 		
@@ -372,6 +378,7 @@ DEFINE CLASS form1 AS form
 					DefaultSWB C(1),;
 					ToNPSDate C(10))
 		
+		
 				al = Alias()
 				Select 2
 		*-------------- создание курсора acc807 ----------- 9+1 полей -------------
@@ -395,14 +402,13 @@ DEFINE CLASS form1 AS form
 				m_DateOut = ''
 				m_RAccountType = ''
 		
+		
 				mBIC = ''
 				x = 1
 		
 				For Each loNode In loNodeAcc  &&  ED807/BICDirectoryEntry/Accounts
 		*ssa*			Wait 'Заполнение таблицы счетов (1/2)...  '+Str(x,10)+ ' из '+Alltrim(Str(loNodeAcc.Length,18)) Window Nowait
-					If x%100 = 0
-						Wait 'Заполнение таблицы счетов (1/2)...  '+Str(x,10)+ ' из '+Transform(loNodeAcc.Length) Window Nowait
-					Endif
+					Wait 'Заполнение таблицы счетов (1/2)...  '+Str(x,10)+ ' из '+Transform(loNodeAcc.Length) Window Nowait
 					Select (al2)
 		
 					Append Blank
@@ -457,9 +463,7 @@ DEFINE CLASS form1 AS form
 		
 				For Each loNode In loNodeList &&  loXML.selectNodes("ED807/BICDirectoryEntry")
 		
-					If m%10 = 0
-						Wait 'Заполнение таблицы БИК-ов (2/2)... '+Transform(m)+' из '+Transform(loNodeList.Length) Window Nowait
-					Endif
+					Wait 'Заполнение таблицы БИК-ов (2/2)... '+Alltrim(Str(m,10))+' из '+Alltrim(Str(loNodeList.Length,18)) Window Nowait
 					Select (al)
 					m.BIC = loNode.Attributes.getNamedItem("BIC").Text
 					m_Bic = m.BIC
@@ -506,6 +510,7 @@ DEFINE CLASS form1 AS form
 		* <---  здесь добавить для скорости, если имя тэга изменится !!!
 		
 						For i=0 To loNode.ChildNodes[j].Attributes.Length-1
+		
 		
 							Select (al)
 		
@@ -660,6 +665,7 @@ DEFINE CLASS form1 AS form
 		
 			Endif && - загрузка XML из локальной папки Data
 		
+		
 			If .Optiongroup1.Option3.Value = 1  && открытие ранее сохраненных DBF
 				If (!File(pathdata+'a807'+dat77+'.dbf')) Or (!File(pathdata+'acc807'+dat77+'.dbf')) Or (!File(pathdata+'h807'+dat77+'.dbf'))
 					=Messagebox('Нет DBF-таблиц ранее сохраненного справочника!'+Chr(13)+'Открытие невозможно!', 0+48, 'Открытие DBF СПРАВОЧНИКА БИК')
@@ -678,43 +684,42 @@ DEFINE CLASS form1 AS form
 		*ssa*			Close Indexes
 		
 		*ssa*			Select 1
-				Use (vq_tmp) Alias a807 In 0 Exclusive
+				Use (vq_tmp) Alias a807
 				al = Alias()
 		
-		*ssa*			Select 2
-				Use (vq_tmp2) Alias acc807 In 0 Exclusive
+				Select 2
+				Use (vq_tmp2) Alias acc807
 				al2 = Alias()
 		
-		*ssa*			Select 0
-				Use (vq_tmp3) Alias h807 In 0
+				Select 0
+				Use (vq_tmp3) Alias h807
 		
-				m_EDNo              = h807.EDNo
-				m_EDDate            = h807.EDDate
-				m_EDAuthor          = h807.EDAuthor
-				m_CreationReason    = h807.CreationRe
-				m_CreationDateTime  = h807.CreationDT
-				m_InfoTypeCode      = h807.InfoTypeCo
+				m_EDNo              = EDNo
+				m_EDDate            = EDDate
+				m_EDAuthor          = EDAuthor
+				m_CreationReason    = CreationRe
+				m_CreationDateTime  = CreationDT
+				m_InfoTypeCode      = InfoTypeCo
 		*ssa*		If Empty(EDReceiver)
 		*ssa*			m_EDReceiver        = ' '
 		*ssa*		Else
 		*ssa*			m_EDReceiver        = EDReceiver
 		*ssa*		EndIf
-				m_EDReceiver        = Evl(h807.EDReceiver, ' ')
+				m_EDReceiver        = Evl(EDReceiver, ' ')
 		*ssa*		If Empty(BusinessDa)
 		*ssa*			m_BusinessDay       = ' '
 		*ssa*		Else
 		*ssa*			m_BusinessDay       = BusinessDa
 		*ssa*		EndIf
-				m_BusinessDay       = Evl(h807.BusinessDa, ' ')
+				m_BusinessDay       = Evl(BusinessDa, ' ')
 		*ssa*		If Empty(DirectoryV)
 		*ssa*			m_DirectoryVersion  = ' '
 		*ssa*		Else
 		*ssa*			m_DirectoryVersion  = DirectoryV
 		*ssa*		Endif
-				m_DirectoryVersion  = Evl(h807.DirectoryV, ' ')
+				m_DirectoryVersion  = Evl(DirectoryV, ' ')
+				Select (al)
 			Endif && - открытие ранее сохраненных DBF
-			
-			Select (al)
 		
 			Index On BIC Tag BIC
 			Index On NameP Tag NameP
@@ -736,8 +741,10 @@ DEFINE CLASS form1 AS form
 			Set Relation To BIC Into acc807 Additive
 		*SET SKIP TO ACC807
 		
+		
 		*ThisForm.Command2.Enabled = .T.
-			.Command2.Caption = 'Импорт'
+			Thisform.Command2.Caption = 'Импорт'
+		
 		
 			Do Form Form2 Name fr_2
 		
@@ -760,7 +767,7 @@ DEFINE CLASS form1 AS form
 	PROCEDURE Text1.Valid
 		With Thisform
 		*ssa*	dat77=SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)
-			dat77 = Dtos(.Text1.Value)
+			dat77=Dtos(.Text1.Value)
 			If File(pathdata+'a807'+dat77+'.dbf') And ;
 					FILE(pathdata+'acc807'+dat77+'.dbf') And ;
 					FILE(pathdata+'h807'+dat77+'.dbf')
