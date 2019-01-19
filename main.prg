@@ -214,6 +214,10 @@ Endif
 If File(path_tmp+'tmp4tmp.cmd')
 	Delete File path_tmp+'tmp4tmp.cmd'
 Endif
+If File(path_tmp+'tmp7tmp.cmd')
+	Delete File path_tmp+'tmp7tmp.cmd'
+Endif
+
 Strtofile('dir /b '+pathdata+'a807*.* >' +path_tmp+'flst'+Chr(13), path_tmp+'tmp4tmp.cmd')
 Strtofile('dir /b '+pathdata+'h807*.* >>'+path_tmp+'flst'+Chr(13), path_tmp+'tmp4tmp.cmd',.T.)
 Strtofile('dir /b '+pathdata+'acc807*.* >>'+path_tmp+'flst'+Chr(13), path_tmp+'tmp4tmp.cmd',.T.)
@@ -301,9 +305,10 @@ Try
 	If File(path_tmp+'tmp4tmp.cmd')
 		Delete File path_tmp+'tmp4tmp.cmd'
 	Endif
-	If File(path_tmp+'tmp7tmp.cmd')
-		Delete File path_tmp+'tmp7tmp.cmd'
-	Endif
+* alex2sign --- перенёс в начало (был конфликт (file in use) 19.01.2019
+*	If File(path_tmp+'tmp7tmp.cmd')
+*		Delete File path_tmp+'tmp7tmp.cmd'
+*	Endif
 
 	Wait Clear
 
