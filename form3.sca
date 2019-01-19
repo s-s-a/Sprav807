@@ -103,30 +103,31 @@ DEFINE CLASS form3 AS form
 	PROCEDURE Init
 		Push Key Clear
 		
+		
 		*  BROWSE
 		*  ON KEY LABEL F9 DO p_lst
 		fr_2.Grid1.Visible = .F.
 		fr_2.Label1.Caption = 'Для визуализации таблицы БИК закройте просмотр.'
 		*  =MESSAGEBOX(STR(fr_2.Label1.Left,12))
 		
+		
 		With This
 			.Width = Sysmetric(1)/5.03
 			.Height = 79/19.25*(Sysmetric(2)/100)
 		
-			With .Grid1
-				.ColumnCount = 2
-				.Width = Sysmetric(1)/5.03 && Ширина Grid1
-				.Height = 79/19.25*(Sysmetric(2)/100) && Высота грид
+			.Grid1.ColumnCount = 2
+			.Grid1.Width = Sysmetric(1)/5.03 && Ширина Grid1
+			.Grid1.Height = 79/19.25*(Sysmetric(2)/100) && Высота грид
 		*  ThisForm.Grid1.AutoFit()
 		
-				.Column1.ControlSource = 'p807.pNames'
-				.Column1.Header1.Caption = 'Название атрибутов'
-				.Column1.Width = 35/7*(Sysmetric(1)/100)
 		
-				.Column2.ControlSource = 'p807.pZnach'
-				.Column2.Header1.Caption = 'Значения'
-				.Column2.Width = Sysmetric(1)/7
-			Endwith
+			.Grid1.Column1.ControlSource = 'p807.pNames'
+			.Grid1.Column1.Header1.Caption = 'Название атрибутов'
+			.Grid1.Column1.Width = 35/7*(Sysmetric(1)/100)
+		
+			.Grid1.Column2.ControlSource = 'p807.pZnach'
+			.Grid1.Column2.Header1.Caption = 'Значения'
+			.Grid1.Column2.Width = Sysmetric(1)/7
 		
 			fr_2.Label1.Left = fr_2.Grid2.Width+6/7.5*(Sysmetric(1)/100)
 			fr_2.Label1.Top  = fr_2.Grid1.Height+6/19.25*(Sysmetric(2)/100)

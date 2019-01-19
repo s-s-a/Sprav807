@@ -43,6 +43,7 @@ DEFINE CLASS form4 AS form
 	*< OBJECTDATA: ObjPath="Text8" UniqueID="" Timestamp="" />
 	*< OBJECTDATA: ObjPath="Label11" UniqueID="" Timestamp="" />
 	*< OBJECTDATA: ObjPath="Text9" UniqueID="" Timestamp="" />
+	*< OBJECTDATA: ObjPath="Command2" UniqueID="" Timestamp="" />
 
 	AlwaysOnTop = .T.
 	Caption = "Отбор по фильтру"
@@ -76,6 +77,15 @@ DEFINE CLASS form4 AS form
 		TabIndex = 12, ;
 		Top = 29.25, ;
 		Width = 14.00
+		*< END OBJECT: BaseClass="commandbutton" />
+
+	ADD OBJECT 'Command2' AS commandbutton WITH ;
+		Caption = ">>", ;
+		Height = 1.44, ;
+		Left = 138.00, ;
+		Name = "Command2", ;
+		Top = 14.25, ;
+		Width = 4.00
 		*< END OBJECT: BaseClass="commandbutton" />
 
 	ADD OBJECT 'Label1' AS label WITH ;
@@ -355,9 +365,7 @@ DEFINE CLASS form4 AS form
 			.Label10.Top=.Label9.Top+zs1
 			.Label11.Top=.Label10.Top+zs1
 		
-			.Command1.Top=.Label11.Top+zs1
-		
-		*ssa*	.Text8.Value = CTOD('  .  .    ')
+			.Command1.Top=Thisform.Label11.Top+zs1
 		Endwith
 		
 	ENDPROC
@@ -475,7 +483,7 @@ DEFINE CLASS form4 AS form
 			tff9 =tf9
 		
 			flt = tff1+tff2+tff3+tff4+tff5+tff6+tff7+tff8+tff9
-		*=MESSAGEBOX(flt)
+		
 			Set Filter To &flt
 		
 			Count To k_filt
@@ -483,12 +491,25 @@ DEFINE CLASS form4 AS form
 				g_filt=1
 		
 				fr_2.Command1.Visible = .T.
-		
 			Endif
 		
 			Go Top
 			.Release()
 		Endwith
+		
+	ENDPROC
+
+	PROCEDURE Command2.Click
+		Select 0
+		Use &tipu
+		Define Popup mnu_tip From Thisform.Command2.Top,Thisform.Command2.Left Prompt Field ;
+			TIP +' | '+TNAME Title '[ Выбирайте ]'
+		On Selection Popup mnu_tip Deactiv Popup mnu_tip
+		Activate Popup mnu_tip
+		Release Popups mnu_tip
+		Thisform.Text5.Value = TIP
+		
+		Use
 		
 	ENDPROC
 
