@@ -1052,14 +1052,14 @@ DEFINE CLASS form2 AS form
 		
 				Go Top
 				.Height = (99/19.25)*(Sysmetric(2)/100)
-				.Caption = .Caption+' '+m_EDNo+' '+m_EDDate+' '+m_EDAuthor+' '+m_CreationReason+' '+m_CreationDateTime+;
+				ThisForm.Caption = ThisForm.Caption+' '+m_EDNo+' '+m_EDDate+' '+m_EDAuthor+' '+m_CreationReason+' '+m_CreationDateTime+;
 					' '+m_InfoTypeCode+' '+m_ED11+' '+m_Bus11+' '+m_Dir11+;
 					'   '+' ;  F5 - поиск в табл. БИК; F6 - поиск в табл. счетов ; Ctrl+Home - верх ; Ctrl+End - низ ; F1 - помощь ; F7 - сохранить в DBF, F9 - экспорт в BNKSEEK.DBF'
 		* ПО ширине ФОКСЕЛИ в 7 раз меньше пикселей  , высота в 19.25 раз меньше
 				.Width = Sysmetric(1)/7.05 && Ширина Grid1
 				.Height = (63/19.25)*(Sysmetric(2)/100) && Высота грид
-				.Height = (23/19.25)*(Sysmetric(2)/100)
-				.Top = .Grid1.Top + .Grid1.Height
+		*		.Height = (23/19.25)*(Sysmetric(2)/100)
+				ThisForm.Grid2.Top = .Top + .Height
 		
 				.Column1.ControlSource = 'a807.BIC'
 		* .Column1.Header1.ForeColor = RGB(255,128,0)
@@ -1172,7 +1172,7 @@ DEFINE CLASS form2 AS form
 			With .Grid2
 				.RecordSourceType = 1
 				.RecordSource = (al2)
-		
+				.Height = (23/19.25)*(Sysmetric(2)/100)
 				.Column1.Width  = (10.4/7)*(Sysmetric(1)/100)
 				.Column2.Width  = (5/7)*(Sysmetric(1)/100)
 				.Column3.Width  = (4/7)*(Sysmetric(1)/100)
