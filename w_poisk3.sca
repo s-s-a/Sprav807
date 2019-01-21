@@ -78,7 +78,7 @@ DEFINE CLASS form_uid AS form
 			Seek .Text1.Value
 		
 			If !Found()
-				Messagebox('УИС НЕ НАЙДЕН!',0+48,'Внимание!',2000)
+				=Messagebox('УИС НЕ НАЙДЕН!',0+48,'Внимание!',2000)
 				Go trec
 				.Text1.SetFocus
 			Else

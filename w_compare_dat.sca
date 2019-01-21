@@ -77,7 +77,7 @@ DEFINE CLASS w_com_d AS form
 	PROCEDURE Command1.Click
 		With Thisform
 			If .Text1.Value > Date()
-				Messagebox('Сравнить с датой больше системной невозможно!',0+16,'Некорректная дата',3000)
+				=Messagebox('Сравнить с датой больше системной невозможно!',0+16,'Некорректная дата',3000)
 				Return
 			Endif
 		*ssa*	qqo=pathdata+'a807'+SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)+'.dbf'
@@ -85,20 +85,31 @@ DEFINE CLASS w_com_d AS form
 			qqo=pathdata+'a807'+Dtos(.Text1.Value)+'.dbf'
 			qqk=pathdata+'a807'+Dtos(.Text1.Value)+'.cdx'
 		
+		*=MESSAGEBOX(qqo+CHR(13)+qqk)
+		
 			If (!(File(qqo))) &&.OR.(!(FILE(qqk)))
-				Messagebox('Отсутстует DBF-таблица БИК-ов (или индексный файл)!'+Chr(13)+;
+				=Messagebox('Отсутстует DBF-таблица БИК-ов (или индексный файл)!'+Chr(13)+;
 					'Необходимо сначала скачать справочник за указанную дату и сохранить по F7 !',0+48,'Внимание!',8000)
 				Return
 			Endif
 		
 			If .Text1.Value = fr_start.Text1.Value
-				Messagebox('Сравнивать две одинаковые даты не нужно!',0+16,'Некорректная дата',3000)
+				=Messagebox('Сравнивать две одинаковые даты не нужно!',0+16,'Некорректная дата',3000)
 				Return
 			Endif
 		
-			frtfcompare(.T., "Data\lstcompare.RTF")
+			=frtfcompare(.T., "Data\lstcompare.RTF")
 			.Release
 		Endwith
+		
+		* LOCAL loF as Wscript.Shell
+		* ff1=pathdata+'compdat.txt'
+		* prms = 'notepad.exe'+' '+ff1
+		* loF=CREATEOBJECT("WScript.Shell")
+		* loF.Run(prms, 1, .F.) && .F. не ждать выполнения notepad.exe
+		* Release loF
+		
+		*-----------------------------
 		
 	ENDPROC
 

@@ -68,6 +68,7 @@ DEFINE CLASS form_acc AS form
 			.Top  = 24/19.5*(Sysmetric(2)/100)
 		Endwith
 		Push Key Clear
+		
 		On Key Label F6 Do act_poisk_a
 		
 	ENDPROC
