@@ -44,6 +44,8 @@ DEFINE CLASS form4 AS form
 	*< OBJECTDATA: ObjPath="Label11" UniqueID="" Timestamp="" />
 	*< OBJECTDATA: ObjPath="Text9" UniqueID="" Timestamp="" />
 	*< OBJECTDATA: ObjPath="Command2" UniqueID="" Timestamp="" />
+	*< OBJECTDATA: ObjPath="Command3" UniqueID="" Timestamp="" />
+	*< OBJECTDATA: ObjPath="Command4" UniqueID="" Timestamp="" />
 
 	AlwaysOnTop = .T.
 	Caption = "Отбор по фильтру"
@@ -85,6 +87,24 @@ DEFINE CLASS form4 AS form
 		Left = 138.00, ;
 		Name = "Command2", ;
 		Top = 14.25, ;
+		Width = 4.00
+		*< END OBJECT: BaseClass="commandbutton" />
+
+	ADD OBJECT 'Command3' AS commandbutton WITH ;
+		Caption = ">>", ;
+		Height = 1.44, ;
+		Left = 138.00, ;
+		Name = "Command3", ;
+		Top = 25.50, ;
+		Width = 4.00
+		*< END OBJECT: BaseClass="commandbutton" />
+
+	ADD OBJECT 'Command4' AS commandbutton WITH ;
+		Caption = ">>", ;
+		Height = 1.44, ;
+		Left = 138.00, ;
+		Name = "Command4", ;
+		Top = 11.25, ;
 		Width = 4.00
 		*< END OBJECT: BaseClass="commandbutton" />
 
@@ -365,7 +385,13 @@ DEFINE CLASS form4 AS form
 			.Label10.Top=.Label9.Top+zs1
 			.Label11.Top=.Label10.Top+zs1
 		
-			.Command1.Top=Thisform.Label11.Top+zs1
+			.Command1.Top=.Label11.Top+zs1
+		  .Command2.Left=.Text5.Left+.Text5.Width 
+		  .Command2.Top=.Text5.Top 
+		  .Command3.Left=.Text9.Left+.Text9.Width 
+		  .Command3.Top=.Text9.Top 
+		  .Command4.Left=.Text4.Left+.Text4.Width 
+		  .Command4.Top=.Text4.Top 
 		Endwith
 		
 	ENDPROC
@@ -500,17 +526,35 @@ DEFINE CLASS form4 AS form
 	ENDPROC
 
 	PROCEDURE Command2.Click
-		Select 0
-		Use &tipu
-		Define Popup mnu_tip From Thisform.Command2.Top,Thisform.Command2.Left Prompt Field ;
-			TIP +' | '+TNAME Title '[ Выбирайте ]'
-		On Selection Popup mnu_tip Deactiv Popup mnu_tip
-		Activate Popup mnu_tip
-		Release Popups mnu_tip
-		Thisform.Text5.Value = TIP
-		
-		Use
-		
+		 SELECT 0
+		 USE &tipu
+		 numtext='5'
+		 DO FORM mnu_form1 NAME fr_mnu1 NOSHOW 
+		 fr_mnu1.Show(1)
+		   
+		 USE 
+		 SELECT (al)
+	ENDPROC
+
+	PROCEDURE Command3.Click
+		 SELECT 0
+		 USE &uch01
+		 numtext='9'
+		 DO FORM mnu_form1 NAME fr_mnu1 NOSHOW 
+		 fr_mnu1.Show(1)
+		 USE 
+		 SELECT (al)
+	ENDPROC
+
+	PROCEDURE Command4.Click
+		 SELECT 0
+		 USE &okspr
+		 numtext='4'
+		 DO FORM mnu_form1 NAME fr_mnu1 NOSHOW
+		 fr_mnu1.Show(1)
+		 
+		 USE 
+		 SELECT (al)
 	ENDPROC
 
 	PROCEDURE Text1.MouseDown
@@ -604,3 +648,4 @@ DEFINE CLASS form4 AS form
 	ENDPROC
 
 ENDDEFINE
+
