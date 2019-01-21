@@ -113,7 +113,7 @@ DEFINE CLASS form2 AS form
 	DoCreate = .T.
 	FontSize = 12
 	Height = 39.84
-	Left = 0.14
+	Left = 0.00
 	Name = "FORM2"
 	ScaleMode = 0
 	ShowTips = .T.
@@ -1036,6 +1036,9 @@ DEFINE CLASS form2 AS form
 
 	PROCEDURE Init
 		With This
+			.Caption = .Caption+' '+m_EDNo+' '+m_EDDate+' '+m_EDAuthor+' '+m_CreationReason+' '+m_CreationDateTime+;
+				' '+m_InfoTypeCode+' '+m_ED11+' '+m_Bus11+' '+m_Dir11+;
+				'   '+' ;  F5 - поиск в табл. БИК; F6 - поиск в табл. счетов ; Ctrl+Home - верх ; Ctrl+End - низ ; F1 - помощь ; F7 - сохранить в DBF, F9 - экспорт в BNKSEEK.DBF'
 			With .Grid1
 				.RecordSourceType = 1
 				.RecordSource = (al)
@@ -1052,14 +1055,11 @@ DEFINE CLASS form2 AS form
 		
 				Go Top
 				.Height = (99/19.25)*(Sysmetric(2)/100)
-				ThisForm.Caption = ThisForm.Caption+' '+m_EDNo+' '+m_EDDate+' '+m_EDAuthor+' '+m_CreationReason+' '+m_CreationDateTime+;
-					' '+m_InfoTypeCode+' '+m_ED11+' '+m_Bus11+' '+m_Dir11+;
-					'   '+' ;  F5 - поиск в табл. БИК; F6 - поиск в табл. счетов ; Ctrl+Home - верх ; Ctrl+End - низ ; F1 - помощь ; F7 - сохранить в DBF, F9 - экспорт в BNKSEEK.DBF'
 		* ПО ширине ФОКСЕЛИ в 7 раз меньше пикселей  , высота в 19.25 раз меньше
 				.Width = Sysmetric(1)/7.05 && Ширина Grid1
 				.Height = (63/19.25)*(Sysmetric(2)/100) && Высота грид
 		*		.Height = (23/19.25)*(Sysmetric(2)/100)
-				ThisForm.Grid2.Top = .Top + .Height
+				Thisform.Grid2.Top = .Top + .Height
 		
 				.Column1.ControlSource = 'a807.BIC'
 		* .Column1.Header1.ForeColor = RGB(255,128,0)
@@ -1256,7 +1256,6 @@ DEFINE CLASS form2 AS form
 		COUNT TO k_filt
 		GO TOP 
 		ThisForm.Command1.Visible = .F.
-		
 		 WAIT 'Записей = '+Transform(k_filt) WINDOW NOWAIT  && NOCLEAR 
 		_vfp.StatusBar='Записей = '+Transform(k_filt)
 	ENDPROC
@@ -1290,15 +1289,12 @@ DEFINE CLASS form2 AS form
 
 	PROCEDURE Grid1.Column1.Text1.When
 		ax1=Alias()
-		*r99=RECNO()
 		g_kolac = 0
 		Select acc807
 		If !Eof()
 			Count For BIC=a807.BIC To g_kolac
 		Endif
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		*GO r99
 		Select (ax1)
 		
 	ENDPROC
@@ -1310,13 +1306,13 @@ DEFINE CLASS form2 AS form
 	ENDPROC
 
 	PROCEDURE Grid1.Column10.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column10.Text1.When
@@ -1326,15 +1322,12 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
 	PROCEDURE Grid1.Column11.Text1.MouseDown
 		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		
 		x_p_my=nXCoord
 		y_p_my=nYCoord
 		IF nButton=2
@@ -1349,15 +1342,12 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
 	PROCEDURE Grid1.Column12.Text1.MouseDown
 		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		
 		x_p_my=nXCoord
 		y_p_my=nYCoord
 		IF nButton=2
@@ -1372,9 +1362,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1386,7 +1374,6 @@ DEFINE CLASS form2 AS form
 
 	PROCEDURE Grid1.Column13.Text1.MouseDown
 		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		
 		x_p_my=nXCoord
 		y_p_my=nYCoord
 		IF nButton=2
@@ -1401,15 +1388,12 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
 	PROCEDURE Grid1.Column14.Text1.MouseDown
 		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		
 		x_p_my=nXCoord
 		y_p_my=nYCoord
 		IF nButton=2
@@ -1424,15 +1408,12 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
 	PROCEDURE Grid1.Column15.Text1.MouseDown
 		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		
 		x_p_my=nXCoord
 		y_p_my=nYCoord
 		IF nButton=2
@@ -1447,9 +1428,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1464,7 +1443,6 @@ DEFINE CLASS form2 AS form
 
 	PROCEDURE Grid1.Column16.Text1.MouseDown
 		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		
 		x_p_my=nXCoord
 		y_p_my=nYCoord
 		IF nButton=2
@@ -1479,9 +1457,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1501,9 +1477,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1533,9 +1507,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1555,9 +1527,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1587,15 +1557,12 @@ DEFINE CLASS form2 AS form
 
 	PROCEDURE Grid1.Column2.Text1.When
 		ax1=Alias()
-		*r99=RECNO()
 		g_kolac = 0
 		Select acc807
 		If !Eof()
 			Count For BIC=a807.BIC To g_kolac
 		Endif
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		*GO r99
 		Select (ax1)
 		
 	ENDPROC
@@ -1616,9 +1583,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1638,9 +1603,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1660,9 +1623,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1673,9 +1634,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1686,9 +1645,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1699,9 +1656,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1712,9 +1667,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1725,9 +1678,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1738,9 +1689,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1751,9 +1700,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1775,15 +1722,12 @@ DEFINE CLASS form2 AS form
 
 	PROCEDURE Grid1.Column3.Text1.When
 		ax1=Alias()
-		*r99=RECNO()
 		g_kolac = 0
 		Select acc807
 		If !Eof()
 			Count For BIC=a807.BIC To g_kolac
 		Endif
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		*GO r99
 		Select (ax1)
 		
 	ENDPROC
@@ -1795,9 +1739,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1808,9 +1750,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1832,40 +1772,33 @@ DEFINE CLASS form2 AS form
 
 	PROCEDURE Grid1.Column4.Text1.When
 		ax1=ALIAS()
-		*r99=RECNO()
 		g_kolac = 0
 		SELECT acc807
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		*GO r99
 		SELECT (ax1)
 	ENDPROC
 
 	PROCEDURE Grid1.Column5.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column5.Text1.When
 		ax1=ALIAS()
-		*r99=RECNO()
 		g_kolac = 0
 		SELECT acc807
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		*GO r99
 		SELECT (ax1)
 	ENDPROC
 
@@ -1877,7 +1810,6 @@ DEFINE CLASS form2 AS form
 
 	PROCEDURE Grid1.Column6.Text1.MouseDown
 		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		
 		x_p_my=nXCoord
 		y_p_my=nYCoord
 		IF nButton=2
@@ -1889,15 +1821,12 @@ DEFINE CLASS form2 AS form
 
 	PROCEDURE Grid1.Column6.Text1.When
 		ax1=ALIAS()
-		*r99=RECNO()
 		g_kolac = 0
 		SELECT acc807
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		*GO r99
 		SELECT (ax1)
 	ENDPROC
 
@@ -1908,7 +1837,6 @@ DEFINE CLASS form2 AS form
 
 	PROCEDURE Grid1.Column7.Text1.MouseDown
 		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		
 		x_p_my=nXCoord
 		y_p_my=nYCoord
 		IF nButton=2
@@ -1923,9 +1851,7 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
@@ -1937,7 +1863,6 @@ DEFINE CLASS form2 AS form
 
 	PROCEDURE Grid1.Column8.Text1.MouseDown
 		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		
 		x_p_my=nXCoord
 		y_p_my=nYCoord
 		IF nButton=2
@@ -1952,15 +1877,12 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
 	PROCEDURE Grid1.Column9.Text1.MouseDown
 		LPARAMETERS nButton, nShift, nXCoord, nYCoord
-		
 		x_p_my=nXCoord
 		y_p_my=nYCoord
 		IF nButton=2
@@ -1975,15 +1897,12 @@ DEFINE CLASS form2 AS form
 		IF !EOF()
 		 COUNT FOR BIC=a807.BIC TO g_kolac
 		ENDIF 
-		
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		
 		SELECT (ax1)
 	ENDPROC
 
 	PROCEDURE Grid1.MouseDown
 		Lparameters nButton, nShift, nXCoord, nYCoord
-		
 		x_p_my=nXCoord
 		y_p_my=nYCoord
 		If nButton=2
