@@ -526,35 +526,38 @@ DEFINE CLASS form4 AS form
 	ENDPROC
 
 	PROCEDURE Command2.Click
-		 SELECT 0
-		 USE &tipu
-		 numtext='5'
-		 DO FORM mnu_form1 NAME fr_mnu1 NOSHOW 
-		 fr_mnu1.Show(1)
-		   
-		 USE 
-		 SELECT (al)
+		Select 0
+		Use &tipu
+		numtext='5'
+		Do Form mnu_form1 Name fr_mnu1 Noshow
+		fr_mnu1.Show(1)
+		
+		Use
+		Select (al)
+		
 	ENDPROC
 
 	PROCEDURE Command3.Click
-		 SELECT 0
-		 USE &uch01
-		 numtext='9'
-		 DO FORM mnu_form1 NAME fr_mnu1 NOSHOW 
-		 fr_mnu1.Show(1)
-		 USE 
-		 SELECT (al)
+		Select 0
+		Use &uch01
+		numtext='9'
+		Do Form mnu_form1 Name fr_mnu1 Noshow
+		fr_mnu1.Show(1)
+		Use
+		Select (al)
+		
 	ENDPROC
 
 	PROCEDURE Command4.Click
-		 SELECT 0
-		 USE &okspr
-		 numtext='4'
-		 DO FORM mnu_form1 NAME fr_mnu1 NOSHOW
-		 fr_mnu1.Show(1)
-		 
-		 USE 
-		 SELECT (al)
+		Select 0
+		Use &okspr
+		numtext='4'
+		Do Form mnu_form1 Name fr_mnu1 Noshow
+		fr_mnu1.Show(1)
+		
+		Use
+		Select (al)
+		
 	ENDPROC
 
 	PROCEDURE Text1.MouseDown
@@ -648,4 +651,3 @@ DEFINE CLASS form4 AS form
 	ENDPROC
 
 ENDDEFINE
-

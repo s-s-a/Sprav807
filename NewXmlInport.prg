@@ -1,15 +1,16 @@
-ox = Createobject('xmladapter')
-ox.XMLSchemaLocation = '20190117_ED807.xsd'
-?ox.LoadXML('20190117_ED807_full.xml', .T., .T.)
+Lparameters ;
+  lcXMLFileName as String, ; && откуда взять (входной XML-файл)
+  lcBnkSeekPath as String    && куда положить BNKSEEK.DBF
 
-If ox.Tables.Count > 0
-*ssa*    ox.Tables.Item(5).ToCursor() && BICdirectoryEntry
-*ssa*    ox.Tables.Item(2).ToCursor() && ParticipantInfo
-  For i =1 To ox.Tables.Count
-    ?ox.Tables.Item(i).Alias
-    ox.Tables.Item(i).ToCursor()
-  Next
-Endif
-select Recno() as Pid, * from participantinfo into cursor PartInfo NOFILTER 
-select Recno() as id, * from bicdirectoryentry into cursor Bic NOFILTER
-select * from Bic b inner join PartInfo p on id = pid
+ox = Createobject('xmladapter')
+ox.XMLSchemaLocation = 'ED807.xsd'
+With ox
+  If .LoadXML(lcXMLFileName, .T., .T.) And .Tables.Count > 0
+    .Tables(5).ToCursor() && BICdirectoryEntry
+    .Tables(2).ToCursor() && ParticipantInfo
+    Select Recno() As Pid, * From participantinfo Into Cursor PartInfo NOFILTER
+    Select Recno() As Id, * From bicdirectoryentry Into Cursor Bic NOFILTER
+    Select * From Bic b inner Join PartInfo p On Id = Pid
+    Copy To (Addbs(lcBnkSeekPath) + 'BNKSEEK') type fox2x as 866
+  Endif
+Endwith

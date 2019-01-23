@@ -103,13 +103,11 @@ DEFINE CLASS form3 AS form
 	PROCEDURE Init
 		Push Key Clear
 		
-		
 		*  BROWSE
 		*  ON KEY LABEL F9 DO p_lst
 		fr_2.Grid1.Visible = .F.
 		fr_2.Label1.Caption = 'Для визуализации таблицы БИК закройте просмотр.'
 		*  =MESSAGEBOX(STR(fr_2.Label1.Left,12))
-		
 		
 		With This
 			.Width = Sysmetric(1)/5.03

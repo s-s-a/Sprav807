@@ -10,12 +10,12 @@ Set Sysmenu Off
 *SET CONSOLE OFF
 
 Declare Integer ShellExecute In SHELL32.Dll ;
-	INTEGER nWinHandle, ;
-	STRING cOperation, ;
-	STRING cFileName, ;
-	STRING cParameters, ;
-	STRING cDirectory, ;
-	INTEGER nShowWindow
+  INTEGER nWinHandle, ;
+  STRING cOperation, ;
+  STRING cFileName, ;
+  STRING cParameters, ;
+  STRING cDirectory, ;
+  INTEGER nShowWindow
 
 Declare Integer LoadKeyboardLayout In win32api String, Integer
 Declare Integer GetKeyboardLayout In Win32API Integer
@@ -27,9 +27,9 @@ Declare Integer unzClose In ZLib Integer FileID
 Declare Integer unzGoToNextFile In ZLib Integer FileID
 Declare Integer unzOpenCurrentFile In ZLib Integer FileID
 Declare Integer unzGetCurrentFileInfo In ZLib;
-	integer FileID,      String @file_info,    String @namefile,;
-	integer LenNameFile, String @extraField,   Integer extraFieldBufferSize,;
-	string  @szComment,  Integer ComBufSize
+  integer FileID,      String @file_info,    String @namefile,;
+  integer LenNameFile, String @extraField,   Integer extraFieldBufferSize,;
+  string  @szComment,  Integer ComBufSize
 Declare Integer unzCloseCurrentFile In ZLib Integer FileID
 Declare Integer unzReadCurrentFile In ZLib Integer FileID, String @buf, Integer lbuf
 Declare Integer unzeof In ZLib Integer FileID
@@ -37,18 +37,18 @@ Declare Integer unzeof In ZLib Integer FileID
 *----------------------------------------------------------------------
 
 Public al,al2, x_p_my, y_p_my, x_q_my, y_q_my, y_i_my, x_i_my, tx1, tx2, tx3, tx4, tx5, tx6, tx7, tx8, tx9, k_filt, fr_2,;
-	fr_start, g_filt, g_naimenovanie, f_p_n, g_opt1, g_opt2, g_kolac, ccx, flag_sd, gnMutex,;
-	INIFILE, lcEntry1, lcValue1, MyValue, n_FileInZip, dat77, kuch1, kuch2,;
-	m_EDNo, m_EDDate, m_EDAuthor, m_CreationReason, m_CreationDateTime, m_InfoTypeCode,;
-	m_EDReceiver, m_BusinessDay, m_DirectoryVersion, m_ED11, m_Bus11, m_Dir11, pathdata,;
-	lcEntry2, lcValue2, lcEntry3, lcValue3, lcEntry4, lcValue4, lcEntry5, lcValue5, MyValue2, MyValue3,;
-	MyValue4, MyValue5, MyValue6, MyValue7, kus4, lcEntry6, lcValue6, lcEntry7, lcValue7,;
-	g1_Width, g1_Height, g2_Height, g2_Top, g2_Width, tipu, uch01, okspr, numtext
+  fr_start, g_filt, g_naimenovanie, f_p_n, g_opt1, g_opt2, g_kolac, ccx, flag_sd, gnMutex,;
+  INIFILE, lcEntry1, lcValue1, MyValue, n_FileInZip, dat77, kuch1, kuch2,;
+  m_EDNo, m_EDDate, m_EDAuthor, m_CreationReason, m_CreationDateTime, m_InfoTypeCode,;
+  m_EDReceiver, m_BusinessDay, m_DirectoryVersion, m_ED11, m_Bus11, m_Dir11, pathdata,;
+  lcEntry2, lcValue2, lcEntry3, lcValue3, lcEntry4, lcValue4, lcEntry5, lcValue5, MyValue2, MyValue3,;
+  MyValue4, MyValue5, MyValue6, MyValue7, kus4, lcEntry6, lcValue6, lcEntry7, lcValue7,;
+  g1_Width, g1_Height, g2_Height, g2_Top, g2_Width, tipu, uch01, okspr, numtext
 
 *        koef, koef2, koef3, koef4
 
 On Shutdown Do ExProg
-*ssa*	On Error Do errHandler With Error( ), Message( ), Message(1), Program( ), Lineno( )
+*ssa*  On Error Do errHandler With Error( ), Message( ), Message(1), Program( ), Lineno( )
 
 flag_sd = 0 && flag shutdown
 *flag_sd2 = 0  && flag shutdown для закрытия второго экземпляра программы
@@ -63,11 +63,11 @@ g_naimenovanie ='' && наименование учатника (в поиске
 numtext = ''
 
 With _Screen
-	.Left = 0
+  .Left = 0
 *_Screen.Top = 0
-	.Width = pWidth
-	.Height = pHeight
-	.Caption = ''
+  .Width = pWidth
+  .Height = pHeight
+  .Caption = ''
 Endwith
 
 * Формируем идентификатор данного приложения
@@ -76,9 +76,9 @@ lcApplicationName = Getenv("SessionName") + "#"+ Sys(0)
 
 * Формируем ссылку на объект Mutex
 Declare Integer CreateMutex In Win32API ;
-	Integer lpMutexAttributes, ;
-	Integer bInitialOwner, ;
-	String lpName
+  Integer lpMutexAttributes, ;
+  Integer bInitialOwner, ;
+  String lpName
 
 gnMutex = CreateMutex(0,1,m.lcApplicationName)
 
@@ -92,23 +92,23 @@ If GetLastError() = ERROR_ALREADY_EXISTS
 * Надо вывести ранее запущенное приложение на передний план
 * или сообщить об этом факте пользователю
 * и закрыть текущее приложение
-	loWS=Createobject("WScript.Shell")
-	lcCaption = 'Справочник БИК (на основе ED807)'
-	loWS.AppActivate(lcCaption) && Выводит окно первого экземпляра программы на передний план!!!
+  loWS=Createobject("WScript.Shell")
+  lcCaption = 'Справочник БИК (на основе ED807)'
+  loWS.AppActivate(lcCaption) && Выводит окно первого экземпляра программы на передний план!!!
 *    loWS.SendKeys("% "+CHR(13))
-	loWS.SendKeys("{F11}") && посылает приложению нажатие F11 (если оно свёрнуто, распахивается)
+  loWS.SendKeys("{F11}") && посылает приложению нажатие F11 (если оно свёрнуто, распахивается)
 
 *     IF !(loWS.AppActivate(lcCaption) = .T.) && Выводит окно первого экземпляра программы на передний план!!!
 *      MessageBox("Приложение "+lcCaption+" не найдено")
 *     ENDIF
 
 *    flag_sd2 = 1
-	On Shutdown
+  On Shutdown
 
-	Release loWS
+  Release loWS
 
-	Do CloseMutex With .T.
-	Return
+  Do CloseMutex With .T.
+  Return
 Endif
 
 
@@ -133,18 +133,18 @@ lcValue7="ED807/BICDirectoryEntry/Accounts"
 
 *-- DECLARE DLL statements for reading/writing to private INI files
 Declare Integer GetPrivateProfileString In Win32API As GetPrivStr ;
-	String cSection, String cKey, String cDefault, String @cBuffer, ;
-	Integer nBufferSize, String cINIFile
+  String cSection, String cKey, String cDefault, String @cBuffer, ;
+  Integer nBufferSize, String cINIFile
 
 Declare Integer WritePrivateProfileString In Win32API As WritePrivStr ;
-	String cSection, String cKey, String cValue, String cINIFile
+  String cSection, String cKey, String cValue, String cINIFile
 
 If !File(Curdir() + INIFILE)
 *-- Write the entry to the INI file
-	=WritePrivStr("Source", lcEntry1, lcValue1, Curdir() + INIFILE)
-	=WritePrivStr("SaveDBFonLoad", lcEntry2, lcValue2, Curdir() + INIFILE)
-	=WritePrivStr("RadioButton", lcEntry3, lcValue3, Curdir() + INIFILE)
-	=WritePrivStr("ClearHistory", lcEntry4, lcValue4, Curdir() + INIFILE)
+  =WritePrivStr("Source", lcEntry1, lcValue1, Curdir() + INIFILE)
+  =WritePrivStr("SaveDBFonLoad", lcEntry2, lcValue2, Curdir() + INIFILE)
+  =WritePrivStr("RadioButton", lcEntry3, lcValue3, Curdir() + INIFILE)
+  =WritePrivStr("ClearHistory", lcEntry4, lcValue4, Curdir() + INIFILE)
 *   =WritePrivStr("Nodes", lcEntry5, lcValue5, CURDIR() + INIFILE)
 *   =WritePrivStr("Nodes", lcEntry6, lcValue6, CURDIR() + INIFILE)
 *   =WritePrivStr("Nodes", lcEntry7, lcValue7, CURDIR() + INIFILE)
@@ -154,23 +154,23 @@ Endif
 
 *-- Read the window position from the INI file
 If GetPrivStr("Source", lcEntry1, "", @lcBuffer, Len(lcBuffer), Curdir() + INIFILE) > 0
-	lnPos = At(Chr(0), lcBuffer)
-	MyValue=Left(lcBuffer,lnPos - 1)
+  lnPos = At(Chr(0), lcBuffer)
+  MyValue=Left(lcBuffer,lnPos - 1)
 Endif
 
 If GetPrivStr("SaveDBFonLoad", lcEntry2, "", @lcBuffer, Len(lcBuffer), Curdir() + INIFILE) > 0
-	lnPos2 = At(Chr(0), lcBuffer)
-	MyValue2=Left(lcBuffer,lnPos2 - 1)
+  lnPos2 = At(Chr(0), lcBuffer)
+  MyValue2=Left(lcBuffer,lnPos2 - 1)
 Endif
 
 If GetPrivStr("RadioButton", lcEntry3, "", @lcBuffer, Len(lcBuffer), Curdir() + INIFILE) > 0
-	lnPos3 = At(Chr(0), lcBuffer)
-	MyValue3=Left(lcBuffer,lnPos3 - 1)
+  lnPos3 = At(Chr(0), lcBuffer)
+  MyValue3=Left(lcBuffer,lnPos3 - 1)
 Endif
 
 If GetPrivStr("ClearHistory", lcEntry4, "", @lcBuffer, Len(lcBuffer), Curdir() + INIFILE) > 0
-	lnPos4 = At(Chr(0), lcBuffer)
-	MyValue4=Left(lcBuffer,lnPos4 - 1)
+  lnPos4 = At(Chr(0), lcBuffer)
+  MyValue4=Left(lcBuffer,lnPos4 - 1)
 Endif
 
 *  IF GetPrivStr("Nodes", lcEntry5, "", @lcBuffer, LEN(lcBuffer), CURDIR() + INIFILE) > 0
@@ -198,24 +198,24 @@ pathdata = pathcur+'Data\'
 path_tmp = pathcur+'TMP\'
 path_zip = pathcur+'ZIP\'
 
-*ssa*	создание нужных каталогов
+*ssa*  создание нужных каталогов
 Try
-	Md (pathdata)
-	Md (path_tmp)
-	Md (path_zip)
+  Md (pathdata)
+  Md (path_tmp)
+  Md (path_zip)
 Catch
-EndTry
+Endtry
 
 *-----------------Получение списка файлов данных в папке Data и ZIP и очистка старых----------------------
 Local loWshShell As Wscript.Shell
 If File(path_tmp+'flst')
-	Delete File path_tmp+'flst'
+  Delete File path_tmp+'flst'
 Endif
 If File(path_tmp+'tmp4tmp.cmd')
-	Delete File path_tmp+'tmp4tmp.cmd'
+  Delete File path_tmp+'tmp4tmp.cmd'
 Endif
 If File(path_tmp+'tmp7tmp.cmd')
-	Delete File path_tmp+'tmp7tmp.cmd'
+  Delete File path_tmp+'tmp7tmp.cmd'
 Endif
 
 Strtofile('dir /b '+pathdata+'a807*.* >' +path_tmp+'flst'+Chr(13), path_tmp+'tmp4tmp.cmd')
@@ -230,9 +230,9 @@ loWshShell.Run(parms, 0, .T.)
 Release loWshShell
 
 Try
-	flag_qh=0
+  flag_qh=0
 
-	Wait 'Очистка устаревших копий файлов... ' Window Nowait
+  Wait 'Очистка устаревших копий файлов... ' Window Nowait
 
 	datdel = Date()-Int(Val(MyValue4))
 *	hnd1 = Fcreate(path_tmp+'tmp7tmp.cmd')
@@ -310,16 +310,16 @@ Try
 
 	Endtry
 
-
-	Wait Clear
+  Wait Clear
 
 Catch
+
 	Strtofile(Dtoc(Date())+' '+Time()+' '+'Ошибка удаления устаревших файлов из папок Data и ZIP!','sprav_err.log')
 	MESSAGEBOX('Ошибка удаления устаревших файлов из папок Data и ZIP!', 16, 'Sprav807')
 Endtry
 
 If File(path_tmp+'flst')
-	Delete File path_tmp+'flst'
+  Delete File path_tmp+'flst'
 Endif
 If File(path_tmp+'tmp4tmp.cmd')
 	Delete File path_tmp+'tmp4tmp.cmd'
@@ -328,10 +328,10 @@ If File(path_tmp+'tmp7tmp.cmd')
 	Delete File path_tmp+'tmp7tmp.cmd'
 Endif
 
-
 *-------от 19.01.2019 alex2sign--Создание справочников вынесено в отдельный файл----->
-Do CreateRefs    
 *  <---------- от 19.01.2019 alex2sign ---------------
+
+Do CreateRefs && ssa Создание справочников
 
 Do Form Form1 Name fr_start
 

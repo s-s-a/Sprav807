@@ -240,8 +240,6 @@ DEFINE CLASS form1 AS form
 		
 			Endif  && ThisForm.Optiongroup1.Option1.Value = 1 - загрузка с сайта ЦБ
 		
-		
-		
 			If (.Optiongroup1.Option2.Value = 1) Or (.Optiongroup1.Option1.Value = 1)  && загрузка XML из локальной папки Data
 		
 				flag_est = 0
@@ -254,7 +252,6 @@ DEFINE CLASS form1 AS form
 				If !File(cXMLFile2)
 					flag_est2 = 1
 				Endif
-		
 		
 				If (flag_est=1).And.(flag_est2=1)
 					Messagebox('XML-файл справочника не найден! '+Chr(13)+cXMLFile+' или '+Chr(13)+cXMLFile2, 48, 'Загрузка СПРАВОЧНИКА БИК')
@@ -299,7 +296,6 @@ DEFINE CLASS form1 AS form
 				loNodeList =  loXML.selectNodes(MyValue6)
 				loNodeAcc  =  loXML.selectNodes(MyValue7)
 		
-		
 		* Устанавливаем внутренний указатель на позицию перед первым узлом в наборе
 				loXMLNodes.Reset
 		
@@ -309,7 +305,6 @@ DEFINE CLASS form1 AS form
 				m_EDAuthor          = loNodes.getAttribute("EDAuthor")
 				m_EDDate            = loNodes.getAttribute("EDDate")
 				m_EDNo              = loNodes.getAttribute("EDNo")
-		
 		
 		*=MESSAGEBOX(m_EDDate)
 		
@@ -378,7 +373,6 @@ DEFINE CLASS form1 AS form
 					DefaultSWB C(1),;
 					ToNPSDate C(10))
 		
-		
 				al = Alias()
 				Select 2
 		*-------------- создание курсора acc807 ----------- 9+1 полей -------------
@@ -401,7 +395,6 @@ DEFINE CLASS form1 AS form
 				m_DateIn  = ''
 				m_DateOut = ''
 				m_RAccountType = ''
-		
 		
 				mBIC = ''
 				x = 1
@@ -438,7 +431,6 @@ DEFINE CLASS form1 AS form
 						RAccountT With m_RAccountType,;
 						DateOut With m_DateOut,;
 						BIC With mBIC
-		
 		
 					For j=0 To loNode.ChildNodes.Length-1
 		
@@ -500,7 +492,6 @@ DEFINE CLASS form1 AS form
 					m.DefaultSWBIC        = ''
 					m.ToNPSDate           = ''
 		
-		
 					For j=0 To loNode.ChildNodes.Length-1
 		* здесь добавить для скорости, если имя тэга изменится !!! --->
 						If ((loNode.ChildNodes[j].NodeName='Accounts') Or (loNode.ChildNodes[j].NodeName='ed:Accounts')) Or ;
@@ -510,7 +501,6 @@ DEFINE CLASS form1 AS form
 		* <---  здесь добавить для скорости, если имя тэга изменится !!!
 		
 						For i=0 To loNode.ChildNodes[j].Attributes.Length-1
-		
 		
 							Select (al)
 		
@@ -665,7 +655,6 @@ DEFINE CLASS form1 AS form
 		
 			Endif && - загрузка XML из локальной папки Data
 		
-		
 			If .Optiongroup1.Option3.Value = 1  && открытие ранее сохраненных DBF
 				If (!File(pathdata+'a807'+dat77+'.dbf')) Or (!File(pathdata+'acc807'+dat77+'.dbf')) Or (!File(pathdata+'h807'+dat77+'.dbf'))
 					=Messagebox('Нет DBF-таблиц ранее сохраненного справочника!'+Chr(13)+'Открытие невозможно!', 0+48, 'Открытие DBF СПРАВОЧНИКА БИК')
@@ -741,26 +730,14 @@ DEFINE CLASS form1 AS form
 			Set Relation To BIC Into acc807 Additive
 		*SET SKIP TO ACC807
 		
-		
 		*ThisForm.Command2.Enabled = .T.
-			Thisform.Command2.Caption = 'Импорт'
-		
+			.Command2.Caption = 'Импорт'
 		
 			Do Form Form2 Name fr_2
 		
 		Endwith
 		*CLOSE ALL
 		*---------------------------------------------
-		
-		
-		*ssa*	ox = Createobject('xmladapter')
-		*ssa*	?ox.XMLSchemaLocation = '20190117_ED807_.xsd'
-		*ssa*	?ox.LoadXML('20190117_ED807_full.xml', .T., .T.)
-		
-		*ssa*	If ox.Tables.Count > 0
-		*ssa*		ox.Tables.Item(5).ToCursor() && BICdirectoryEntry
-		*ssa*		ox.Tables.Item(2).ToCursor() && ParticipantInfo
-		*ssa*	Endif
 		
 	ENDPROC
 
