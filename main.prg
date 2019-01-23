@@ -234,91 +234,102 @@ Try
 
   Wait 'Очистка устаревших копий файлов... ' Window Nowait
 
-  datdel = Date()-Int(Val(MyValue4))
-*=MESSAGEBOX(DTOC(datdel))
-  hnd1 = Fcreate(path_tmp+'tmp7tmp.cmd')
-  hnd2 = Fopen(path_tmp+'flst')
+	datdel = Date()-Int(Val(MyValue4))
+*	hnd1 = Fcreate(path_tmp+'tmp7tmp.cmd')
+	hnd2 = Fopen(path_tmp+'flst')
 
-  Do While !Feof(hnd2) && цикл чтения листинга файлов
-    bufe = Fgets(hnd2)
+	Do While !Feof(hnd2) && цикл чтения листинга файлов
+		bufe = Fgets(hnd2)
 
-    If (Atc('a807',bufe)=1).Or.(Atc('h807',bufe)=1)
-      yqq1 = Substr(bufe,5,4)
-      mqq1 = Substr(bufe,9,2)
-      dqq1 = Substr(bufe,11,2)
-*ssa*        datqq1 = Ctod(dqq1+'.'+mqq1+'.'+)
-      datqq1 = Date(yqq1, mqq1, dqq1)
-      If datqq1<datdel
-        flag_qh=flag_qh+1
-        =Fputs(hnd1,'del '+pathdata+ bufe)
-      Endif
-    Endif
+		If (Atc('a807',bufe)=1).Or.(Atc('h807',bufe)=1)
+			yqq1 = Substr(bufe,5,4)
+			mqq1 = Substr(bufe,9,2)
+			dqq1 = Substr(bufe,11,2)
+*ssa*				datqq1 = Ctod(dqq1+'.'+mqq1+'.'+)
+			datqq1 = date(VAL(yqq1), VAL(mqq1), VAL(dqq1))
+			If datqq1<datdel
+				flag_qh=flag_qh+1
+*				=Fputs(hnd1,'del '+pathdata+ bufe)
+				Strtofile('del '+pathdata+ bufe+Chr(10)+Chr(13), path_tmp+'tmp7tmp.cmd',.T.)
 
-    If Atc('acc807',bufe)=1
-      yqq1 = Substr(bufe,7,4)
-      mqq1 = Substr(bufe,11,2)
-      dqq1 = Substr(bufe,13,2)
-*ssa*        datqq1 = Ctod(dqq1+'.'+mqq1+'.'+)
-      datqq1 = Date(yqq1, mqq1, dqq1)
-      If datqq1<datdel
-        flag_qh=flag_qh+1
-        =Fputs(hnd1,'del '+pathdata+ bufe)
-      Endif
-    Endif
 
-    If Right(bufe,12)='807_full.xml'
-      yqq1 = Substr(bufe,1,4)
-      mqq1 = Substr(bufe,5,2)
-      dqq1 = Substr(bufe,7,2)
-*ssa*        datqq1 = Ctod(dqq1+'.'+mqq1+'.'+)
-      datqq1 = Date(yqq1, mqq1, dqq1)
-      If datqq1<datdel
-        flag_qh=flag_qh+1
-        =Fputs(hnd1,'del '+pathdata+ bufe)
-      Endif
-    Endif
+			Endif
+		Endif
 
-    If Right(bufe,7)='SBR.zip'
-      yqq1 = Substr(bufe,1,4)
-      mqq1 = Substr(bufe,5,2)
-      dqq1 = Substr(bufe,7,2)
-*ssa*        datqq1 = Ctod(dqq1+'.'+mqq1+'.'+)
-      datqq1 = Date(yqq1, mqq1, dqq1)
-      If datqq1<datdel
-        flag_qh=flag_qh+1
-        =Fputs(hnd1,'del '+path_zip+ bufe)
-      Endif
-    Endif
+		If Atc('acc807',bufe)=1
+			yqq1 = Substr(bufe,7,4)
+			mqq1 = Substr(bufe,11,2)
+			dqq1 = Substr(bufe,13,2)
+*ssa*				datqq1 = Ctod(dqq1+'.'+mqq1+'.'+)
+			datqq1 = date(VAL(yqq1), VAL(mqq1), VAL(dqq1))
+			If datqq1<datdel
+				flag_qh=flag_qh+1
+*				=Fputs(hnd1,'del '+pathdata+ bufe)
+				Strtofile('del '+pathdata+ bufe+Chr(10)+Chr(13), path_tmp+'tmp7tmp.cmd',.T.)
+			Endif
+		Endif
 
-  Enddo && Конец цикла чтения листинга файлов
+		If Right(bufe,12)='807_full.xml'
+			yqq1 = Substr(bufe,1,4)
+			mqq1 = Substr(bufe,5,2)
+			dqq1 = Substr(bufe,7,2)
+*ssa*				datqq1 = Ctod(dqq1+'.'+mqq1+'.'+)
+			datqq1 = date(VAL(yqq1), VAL(mqq1), VAL(dqq1))
+			If datqq1<datdel
+				flag_qh=flag_qh+1
+*				=Fputs(hnd1,'del '+pathdata+ bufe)
+				Strtofile('del '+pathdata+ bufe+Chr(10)+Chr(13), path_tmp+'tmp7tmp.cmd',.T.)
+			Endif
+		Endif
 
-  =Fclose(hnd1)
-  =Fclose(hnd2)
+		If Right(bufe,7)='SBR.zip'
+			yqq1 = Substr(bufe,1,4)
+			mqq1 = Substr(bufe,5,2)
+			dqq1 = Substr(bufe,7,2)
+*ssa*				datqq1 = Ctod(dqq1+'.'+mqq1+'.'+)
+			datqq1 = date(VAL(yqq1), VAL(mqq1), VAL(dqq1))
+			If datqq1<datdel
+				flag_qh=flag_qh+1
+*				=Fputs(hnd1,'del '+path_zip+ bufe)
+				Strtofile('del '+path_zip+ bufe+Chr(10)+Chr(13), path_tmp+'tmp7tmp.cmd',.T.)
+			Endif
+		Endif
 
-  If flag_qh>1
-    parmsk = path_tmp+'tmp7tmp.cmd'
-    loWshShell=Createobject("WScript.Shell")
-    loWshShell.Run(parmsk, 0, .T.)
-    Release loWshShell
-  Endif
+	Enddo && Конец цикла чтения листинга файлов
 
-  If File(path_tmp+'tmp4tmp.cmd')
-    Delete File path_tmp+'tmp4tmp.cmd'
-  Endif
-* alex2sign --- перенёс в начало (был конфликт (file in use) 19.01.2019
-*  If File(path_tmp+'tmp7tmp.cmd')
-*    Delete File path_tmp+'tmp7tmp.cmd'
-*  Endif
+*	=Fclose(hnd1)
+	=Fclose(hnd2)
+	Try
+		If flag_qh>1
+			parmsk = path_tmp+'tmp7tmp.cmd'
+			loWshShell=Createobject("WScript.Shell")
+			loWshShell.Run(parmsk, 0, .T.)
+			Release loWshShell
+		ENDIF
+	CATCH
+
+	Endtry
 
   Wait Clear
 
 Catch
-  Strtofile(Dtoc(Date())+' '+Time()+' '+'Ошибка удаления устаревших файлов из папок Data и ZIP!','sprav_err.log')
+
+	Strtofile(Dtoc(Date())+' '+Time()+' '+'Ошибка удаления устаревших файлов из папок Data и ZIP!','sprav_err.log')
+	MESSAGEBOX('Ошибка удаления устаревших файлов из папок Data и ZIP!', 16, 'Sprav807')
 Endtry
 
 If File(path_tmp+'flst')
   Delete File path_tmp+'flst'
 Endif
+If File(path_tmp+'tmp4tmp.cmd')
+	Delete File path_tmp+'tmp4tmp.cmd'
+Endif
+If File(path_tmp+'tmp7tmp.cmd')
+	Delete File path_tmp+'tmp7tmp.cmd'
+Endif
+
+*-------от 19.01.2019 alex2sign--Создание справочников вынесено в отдельный файл----->
+*  <---------- от 19.01.2019 alex2sign ---------------
 
 Do CreateRefs && ssa Создание справочников
 
