@@ -1,24 +1,24 @@
 #INCLUDE "RTF.H"
-* РџСЂРѕС†РµРґСѓСЂР° СѓРґР°Р»РµРЅРёСЏ РѕР±СЉРµРєС‚Р° Mutex
+* Процедура удаления объекта Mutex
 Procedure CloseMutex
-Lparameters IsExists  && СЃСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё РґСЂСѓРіРѕРµ РїСЂРёР»РѕР¶РµРЅРёРµ
+Lparameters IsExists  && существует ли другое приложение
 
-* Р•СЃР»Рё РґСЂСѓРіРѕРµ РїСЂРёР»РѕР¶РµРЅРёРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚, С‚Рѕ СѓРґР°Р»СЏС‚СЊ РѕР±СЉРµРєС‚ Mutex РЅРµ РЅР°РґРѕ
-* РЈРґР°Р»РµРЅРёРµ РІС‹РїРѕР»РЅСЏРµС‚СЃСЏ С‚РѕР»СЊРєРѕ РµСЃР»Рё РѕР±СЉРµРєС‚ Р±С‹Р» СЃРѕР·РґР°РЅ РёРјРµРЅРЅРѕ РІ СЌС‚РѕРј РїСЂРёР»РѕР¶РµРЅРёРё
+* Если другое приложение существует, то удалять объект Mutex не надо
+* Удаление выполняется только если объект был создан именно в этом приложении
 If IsExists = .F.
-* РЈРґР°Р»РµРЅРёРµ РѕР±СЉРµРєС‚Р° Mutex
+* Удаление объекта Mutex
   Declare Integer ReleaseMutex In Win32API Integer hMutex
   ReleaseMutex(m.gnMutex)
 Endif
 
-* Р—Р°РєСЂС‹С‚РёРµ СѓР¶Рµ РЅРµ РЅСѓР¶РЅРѕРіРѕ С…РµРЅРґР»Р° РѕР±СЉРµРєС‚Р° Mutex
+* Закрытие уже не нужного хендла объекта Mutex
 Declare Integer CloseHandle In Kernel32 Integer hObject
 CloseHandle(m.gnMutex)
 
 Endproc
 *-----------------------------------------------------------------------------------------------
 
-* РџРћР”РљР›Р®Р§Р•Рќ Р›Р РљРћРњРџР¬Р®РўР•Р  Рљ РРќРўР•Р РќР•РўРЈ ?
+* ПОДКЛЮЧЕН ЛИ КОМПЬЮТЕР К ИНТЕРНЕТУ ?
 Function IsInternetConnected
 Local lnFlags As Integer
 Declare SHORT InternetGetConnectedState In WININET Long @, Long
@@ -28,7 +28,7 @@ Clear Dlls 'InternetGetConnectedState'
 Return !Inlist(lnFlags, 0, 16, 32, 48)
 *-----------------------------------------------------------------------------------------------
 
-* Р—РђР“Р РЈР—РРњ Р¤РђР™Р› Р РЎРћРҐР РђРќРРњ Р•Р“Рћ Р›РћРљРђР›Р¬РќРћ
+* ЗАГРУЗИМ ФАЙЛ И СОХРАНИМ ЕГО ЛОКАЛЬНО
 Function IsFileDownloaded
 Lparameters tcSourceFile As String, tcTargetFile As String
 If !File(tcTargetFile)
@@ -39,35 +39,35 @@ If !File(tcTargetFile)
 Endif
 Return .F.
 *-----------------------------------------------------------------------------------------------
-* РЎРћРћР‘Р©Р•РќРР• РћР‘ РћРЁРР‘РљР•
+* СООБЩЕНИЕ ОБ ОШИБКЕ
 Procedure ShowError
 Lparameters toException As Exception
 Local lcErrorNo As String, lcMessage As String, lcStackLevel As String,;
   lcProcedure As String, lcLineNo As String, lcLineContents As String
 Try
-  lcErrorNo = 'РќРѕРјРµСЂ РѕС€РёР±РєРё' + CHR_TAB + ': ' + Transform(toException.ErrorNo) + CHR_CR
-  lcMessage = 'РЎРѕРѕР±С‰РµРЅРёРµ' + CHR_TAB + ': ' + toException.Message + CHR_CR
-  lcStackLevel = 'РЈСЂРѕРІРµРЅСЊ СЃС‚РµРєР°' + CHR_TAB + ': ' + Transform(toException.StackLevel) + CHR_CR
-  lcProcedure = 'РџСЂРѕС†РµРґСѓСЂР°' + CHR_TAB + ': ' + toException.Procedure + CHR_CR
-  lcLineNo = 'РќРѕРјРµСЂ СЃС‚СЂРѕРєРё' + CHR_TAB + ': ' + Transform(toException.Lineno)
+  lcErrorNo = 'Номер ошибки' + CHR_TAB + ': ' + Transform(toException.ErrorNo) + CHR_CR
+  lcMessage = 'Сообщение' + CHR_TAB + ': ' + toException.Message + CHR_CR
+  lcStackLevel = 'Уровень стека' + CHR_TAB + ': ' + Transform(toException.StackLevel) + CHR_CR
+  lcProcedure = 'Процедура' + CHR_TAB + ': ' + toException.Procedure + CHR_CR
+  lcLineNo = 'Номер строки' + CHR_TAB + ': ' + Transform(toException.Lineno)
   lcLineContents = Iif(Application.StartMode = 0,;
-    CHR_CR + 'РЎРѕРґРµСЂР¶РёРјРѕРµ' + CHR_TAB + ': ' + toException.LineContents, '')
+    CHR_CR + 'Содержимое' + CHR_TAB + ': ' + toException.LineContents, '')
   Messagebox(lcErrorNo + lcMessage + lcStackLevel + lcProcedure + lcLineNo + lcLineContents, 16,'Sprav807')
 Catch
-  Messagebox('РћС€РёР±РєР° РїСЂРё РїРѕРїС‹С‚РєРµ РІС‹РІРµСЃС‚Рё СЃРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ', 16, 'Sprav807')
+  Messagebox('Ошибка при попытке вывести сообщение об ошибке', 16, 'Sprav807')
 Endtry
 Return
 
 *-----------------------------------------------------------------------------------------------
-* Р•Р©РЃ РћР”РќРћ РЎРћРћР‘Р©Р•РќРР• РћР‘ РћРЁРР‘РљР• (РІС‹Р·С‹РІР°РµС‚СЃСЏ СЌС‚Рѕ)
+* ЕЩЁ ОДНО СООБЩЕНИЕ ОБ ОШИБКЕ (вызывается это)
 Procedure errHandler
 Parameter merror, Mess, mess1, mprog, mlineno
 Clear
-err1 = 'РќРѕРјРµСЂ РѕС€РёР±РєРё: ' + Str(merror)+ Chr(13)
-err2 = 'РЎРѕРѕР±С‰РµРЅРёРµ РѕР± РѕС€РёР±РєРµ: ' + Mess + Chr(13)
-err3 = 'РЎС‚СЂРѕРєР° РєРѕРґР° СЃ РѕС€РёР±РєРѕР№: ' + mess1 + Chr(13)
-err4 = 'РќРѕРјРµСЂ СЃС‚СЂРѕРєРё СЃ РѕС€РёР±РєРѕР№: ' + Str(mlineno) + Chr(13)
-err5 = 'РџСЂРѕРіСЂР°РјРјР° СЃ РѕС€РёР±РєРѕР№: ' + mprog + Chr(13)
+err1 = 'Номер ошибки: ' + Str(merror)+ Chr(13)
+err2 = 'Сообщение об ошибке: ' + Mess + Chr(13)
+err3 = 'Строка кода с ошибкой: ' + mess1 + Chr(13)
+err4 = 'Номер строки с ошибкой: ' + Str(mlineno) + Chr(13)
+err5 = 'Программа с ошибкой: ' + mprog + Chr(13)
 Messagebox(err1 + err2 + err3 + err4 + err5, 16,'Sprav807')
 Endproc
 *-----------------------------------------------------------------------------------------------
@@ -148,13 +148,13 @@ Return
 Procedure p1menu
 
 Define Popup _3mp From y_p_my,x_p_my Margin Relative Shadow Font 'Arial', 10   && FONT 'Courier New', 10 STYLE 'B'
-Defi Bar 1 Of _3mp Prompt " РџСЂРѕСЃРјРѕС‚СЂ "
-Defi Bar 2 Of _3mp Prompt " РћС‚Р±РѕСЂ РїРѕ С„РёР»СЊС‚СЂСѓ "
-Defi Bar 3 Of _3mp Prompt " РЎР±СЂРѕСЃ С„РёР»СЊС‚СЂР° "
-Defi Bar 4 Of _3mp Prompt " РџРѕРёСЃРє РІ С‚Р°Р±Р»РёС†Рµ Р‘РРљ "
-Defi Bar 5 Of _3mp Prompt " РљРѕРїРёСЂРѕРІР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР° "
-Defi Bar 6 Of _3mp Prompt " РЎСЂР°РІРЅРёС‚СЊ СЃ РґР°С‚РѕР№ "
-Defi Bar 7 Of _3mp Prompt " РЎРїРёСЃРѕРє РєР»РёРµРЅС‚РѕРІ "
+Defi Bar 1 Of _3mp Prompt " Просмотр "
+Defi Bar 2 Of _3mp Prompt " Отбор по фильтру "
+Defi Bar 3 Of _3mp Prompt " Сброс фильтра "
+Defi Bar 4 Of _3mp Prompt " Поиск в таблице БИК "
+Defi Bar 5 Of _3mp Prompt " Копировать значение в буфер обмена "
+Defi Bar 6 Of _3mp Prompt " Сравнить с датой "
+Defi Bar 7 Of _3mp Prompt " Список клиентов "
 On Selec Bar 1 Of _3mp Do p2p
 On Selec Bar 2 Of _3mp Do p3p
 On Selec Bar 3 Of _3mp Do p4p
@@ -169,8 +169,8 @@ Return
 *--------------------------------------------------------------------------------------------------
 Procedure paccmenu
 Define Popup _7mp From y_p_my,x_p_my Margin Relative Shadow Font 'Arial', 10   && FONT 'Courier New', 10 STYLE 'B'
-Defi Bar 1 Of _7mp Prompt " РџРѕРёСЃРє СЃС‡РµС‚Р° РІ С‚Р°Р±Р»РёС†Рµ СЃС‡РµС‚РѕРІ "
-Defi Bar 2 Of _7mp Prompt " РљРѕРїРёСЂРѕРІР°С‚СЊ Р·РЅР°С‡РµРЅРёРµ РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР°"
+Defi Bar 1 Of _7mp Prompt " Поиск счета в таблице счетов "
+Defi Bar 2 Of _7mp Prompt " Копировать значение в буфер обмена"
 On Selec Bar 1 Of _7mp Do pacc7
 On Selec Bar 2 Of _7mp Do clipmy2
 Activate Popup _7mp
@@ -180,14 +180,14 @@ Return
 *--------------------------------------------------------------------------------------------------
 Procedure vs_menu
 Define Popup _9mp From y_q_my,x_q_my Margin Relative Shadow Font 'Arial', 10   && FONT 'Courier New', 10 STYLE 'B'
-Defi Bar 1 Of _9mp Prompt " Р’СЃС‚Р°РІРёС‚СЊ "
+Defi Bar 1 Of _9mp Prompt " Вставить "
 On Selec Bar 1 Of _9mp Do pvs7
 Activate Popup _9mp
 Release Popup _9mp
 
 Return
 *--------------------------------------------------------------------------------------------------
-Procedure pvs7  && РІСЃС‚Р°РІРєР° РёР· Р±СѓС„РµСЂР° РѕР±РјРµРЅР° РІ С‚РµРєСЃС‚Р±РѕРєСЃС‹
+Procedure pvs7  && вставка из буфера обмена в текстбоксы
 Hide Popup _9mp
 _Screen.ActiveForm.ActiveControl.Value = _Cliptext
 Deactivate Popup _9mp
@@ -223,7 +223,7 @@ Release Popups _7mp
 
 Return
 *--------------------------------------------------------------------------------------------------
-Procedure p3p  && СѓСЃС‚Р°РЅРѕРІРєР° С„РёР»СЊС‚СЂР°
+Procedure p3p  && установка фильтра
 Hide Popup _3mp
 Push Key Clear
 
@@ -237,20 +237,20 @@ If !mya2
 Endif
 
 Pop Key
-Wait 'Р—Р°РїРёСЃРµР№ Р‘РРљ = '+Str(k_filt) Window Nowait
+Wait 'Записей БИК = '+Str(k_filt) Window Nowait
 
 Deactivate Popup _3mp
 Release Popups _3mp
 
 Return
 *--------------------------------------------------------------------------------------------------
-Procedure p4p  && СЃР±СЂРѕСЃ С„РёР»СЊС‚СЂР°
+Procedure p4p  && сброс фильтра
 Hide Popup _3mp
 Set Filter To
 Count To k_filt
 Go Top
-Wait 'Р—Р°РїРёСЃРµР№ Р‘РРљ = '+Str(k_filt) Window Nowait  && NOCLEAR
-_vfp.StatusBar='Р—Р°РїРёСЃРµР№ Р‘РРљ = '+Str(k_filt)
+Wait 'Записей БИК = '+Str(k_filt) Window Nowait  && NOCLEAR
+_vfp.StatusBar='Записей БИК = '+Str(k_filt)
 
 Store '' To tx1, tx2, tx3, tx4, tx5, tx6, tx7, tx8, tx9, kus4
 
@@ -272,13 +272,13 @@ If Pcount() > 0
 
 * WAIT _Screen.Forms(lnForCounter).Name WINDOW
 
-      If Upper(_Screen.Forms(lnForCounter).Name) = tcFormName && Р•СЃР»Рё С„РѕСЂРјР° РµСЃС‚СЊ РІ РјР°СЃСЃРёРІРµ _Screen.Forms()
+      If Upper(_Screen.Forms(lnForCounter).Name) = tcFormName && Если форма есть в массиве _Screen.Forms()
 
-        If Type('_SCREEN.FORMS(lnForCounter).NAME') = 'C' && Р•СЃР»Рё _Screen.ActiveForm РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ СЏРІР»СЏРµС‚СЃСЏ РѕР±СЉРµРєС‚РѕРј Рё РЅР° РЅРµС‘ РјРѕР¶РЅРѕ СЃСЃС‹Р»Р°С‚СЊСЃСЏ
+        If Type('_SCREEN.FORMS(lnForCounter).NAME') = 'C' && Если _Screen.ActiveForm в данный момент является объектом и на неё можно ссылаться
 
 *WAIT tcFormName + STR(lnForCounter ,4)  WINDOW
 
-          If Upper(_Screen.Forms(lnForCounter).Name) == tcFormName && Р•СЃР»Рё С„РѕСЂРјР°-РїР°СЂР°РјРµС‚СЂ РІ РґР°РЅРЅС‹Р№ РјРѕРјРµРЅС‚ Р°РєС‚РёРІРЅР°
+          If Upper(_Screen.Forms(lnForCounter).Name) == tcFormName && Если форма-параметр в данный момент активна
             _Screen.Forms(lnForCounter).Show()
             Return .T.
           Endif
@@ -327,25 +327,25 @@ Endif
 
 Return
 *------------------------------------------------------------------------
-Procedure clipmy && !!!РєРѕРїРёСЂРѕРІР°РЅРёРµ РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР° РЅСѓР¶РЅРѕ РґРµР»Р°С‚СЊ С‚РѕР»СЊРєРѕ РІ СЂСѓСЃСЃРєРѕР№ СЂР°СЃРєР»Р°РґРєРµ!!!!!
+Procedure clipmy && !!!копирование в буфер обмена нужно делать только в русской раскладке!!!!!
 Hide Popup _3mp
-* РљРѕРЅСЃС‚Р°РЅС‚С‹:
-*  #DEFINE KEYBOARD_GERMAN_ST   0x0407    && РќРµРјРµС†РєРёР№ (РЎС‚Р°РЅРґР°СЂС‚)
-#Define KEYBOARD_ENGLISH_US   0x0409    && РђРЅРіР»РёР№СЃРєРёР№ (РЎРѕРµРґРёРЅРµРЅРЅС‹Рµ РЁС‚Р°С‚С‹)
-*  #DEFINE KEYBOARD_FRENCH_ST   0x040c    && Р¤СЂР°РЅС†СѓР·СЃРєРёР№ (РЎС‚Р°РЅРґР°СЂС‚)
-#Define KEYBOARD_RUSSIAN     0x0419    && Р СѓСЃСЃРєРёР№
+* Константы:
+*  #DEFINE KEYBOARD_GERMAN_ST   0x0407    && Немецкий (Стандарт)
+#Define KEYBOARD_ENGLISH_US   0x0409    && Английский (Соединенные Штаты)
+*  #DEFINE KEYBOARD_FRENCH_ST   0x040c    && Французский (Стандарт)
+#Define KEYBOARD_RUSSIAN     0x0419    && Русский
 
 lnCurrentKeyboard = GetKeyboardLayout(0)
-* РЎС‡РёС‚С‹РІР°РµРј РјР»Р°РґС€РµРµ СЃР»РѕРІРѕ (РјР»Р°РґС€РёРµ 16 Р±РёС‚ РёР· 32)
+* Считываем младшее слово (младшие 16 бит из 32)
 lnCurrentKeyboard = Bitrshift(m.lnCurrentKeyboard,16)
 
 If m.lnCurrentKeyboard <> KEYBOARD_RUSSIAN
-  =LoadKeyboardLayout("00000419",1) && Р СѓСЃ
+  =LoadKeyboardLayout("00000419",1) && Рус
 Endif
 
 ccx='fr_2.Grid1.Column'+Transform(_Screen.ActiveForm.ActiveControl.ActiveColumn)+'.Text1.Value'
 ccx=Alltrim(ccx)
-_Cliptext=&ccx && !!!РєРѕРїРёСЂРѕРІР°РЅРёРµ РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР° РЅСѓР¶РЅРѕ РґРµР»Р°С‚СЊ С‚РѕР»СЊРєРѕ РІ СЂСѓСЃСЃРєРѕР№ СЂР°СЃРєР»Р°РґРєРµ!!!!!
+_Cliptext=&ccx && !!!копирование в буфер обмена нужно делать только в русской раскладке!!!!!
 
 If m.lnCurrentKeyboard=KEYBOARD_ENGLISH_US
   LoadKeyboardLayout("00000409",1) && Eng
@@ -355,25 +355,25 @@ Deactivate Popup _3mp
 Release Popups _3mp
 Return
 *------------------------------------------------------------------------
-Procedure clipmy2 && !!!РєРѕРїРёСЂРѕРІР°РЅРёРµ РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР° РЅСѓР¶РЅРѕ РґРµР»Р°С‚СЊ С‚РѕР»СЊРєРѕ РІ СЂСѓСЃСЃРєРѕР№ СЂР°СЃРєР»Р°РґРєРµ!!!!!
+Procedure clipmy2 && !!!копирование в буфер обмена нужно делать только в русской раскладке!!!!!
 Hide Popup _7mp
-* РљРѕРЅСЃС‚Р°РЅС‚С‹:
-*  #DEFINE KEYBOARD_GERMAN_ST   0x0407    && РќРµРјРµС†РєРёР№ (РЎС‚Р°РЅРґР°СЂС‚)
-#Define KEYBOARD_ENGLISH_US   0x0409    && РђРЅРіР»РёР№СЃРєРёР№ (РЎРѕРµРґРёРЅРµРЅРЅС‹Рµ РЁС‚Р°С‚С‹)
-*  #DEFINE KEYBOARD_FRENCH_ST   0x040c    && Р¤СЂР°РЅС†СѓР·СЃРєРёР№ (РЎС‚Р°РЅРґР°СЂС‚)
-#Define KEYBOARD_RUSSIAN     0x0419    && Р СѓСЃСЃРєРёР№
+* Константы:
+*  #DEFINE KEYBOARD_GERMAN_ST   0x0407    && Немецкий (Стандарт)
+#Define KEYBOARD_ENGLISH_US   0x0409    && Английский (Соединенные Штаты)
+*  #DEFINE KEYBOARD_FRENCH_ST   0x040c    && Французский (Стандарт)
+#Define KEYBOARD_RUSSIAN     0x0419    && Русский
 
 lnCurrentKeyboard = GetKeyboardLayout(0)
-* РЎС‡РёС‚С‹РІР°РµРј РјР»Р°РґС€РµРµ СЃР»РѕРІРѕ (РјР»Р°РґС€РёРµ 16 Р±РёС‚ РёР· 32)
+* Считываем младшее слово (младшие 16 бит из 32)
 lnCurrentKeyboard = Bitrshift(m.lnCurrentKeyboard,16)
 
 If m.lnCurrentKeyboard <> KEYBOARD_RUSSIAN
-  LoadKeyboardLayout("00000419",1) && Р СѓСЃ
+  LoadKeyboardLayout("00000419",1) && Рус
 Endif
 
 ccx='fr_2.Grid2.Column'+Transform(_Screen.ActiveForm.ActiveControl.ActiveColumn)+'.Text1.Value'
 ccx=Alltrim(ccx)
-_Cliptext=&ccx && !!!РєРѕРїРёСЂРѕРІР°РЅРёРµ РІ Р±СѓС„РµСЂ РѕР±РјРµРЅР° РЅСѓР¶РЅРѕ РґРµР»Р°С‚СЊ С‚РѕР»СЊРєРѕ РІ СЂСѓСЃСЃРєРѕР№ СЂР°СЃРєР»Р°РґРєРµ!!!!!
+_Cliptext=&ccx && !!!копирование в буфер обмена нужно делать только в русской раскладке!!!!!
 
 If m.lnCurrentKeyboard=KEYBOARD_ENGLISH_US
   LoadKeyboardLayout("00000409",1) && Eng
@@ -385,7 +385,7 @@ Return
 *------------------------------------------------------------------------
 Procedure pimenu1
 Define Popup _1mq From y_i_my,x_i_my Margin Relative Shadow Font 'Arial', 10   && FONT 'Courier New', 10 STYLE 'B'
-Defi Bar 1 Of _1mq Prompt " Р’С‹РІРѕРґ РІ С‚РµРєСЃС‚РѕРІС‹Р№ С„Р°Р№Р» "
+Defi Bar 1 Of _1mq Prompt " Вывод в текстовый файл "
 On Selec Bar 1 Of _1mq Do pcallrtf2
 Activate Popup _1mq
 Release Popup _1mq
@@ -401,12 +401,12 @@ Hide Popup _1mq
 
 pal02=Alias()
 
-f02='Data\lst_record.txt' && С„Р°Р№Р» РІС‹РІРѕРґР°
+f02='Data\lst_record.txt' && файл вывода
 Set Textmerge To (f02) On Noshow
 
 *!*  des1=Fcreate(f02)
 *!*  If (des1<0)
-*!*    Messagebox('РќРµРІРѕР·РјРѕР¶РЅРѕ СЃРѕР·РґР°С‚СЊ С„Р°Р№Р» Р»РёСЃС‚РёРЅРіР°!',16,'Р’РЅРёРјР°РЅРёРµ!',3000)
+*!*    Messagebox('Невозможно создать файл листинга!',16,'Внимание!',3000)
 *!*    Return
 *!*  Endif
 
@@ -419,8 +419,8 @@ Scan
 Endscan
 Select (al2)
 ror=Recno()
-*!*  Fputs(des1,'---------РЎР§Р•Рў----------Р”Р°С‚Р° РѕС‚РєСЂ.---Р”Р°С‚Р° РёСЃРєР».--РЎС‚Р°С‚СѓСЃ---Р‘РРљ РџР‘Р --Рљ.РєР»СЋС‡-РўРёРї СЃС‡.-Р”Р°С‚Р° РѕРіСЂР°РЅ.-РўРёРї РѕРіСЂР°РЅРёС‡РµРЅРёСЏ-------')
-\---------РЎР§Р•Рў----------Р”Р°С‚Р° РѕС‚РєСЂ.---Р”Р°С‚Р° РёСЃРєР».--РЎС‚Р°С‚СѓСЃ---Р‘РРљ РџР‘Р --Рљ.РєР»СЋС‡-РўРёРї СЃС‡.-Р”Р°С‚Р° РѕРіСЂР°РЅ.-РўРёРї РѕРіСЂР°РЅРёС‡РµРЅРёСЏ-------
+*!*  Fputs(des1,'---------СЧЕТ----------Дата откр.---Дата искл.--Статус---БИК ПБР--К.ключ-Тип сч.-Дата огран.-Тип ограничения-------')
+\---------СЧЕТ----------Дата откр.---Дата искл.--Статус---БИК ПБР--К.ключ-Тип сч.-Дата огран.-Тип ограничения-------
 *!*  Do While a807.BIC=BIC
 Scan While a807.BIC=BIC
   Fputs(des1,Account+' | '+DateIn+' | '+DateOut+' | '+AccountSta+' | '+AccountCBR+' | '+CK+' | '+RAccountT+' | '+ARDat+' | '+AccRs  )
@@ -441,7 +441,7 @@ Local loWshShell As Wscript.Shell
 parms = 'notepad.exe'+' '+f02
 
 loWshShell=Createobject("WScript.Shell")
-loWshShell.Run(parms, 1, .F.) && .F. РЅРµ Р¶РґР°С‚СЊ РІС‹РїРѕР»РЅРµРЅРёСЏ notepad.exe
+loWshShell.Run(parms, 1, .F.) && .F. не ждать выполнения notepad.exe
 
 Release loWshShell
 Deactivate Popup _1mq
@@ -452,7 +452,7 @@ Return
 Procedure myHelp
 
 If !File('readme.txt')
-  Messagebox('Р¤Р°Р№Р» РїРѕРјРѕС‰Рё РЅРµ РЅР°Р№РґРµРЅ! ', 48, 'РЎРџР РђР’РћР§РќРРљ Р‘РРљ')
+  Messagebox('Файл помощи не найден! ', 48, 'СПРАВОЧНИК БИК')
   Return .F.
 Endif
 
@@ -461,7 +461,7 @@ fH='readme.txt'
 parms = 'notepad.exe'+' '+fH
 
 loH=Createobject("WScript.Shell")
-loH.Run(parms, 1, .F.) && .F. РЅРµ Р¶РґР°С‚СЊ РІС‹РїРѕР»РЅРµРЅРёСЏ notepad.exe
+loH.Run(parms, 1, .F.) && .F. не ждать выполнения notepad.exe
 
 Release loH
 
@@ -471,13 +471,13 @@ Procedure UnZipFile
 Parameters pID, zTag
 Local I,J,K,L,BF,LBF
 L=65536
-I=Space(1024) && РРЅС„РѕСЂРјР°С†РёСЏ РѕР± С„Р°Р№Р»Рµ
-J=Space(100)   && РРјСЏ С„Р°Р№Р»Р°
+I=Space(1024) && Информация об файле
+J=Space(100)   && Имя файла
 
 unzOpenCurrentFile(pID)
 unzGetCurrentFileInfo(pID,@I,@J,Len(J),Null,0,Null,0)
 
-n_FileInZip = RTRIM(J)
+*!*  n_FileInZip = Rtrim(J)
 
 K=Fcreate(zTag+J)
 Do While unzeof(pID)=0
@@ -487,50 +487,49 @@ Do While unzeof(pID)=0
 Enddo
 Fclose(K)
 unzCloseCurrentFile(pID)
-Return
+Return Rtrim(J)
+
 
 *--------------------------------------------------------------------
 Procedure url_download
 Parameters  lcRemoteFile, lcLocalFile
 
-*lcRemoteFile -РѕС‚РєСѓРґР° СЃРєР°С‡Р°С‚СЊ
-*lcLocalFile  -РіРґРµ СЃРѕС…СЂР°РЅРёС‚СЊ
+*lcRemoteFile -откуда скачать
+*lcLocalFile  -где сохранить
 
 Declare Integer URLDownloadToFile In urlmon.Dll;
   INTEGER pCaller, String szURL, String szFileName,;
   INTEGER dwReserved, Integer lpfnCB
 
-Wait "РРґРµС‚ Р·Р°РєР°С‡РєР° С„Р°Р№Р»Р°!" Window Nowait
+Wait "Идет закачка файла!" Window Nowait
 
 URLDownloadToFile (0, lcRemoteFile, lcLocalFile, 0, 0)
 
-Wait "Р—Р°РєР°С‡РєР° С„Р°Р№Р»Р° Р·Р°РІРµСЂС€РµРЅР°!" Window Nowait
+Wait "Закачка файла завершена!" Window Nowait
 
 Endproc
 *--------------------------------------------------------------------
 Procedure Kopi
 Lparameters how_copy
 
-If File(pathdata+'a807'+dat77+'.dbf') Or ;
-    FILE(pathdata+'acc807'+dat77+'.dbf') Or ;
-    FILE(pathdata+'h807'+dat77+'.dbf')
-  If how_copy='РІСЂСѓС‡РЅСѓСЋ'
-    Messagebox('DBF-С„Р°Р№Р»С‹ СЃРїСЂР°РІРѕС‡РЅРёРєР° СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓСЋС‚.'+Chr(13)+'РљРѕРїРёСЂРѕРІР°РЅРёРµ РЅРµРІРѕР·РјРѕР¶РЅРѕ!',0+48,'РЎРѕС…СЂР°РЅРµРЅРёРµ СЃРїСЂР°РІРѕС‡РЅРёРєР° РІ DBF')
+dat77=Dtos(fr_start.Text1.Value)
+
+If IsFileExists(fr_start.Text1.Value)
+  If how_copy='вручную'
+    Messagebox('DBF-файлы справочника уже существуют.'+Chr(13)+'Копирование невозможно!',0+48,'Сохранение справочника в DBF')
   Endif
   Return .F.
 Endif
 
 tmp_al = Alias()
 tektmp=Recno()
-Wait 'РљРѕРїРёСЂРѕРІР°РЅРёРµ РЅР°С‡Р°С‚Рѕ...' Window Nowait
-Select (al)
-to1='Data\a807'+dat77+'.dbf'
-Copy To &to1
-Select (al2)
-to2='Data\acc807'+dat77+'.dbf'
-Copy To (to2)
+Wait 'Копирование начато...' Window Nowait
+Select a807 && (al)
+Copy To 'Data\a807'+dat77+'.dbf'
+Select acc807 && (al2)
+Copy To 'Data\acc807'+dat77+'.dbf'
 to3='Data\h807'+dat77+'.dbf'
-Select 0 && РїРµСЂРµРєР»СЋС‡Р°РµРјСЃСЏ РІ РѕР±Р»Р°СЃС‚СЊ, РіРґРµ РЅРµС‚ С‚Р°Р±Р»С‚С†С‹
+Select 0 && переключаемся в область, где нет таблтцы
 Create Dbf (to3) (EDNo C(9), EDDate C(10), EDAuthor C(10),  EDReceiver C(10),;
   CreationRe C(4), CreationDT C(20), InfoTypeCo C(4), BusinessDa C(10),;
   DirectoryV C(2))
@@ -540,16 +539,9 @@ Replace EDNo With m_EDNo, EDDate With m_EDDate, EDAuthor With m_EDAuthor, EDRece
   CreationRe With m_CreationReason, CreationDT With m_CreationDateTime, InfoTypeCo With m_InfoTypeCode,;
   BusinessDa With m_Bus11, DirectoryV With m_Dir11
 
-Wait 'РљРѕРїРёСЂРѕРІР°РЅРёРµ DBF Р·Р°РІРµСЂС€РµРЅРѕ!' Window Nowait
+Wait 'Копирование DBF завершено!' Window Nowait
 
-dat77=Dtos(fr_start.Text1.Value)
-If File(pathdata+'a807'+dat77+'.dbf') And ;
-    FILE(pathdata+'acc807'+dat77+'.dbf') And ;
-    FILE(pathdata+'h807'+dat77+'.dbf')
-  fr_start.Command2.ForeColor = Rgb(0,128,0)
-Else
-  fr_start.Command2.ForeColor = Rgb(255,128,0)
-Endif
+fr_start.Command2.ForeColor = Iif(IsFileExists(fr_start.Text1.Value), Rgb(255,128,0), Rgb(0,128,0))
 
 Select (tmp_al)
 If !Eof()
@@ -579,7 +571,7 @@ Do While !Eof()
 
     .m_arTblValues(1) = a807.BIC
     .m_arTblValues(2) = a807.NAMEP
-    .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+    .WriteRow()               && занести значения .m_arTblValues в графы таблицы
     kuch1=kuch1+1
   Endif
   Select (al)
@@ -599,7 +591,7 @@ Do While !Eof()
   If !Found()
     .m_arTblValues(1) = d807.BIC
     .m_arTblValues(2) = d807.NAMEP
-    .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+    .WriteRow()               && занести значения .m_arTblValues в графы таблицы
     kuch2=kuch2+1
   Endif
   Select d807
@@ -610,7 +602,7 @@ Endproc
 *--------------------------------------------------------------------
 Procedure p_exp_bnkseek
 
-Wait 'Р­РєСЃРїРѕСЂС‚ РЅР°С‡Р°С‚...' Window Nowait
+Wait 'Экспорт начат...' Window Nowait
 
 al33=Alias()
 tmp_bnkseek = pathdata+'bnkseek.dbf'
@@ -657,7 +649,7 @@ Do While !Eof()
   Select (al_bnks)
   Append Blank
   Replace PZN With a807.PTTYPE, NNP With a807.NNP, IND With a807.IND, ADR With a807.ADR, RGN With a807.RGN, REGN With a807.REGN,;
-    NAMEP With a807.NAMEP, NEWNUM With a807.BIC, TNP With a807.TNP, KSNP With Iif(Atc('CRSA',acc807.RAccountT)=1, acc807.Account, '') && CRSA - РџСЂРёР·РЅР°Рє РєРѕСЂСЂРµСЃРїРѕРЅРґРµРЅС‚СЃРєРѕРіРѕ СЃС‡РµС‚Р°
+    NAMEP With a807.NAMEP, NEWNUM With a807.BIC, TNP With a807.TNP, KSNP With Iif(Atc('CRSA',acc807.RAccountT)=1, acc807.Account, '') && CRSA - Признак корреспондентского счета
 
   Select (al)
   Skip
@@ -669,7 +661,7 @@ Use
 Select (al33)
 Set Order To &ord1
 Go Top
-Wait 'Р­РєСЃРїРѕСЂС‚ Р·Р°РєРѕРЅС‡РµРЅ!' Window Nowait
+Wait 'Экспорт закончен!' Window Nowait
 Endproc
 *--------------------------------------------------------------------
 Procedure plstl
@@ -685,56 +677,56 @@ Set Textmerge To (fl) On Noshow
 *!*  Endif
 
 Go Top
-*!*  Strtofile('  РЎРїРёСЃРѕРє СѓС‡Р°СЃС‚РЅРёРєРѕРІ СЃРїСЂР°РІРѕС‡РЅРёРєР° Р‘РРљ Р·Р° РґР°С‚Сѓ '+m_EDDate+' '+Chr(13)+Chr(10), fl, 1)
-\\  РЎРїРёСЃРѕРє СѓС‡Р°СЃС‚РЅРёРєРѕРІ СЃРїСЂР°РІРѕС‡РЅРёРєР° Р‘РРљ Р·Р° РґР°С‚Сѓ <<m_EDDate>>
+*!*  Strtofile('  Список участников справочника БИК за дату '+m_EDDate+' '+Chr(13)+Chr(10), fl, 1)
+\\  Список участников справочника БИК за дату <<m_EDDate>>
 ffi = Filter()
 If Len(ffi)>0
-*!*    Strtofile('  Р¤РёР»СЊС‚СЂ: '+Chr(13)+Chr(10), fl, 1)
-  \  Р¤РёР»СЊС‚СЂ:
+*!*    Strtofile('  Фильтр: '+Chr(13)+Chr(10), fl, 1)
+  \  Фильтр:
 
   If Atc('tx1', ffi)>0
-*!*      Strtofile('  РќР°РёРјРµРЅРѕРІР°РЅРёРµ СѓС‡Р°СЃС‚РЅРёРєР° = '+tx1+Chr(13)+Chr(10), fl, 1)
-    \  РќР°РёРјРµРЅРѕРІР°РЅРёРµ СѓС‡Р°СЃС‚РЅРёРєР° = <<tx1>>
+*!*      Strtofile('  Наименование участника = '+tx1+Chr(13)+Chr(10), fl, 1)
+    \  Наименование участника = <<tx1>>
   Endif
 
   If Atc('tx2', ffi)>0
-*!*      Strtofile('  РќР°РёРјРµРЅРѕРІР°РЅРёРµ РЅР°СЃРµР»РµРЅРЅРѕРіРѕ РїСѓРЅРєС‚Р° = '+tx2+Chr(13)+Chr(10), fl, 1)
-    \  РќР°РёРјРµРЅРѕРІР°РЅРёРµ РЅР°СЃРµР»РµРЅРЅРѕРіРѕ РїСѓРЅРєС‚Р° = <<tx2>>
+*!*      Strtofile('  Наименование населенного пункта = '+tx2+Chr(13)+Chr(10), fl, 1)
+    \  Наименование населенного пункта = <<tx2>>
   Endif
 
   If Atc('tx3', ffi)>0
-*!*      Strtofile('  РђРґСЂРµСЃ = '+tx3+Chr(13)+Chr(10), fl, 1)
-    \  РђРґСЂРµСЃ = <<tx3>>
+*!*      Strtofile('  Адрес = '+tx3+Chr(13)+Chr(10), fl, 1)
+    \  Адрес = <<tx3>>
   Endif
 
   If Atc('tx4', ffi)>0
-*!*      Strtofile('  РљРѕРґ С‚РµСЂСЂРёС‚РѕСЂРёРё = '+tx4+Chr(13)+Chr(10), fl, 1)
-    \  РљРѕРґ С‚РµСЂСЂРёС‚РѕСЂРёРё = '+tx4>>
+*!*      Strtofile('  Код территории = '+tx4+Chr(13)+Chr(10), fl, 1)
+    \  Код территории = '+tx4>>
   Endif
 
   If Atc('tx5', ffi)>0
-*!*      Strtofile('  РўРёРї СѓС‡Р°СЃС‚РЅРёРєР° РїРµСЂРµРІРѕРґР° = '+tx5+Chr(13)+Chr(10), fl, 1)
-    \  РўРёРї СѓС‡Р°СЃС‚РЅРёРєР° РїРµСЂРµРІРѕРґР° = '+tx5>>
+*!*      Strtofile('  Тип участника перевода = '+tx5+Chr(13)+Chr(10), fl, 1)
+    \  Тип участника перевода = '+tx5>>
   Endif
 
   If Atc('tx6', ffi)>0
-*!*      Strtofile('  РќР°РёРјРµРЅРѕРІР°РЅРёРµ СѓС‡Р°СЃС‚РЅРёРєР° РЅР° Р°РЅРіР»РёР№СЃРєРѕРј СЏР·. = '+tx6+Chr(13)+Chr(10), fl, 1)
-    \  РќР°РёРјРµРЅРѕРІР°РЅРёРµ СѓС‡Р°СЃС‚РЅРёРєР° РЅР° Р°РЅРіР»РёР№СЃРєРѕРј СЏР·. = '+tx6>>
+*!*      Strtofile('  Наименование участника на английском яз. = '+tx6+Chr(13)+Chr(10), fl, 1)
+    \  Наименование участника на английском яз. = '+tx6>>
   Endif
 
   If Atc('tx7', ffi)>0
-*!*      Strtofile('  Р‘РРљ РіРѕР»РѕРІРЅРѕР№ РѕСЂРі. = '+tx7+Chr(13)+Chr(10), fl, 1)
-    \  Р‘РРљ РіРѕР»РѕРІРЅРѕР№ РѕСЂРі. = '+tx7>>
+*!*      Strtofile('  БИК головной орг. = '+tx7+Chr(13)+Chr(10), fl, 1)
+    \  БИК головной орг. = '+tx7>>
   Endif
 
   If Atc('kus4', ffi)>0
-*!*      Strtofile('  Р”Р°С‚Р° РІРєР». РІ СЃРѕСЃС‚Р°РІ СѓС‡. РїРµСЂРµРІРѕРґР° = '+tx7+Chr(13)+Chr(10), fl, 1)
-    \  Р”Р°С‚Р° РІРєР». РІ СЃРѕСЃС‚Р°РІ СѓС‡. РїРµСЂРµРІРѕРґР° = '+tx7>>
+*!*      Strtofile('  Дата вкл. в состав уч. перевода = '+tx7+Chr(13)+Chr(10), fl, 1)
+    \  Дата вкл. в состав уч. перевода = '+tx7>>
   Endif
 
   If Atc('tx9', ffi)>0
-*!*      Strtofile('  РЈС‡Р°СЃС‚РЅРёРє РѕР±РјРµРЅР° (0 - РЅРµС‚) (1 - РґР°) = '+tx9+Chr(13)+Chr(10), fl, 1)
-    \  РЈС‡Р°СЃС‚РЅРёРє РѕР±РјРµРЅР° (0 - РЅРµС‚) (1 - РґР°) = '+tx9>>
+*!*      Strtofile('  Участник обмена (0 - нет) (1 - да) = '+tx9+Chr(13)+Chr(10), fl, 1)
+    \  Участник обмена (0 - нет) (1 - да) = '+tx9>>
   Endif
 
 Endif
@@ -749,12 +741,12 @@ Endscan
 Goto trr
 *!*  Strtofile('--------------------------------'+Chr(13)+Chr(10), fl, 1)
 \--------------------------------
-*!*  Strtofile('РРўРћР“Рћ:  '+Transform(I)+' '+Chr(13)+Chr(10), fl, 1)
-\РРўРћР“Рћ:  <<Transform(I)>>
+*!*  Strtofile('ИТОГО:  '+Transform(I)+' '+Chr(13)+Chr(10), fl, 1)
+\ИТОГО:  <<Transform(I)>>
 Set Textmerge To Off
 parl = 'notepad.exe'+' '+fl
 loWshShell=Createobject("WScript.Shell")
-loWshShell.Run(parl, 1, .F.) && .F. РЅРµ Р¶РґР°С‚СЊ РІС‹РїРѕР»РЅРµРЅРёСЏ notepad.exe
+loWshShell.Run(parl, 1, .F.) && .F. не ждать выполнения notepad.exe
 
 Release loWshShell
 
@@ -769,7 +761,7 @@ Endproc
 Function pRTF1(bWordStart_, cFileName_)
 Hide Popup _3mp
 
-Wait 'РќР°С‡Р°Р»Рѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ Р»РёСЃС‚РёРЅРіР°.... ' Window Nowait
+Wait 'Начало формирования листинга.... ' Window Nowait
 
 Select (al)
 I = 0
@@ -784,68 +776,68 @@ With (oFile)
   .WriteHeader
   .PageA4
 
-  .WriteParagraph("  РЎРїРёСЃРѕРє СѓС‡Р°СЃС‚РЅРёРєРѕРІ СЃРїСЂР°РІРѕС‡РЅРёРєР° Р‘РРљ Р·Р° РґР°С‚Сѓ "+m_EDDate,;
+  .WriteParagraph("  Список участников справочника БИК за дату "+m_EDDate,;
     raCenter, rfsBold+rfsItalic, 0, 0, 3, 30)
 
   ffi = Filter()
   If Len(ffi)>0
 
-    .WriteParagraph("  Р¤РёР»СЊС‚СЂ:", raLeft, rfsBold, 0, 0, 2, 24)
+    .WriteParagraph("  Фильтр:", raLeft, rfsBold, 0, 0, 2, 24)
 
     If Atc('tx1', ffi)>0
-      .WriteParagraph("    РќР°РёРјРµРЅРѕРІР°РЅРёРµ СѓС‡Р°СЃС‚РЅРёРєР° = "+tx1, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Наименование участника = "+tx1, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx2', ffi)>0
-      .WriteParagraph("    РќР°РёРјРµРЅРѕРІР°РЅРёРµ РЅР°СЃРµР»РµРЅРЅРѕРіРѕ РїСѓРЅРєС‚Р° = "+tx2, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Наименование населенного пункта = "+tx2, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx3', ffi)>0
-      .WriteParagraph("    РђРґСЂРµСЃ = "+tx3, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Адрес = "+tx3, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx4', ffi)>0
-      .WriteParagraph("    РљРѕРґ С‚РµСЂСЂРёС‚РѕСЂРёРё = "+tx4, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Код территории = "+tx4, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx5', ffi)>0
-      .WriteParagraph("    РўРёРї СѓС‡Р°СЃС‚РЅРёРєР° РїРµСЂРµРІРѕРґР° = "+tx5, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Тип участника перевода = "+tx5, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx6', ffi)>0
-      .WriteParagraph("    РќР°РёРјРµРЅРѕРІР°РЅРёРµ СѓС‡Р°СЃС‚РЅРёРєР° РЅР° Р°РЅРіР»РёР№СЃРєРѕРј СЏР·. = "+tx6, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Наименование участника на английском яз. = "+tx6, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx7', ffi)>0
-      .WriteParagraph("    Р‘РРљ РіРѕР»РѕРІРЅРѕР№ РѕСЂРі. = "+tx7, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    БИК головной орг. = "+tx7, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('kus4', ffi)>0
-      .WriteParagraph("    Р”Р°С‚Р° РІРєР». РІ СЃРѕСЃС‚Р°РІ СѓС‡. РїРµСЂРµРІРѕРґР° = "+kus4, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Дата вкл. в состав уч. перевода = "+kus4, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx9', ffi)>0
-      .WriteParagraph("    РЈС‡Р°СЃС‚РЅРёРє РѕР±РјРµРЅР° (0 - РЅРµС‚) (1 - РґР°) = "+tx9, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Участник обмена (0 - нет) (1 - да) = "+tx9, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
   Endif
 
   .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 18)
   .SetAlignment(raCenter)
-  .BeginTable                           && РЅР°С‡Р°Р»Рѕ С‚Р°Р±Р»РёС†С‹
+  .BeginTable                           && начало таблицы
   .SetColumnsCount(2)
-  .m_arTblWidths(1) = .Twips(2)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
-  .m_arTblWidths(2) = .Twips(12)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
+  .m_arTblWidths(1) = .Twips(2)         && ширины колонок (в скобках - см)
+  .m_arTblWidths(2) = .Twips(12)         && ширины колонок (в скобках - см)
 
   .SetFont(3, 20, rfsBold)
   .SetupColumns()
-  .m_arTblValues(1) = "Р‘РРљ"
-  .m_arTblValues(2) = "РќР°РёРјРµРЅРѕРІР°РЅРёРµ СѓС‡Р°СЃС‚РЅРёРєР°"
-  .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+  .m_arTblValues(1) = "БИК"
+  .m_arTblValues(2) = "Наименование участника"
+  .WriteRow()               && занести значения .m_arTblValues в графы таблицы
 
   Scan
     I = I+1
 
-    Wait 'Р’С‹РІРѕРґ СѓС‡Р°СЃС‚РЅРёРєРѕРІ РІ С‚Р°Р±Р»РёС†Сѓ: '+Str(I,18) Window Nowait
+    Wait 'Вывод участников в таблицу: '+Str(I,18) Window Nowait
 
     For x = 1 To 2
       .m_arTblAlign(x) = raLeft
@@ -857,23 +849,23 @@ With (oFile)
     .m_arTblAlign(2) = raLeft
     .m_arTblValues(1) = BIC
     .m_arTblValues(2) = Alltrim(NAMEP)
-    .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+    .WriteRow()               && занести значения .m_arTblValues в графы таблицы
 
 
-  Endscan && -------- РєРѕРЅРµС† С†РёРєР»Р° РїРѕ Р·Р°РїРёСЃСЏРј dbf
+  Endscan && -------- конец цикла по записям dbf
 
   Goto trr
 
   .SetFont(3, 18, rfsBold)
-  .m_arTblValues(1) = 'РРўРћР“Рћ:  '
+  .m_arTblValues(1) = 'ИТОГО:  '
   .m_arTblValues(2) = Str(I) && ssa Alltrim(Str(I,18))
-  .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+  .WriteRow()               && занести значения .m_arTblValues в графы таблицы
 
   .EndTable
 
   .CloseFile
 
-* --------- Р Р°Р±РѕС‡РёР№ РљРћР” !!!
+* --------- Рабочий КОД !!!
 *    If(bWordStart_)
 *      DECLARE Integer GetFocus IN WIN32API
 *      DECLARE Integer ShellExecute IN SHELL32 INTEGER, STRING, STRING, STRING, STRING, INTEGER
@@ -881,7 +873,7 @@ With (oFile)
 *      If (hWnd != 0)
 *        result=ShellExecute(hWnd, "open", cFileName_, "", "", 5)
 *      Else
-*        Messagebox("Р¤Р°Р№Р» РѕС‚С‡РµС‚Р° РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РґСЂСѓРіРёРј РїСЂРёР»РѕР¶РµРЅРёРµРј!", 48,"РћС€РёР±РєР°!")
+*        Messagebox("Файл отчета используется другим приложением!", 48,"Ошибка!")
 *      EndIf
 *    EndIf
 * ----------
@@ -890,7 +882,7 @@ Endwith
 
 parl = 'wordpad.exe'+' '+cFileName_
 loWshShell=Createobject("WScript.Shell")
-loWshShell.Run(parl, 1, .F.) && .F. РЅРµ Р¶РґР°С‚СЊ РІС‹РїРѕР»РЅРµРЅРёСЏ notepad.exe
+loWshShell.Run(parl, 1, .F.) && .F. не ждать выполнения notepad.exe
 Release loWshShell
 
 Wait Clear
@@ -900,12 +892,12 @@ Return
 *--------------------------------------------------------------------
 Function pRTF2(bWordStart_, cFileName_)
 
-Wait 'РќР°С‡Р°Р»Рѕ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ Р»РёСЃС‚РёРЅРіР°.... ' Window Nowait
+Wait 'Начало формирования листинга.... ' Window Nowait
 Hide Popup _1mq
 
 pal02=Alias()
 
-* f02 = cFileName_ && С„Р°Р№Р» РІС‹РІРѕРґР°
+* f02 = cFileName_ && файл вывода
 
 Erase (cFileName_)
 
@@ -921,10 +913,10 @@ With (oFile)
 
   .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24)
 
-  .BeginTable                           && РЅР°С‡Р°Р»Рѕ С‚Р°Р±Р»РёС†С‹
+  .BeginTable                           && начало таблицы
   .SetColumnsCount(2)
-  .m_arTblWidths(1) = .Twips(8)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
-  .m_arTblWidths(2) = .Twips(5)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
+  .m_arTblWidths(1) = .Twips(8)         && ширины колонок (в скобках - см)
+  .m_arTblWidths(2) = .Twips(5)         && ширины колонок (в скобках - см)
 
   .SetFont(3, 20, rfsDefault)
   .SetupColumns()
@@ -939,7 +931,7 @@ With (oFile)
       .SetFont(3, 20, rfsDefault)
     Endif
     .m_arTblValues(2) = Alltrim(pZnach)
-    .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+    .WriteRow()               && занести значения .m_arTblValues в графы таблицы
   Endscan
 
   .EndTable
@@ -949,10 +941,10 @@ With (oFile)
   Select acc807
   ror=Recno()
 
-  .BeginTable                           && РЅР°С‡Р°Р»Рѕ С‚Р°Р±Р»РёС†С‹
+  .BeginTable                           && начало таблицы
   .SetColumnsCount(9)
-  .m_arTblWidths(1) = .Twips(4.5)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
-  .m_arTblWidths(2) = .Twips(2)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
+  .m_arTblWidths(1) = .Twips(4.5)         && ширины колонок (в скобках - см)
+  .m_arTblWidths(2) = .Twips(2)         && ширины колонок (в скобках - см)
   .m_arTblWidths(3) = .Twips(2)
   .m_arTblWidths(4) = .Twips(1.2)
   .m_arTblWidths(5) = .Twips(2.2)
@@ -968,16 +960,16 @@ With (oFile)
     .m_arTblAlign(zz) = raCenter
   Next zz
 
-  .m_arTblValues(1) = 'РЎР§Р•Рў'
-  .m_arTblValues(2) = 'Р”Р°С‚Р° РѕС‚РєСЂ.'
-  .m_arTblValues(3) = 'Р”Р°С‚Р° РёСЃРєР».'
-  .m_arTblValues(4) = 'РЎС‚Р°С‚СѓСЃ'
-  .m_arTblValues(5) = 'Р‘РРљ РџР‘Р '
-  .m_arTblValues(6) = 'Рљ.РєР»СЋС‡'
-  .m_arTblValues(7) = 'РўРёРї СЃС‡.'
-  .m_arTblValues(8) = 'Р”Р°С‚Р° РѕРіСЂР°РЅ.'
-  .m_arTblValues(9) = 'РўРёРї РѕРіСЂР°РЅРёС‡РµРЅРёСЏ'
-  .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+  .m_arTblValues(1) = 'СЧЕТ'
+  .m_arTblValues(2) = 'Дата откр.'
+  .m_arTblValues(3) = 'Дата искл.'
+  .m_arTblValues(4) = 'Статус'
+  .m_arTblValues(5) = 'БИК ПБР'
+  .m_arTblValues(6) = 'К.ключ'
+  .m_arTblValues(7) = 'Тип сч.'
+  .m_arTblValues(8) = 'Дата огран.'
+  .m_arTblValues(9) = 'Тип ограничения'
+  .WriteRow()               && занести значения .m_arTblValues в графы таблицы
   .SetFont(3, 20, rfsDefault)
 
   kk=0
@@ -993,10 +985,10 @@ With (oFile)
     .m_arTblValues(7) = RAccountT
     .m_arTblValues(8) = ARDat
     .m_arTblValues(9) = AccRs
-    .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+    .WriteRow()               && занести значения .m_arTblValues в графы таблицы
     Skip
   Enddo
-  .m_arTblValues(1) = 'РРўРћР“Рћ: '
+  .m_arTblValues(1) = 'ИТОГО: '
   .m_arTblValues(2) = ' '+Str(kk) && ssa Alltrim(Str(kk,18))
   .m_arTblValues(3) = ''
   .m_arTblValues(4) = ''
@@ -1006,7 +998,7 @@ With (oFile)
   .m_arTblValues(8) = ''
   .m_arTblValues(9) = ''
   .SetFont(3, 20, rfsBold)
-  .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+  .WriteRow()               && занести значения .m_arTblValues в графы таблицы
   .EndTable
 
   .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24)
@@ -1015,7 +1007,7 @@ With (oFile)
   Select (pal02)
   Go rr02
 
-  .CloseFile  && Р·Р°РєСЂС‹С‚РёРµ С„Р°Р№Р»Р°
+  .CloseFile  && закрытие файла
 
 Endwith
 
@@ -1024,7 +1016,7 @@ Wait Clear
 Local loWshShell As Wscript.Shell
 parms = 'wordpad.exe'+' '+cFileName_
 loWshShell=Createobject("WScript.Shell")
-loWshShell.Run(parms, 1, .F.) && .F. РЅРµ Р¶РґР°С‚СЊ РІС‹РїРѕР»РЅРµРЅРёСЏ wordpad.exe
+loWshShell.Run(parms, 1, .F.) && .F. не ждать выполнения wordpad.exe
 Release loWshShell
 
 Deactivate Popup _1mq
@@ -1053,50 +1045,50 @@ With (oFile)
   .WriteHeader
   .PageA4
 *    .PageA4LandScape
-  tqtmp = 'РЎСЂР°РІРЅРµРЅРёРµ СЃРѕРґРµСЂР¶Р°РЅРёСЏ СЃРїСЂР°РІРѕС‡РЅРёРєР° Р‘РРљ (ED807) Р·Р° РґР°С‚С‹: '+Dtoc(fr_start.Text1.Value)+' Рё '+Dtoc(w_com_d.Text1.Value)
+  tqtmp = 'Сравнение содержания справочника БИК (ED807) за даты: '+Dtoc(fr_start.Text1.Value)+' и '+Dtoc(w_com_d.Text1.Value)
   .WriteParagraph(tqtmp, raLeft, rfsBold, 0, 0, 2, 30)
   .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24)
 
   ffi = Filter()
-  If Len(ffi)>0 && Р•СЃР»Рё РµСЃС‚СЊ С„РёР»СЊС‚СЂ, С‚Рѕ СЃРІРµРґРµРЅРёСЏ Рѕ РЅС‘Рј РІС‹РІРѕРґСЏС‚СЃСЏ РІ С„Р°Р№Р»
+  If Len(ffi)>0 && Если есть фильтр, то сведения о нём выводятся в файл
 
-    .WriteParagraph("  Р¤РёР»СЊС‚СЂ:", raLeft, rfsBold, 0, 0, 2, 24)
+    .WriteParagraph("  Фильтр:", raLeft, rfsBold, 0, 0, 2, 24)
 
     If Atc('tx1', ffi)>0
-      .WriteParagraph("    РќР°РёРјРµРЅРѕРІР°РЅРёРµ СѓС‡Р°СЃС‚РЅРёРєР° = "+tx1, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Наименование участника = "+tx1, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx2', ffi)>0
-      .WriteParagraph("    РќР°РёРјРµРЅРѕРІР°РЅРёРµ РЅР°СЃРµР»РµРЅРЅРѕРіРѕ РїСѓРЅРєС‚Р° = "+tx2, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Наименование населенного пункта = "+tx2, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx3', ffi)>0
-      .WriteParagraph("    РђРґСЂРµСЃ = "+tx3, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Адрес = "+tx3, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx4', ffi)>0
-      .WriteParagraph("    РљРѕРґ С‚РµСЂСЂРёС‚РѕСЂРёРё = "+tx4, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Код территории = "+tx4, raLeft, rfsDefault, 0, 0, 2, 18)
 
     Endif
 
     If Atc('tx5', ffi)>0
-      .WriteParagraph("    РўРёРї СѓС‡Р°СЃС‚РЅРёРєР° РїРµСЂРµРІРѕРґР° = "+tx5, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Тип участника перевода = "+tx5, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx6', ffi)>0
-      .WriteParagraph("    РќР°РёРјРµРЅРѕРІР°РЅРёРµ СѓС‡Р°СЃС‚РЅРёРєР° РЅР° Р°РЅРіР»РёР№СЃРєРѕРј СЏР·. = "+tx6, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Наименование участника на английском яз. = "+tx6, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx7', ffi)>0
-      .WriteParagraph("    Р‘РРљ РіРѕР»РѕРІРЅРѕР№ РѕСЂРі. = "+tx7, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    БИК головной орг. = "+tx7, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('kus4', ffi)>0
-      .WriteParagraph("    Р”Р°С‚Р° РІРєР». РІ СЃРѕСЃС‚Р°РІ СѓС‡. РїРµСЂРµРІРѕРґР° = "+kus4, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Дата вкл. в состав уч. перевода = "+kus4, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
     If Atc('tx9', ffi)>0
-      .WriteParagraph("    РЈС‡Р°СЃС‚РЅРёРє РѕР±РјРµРЅР° (0 - РЅРµС‚) (1 - РґР°) = "+tx9, raLeft, rfsDefault, 0, 0, 2, 18)
+      .WriteParagraph("    Участник обмена (0 - нет) (1 - да) = "+tx9, raLeft, rfsDefault, 0, 0, 2, 18)
     Endif
 
   Endif  && IF LEN(ffi)>0
@@ -1104,72 +1096,72 @@ With (oFile)
   If w_com_d.Text1.Value > fr_start.Text1.Value
 
     .SetFont(2, 28, rfsBold)
-    .WriteParagraph(" Р’С‹Р±С‹РІС€РёРµ СѓС‡Р°СЃС‚РЅРёРєРё СЂР°СЃС‡РµС‚РѕРІ: ", raLeft, rfsUnderline, 0, 0, 2, 28)  && rfsBold
+    .WriteParagraph(" Выбывшие участники расчетов: ", raLeft, rfsUnderline, 0, 0, 2, 28)  && rfsBold
     .WriteParagraph(" ", raLeft, rfsDefault, 0, 0, 2, 24)
-    .BeginTable                           && РЅР°С‡Р°Р»Рѕ С‚Р°Р±Р»РёС†С‹
+    .BeginTable                           && начало таблицы
     .SetColumnsCount(2)
-    .m_arTblWidths(1) = .Twips(2)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
-    .m_arTblWidths(2) = .Twips(12)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
+    .m_arTblWidths(1) = .Twips(2)         && ширины колонок (в скобках - см)
+    .m_arTblWidths(2) = .Twips(12)         && ширины колонок (в скобках - см)
     .SetFont(3, 20, rfsDefault)
     .SetupColumns()
 *~~~~
     Do p_com1
 *~~~~
     .SetFont(3, 20, rfsBold)
-    .m_arTblValues(1) = "РРўРћР“Рћ:"
+    .m_arTblValues(1) = "ИТОГО:"
     .m_arTblValues(2) = Str(kuch1)  && ssa Alltrim(Str(kuch1,18))
-    .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+    .WriteRow()               && занести значения .m_arTblValues в графы таблицы
     .EndTable
     .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24)
 
     .SetFont(2, 28, rfsBold)
-    .WriteParagraph(" РќРѕРІС‹Рµ СѓС‡Р°СЃС‚РЅРёРєРё СЂР°СЃС‡РµС‚РѕРІ: ", raLeft, rfsUnderline, 0, 0, 2, 28)
+    .WriteParagraph(" Новые участники расчетов: ", raLeft, rfsUnderline, 0, 0, 2, 28)
     .WriteParagraph(" ", raLeft, rfsDefault, 0, 0, 2, 24)
-    .BeginTable                           && РЅР°С‡Р°Р»Рѕ С‚Р°Р±Р»РёС†С‹
+    .BeginTable                           && начало таблицы
     .SetColumnsCount(2)
-    .m_arTblWidths(1) = .Twips(2)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
-    .m_arTblWidths(2) = .Twips(12)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
+    .m_arTblWidths(1) = .Twips(2)         && ширины колонок (в скобках - см)
+    .m_arTblWidths(2) = .Twips(12)         && ширины колонок (в скобках - см)
     .SetFont(3, 20, rfsDefault)
     .SetupColumns()
 *~~~~
     Do p_com2
 *~~~~
     .SetFont(3, 20, rfsBold)
-    .m_arTblValues(1) = "РРўРћР“Рћ:"
+    .m_arTblValues(1) = "ИТОГО:"
     .m_arTblValues(2) = Str(kuch2)  && ssa Alltrim(Str(kuch2,18))
-    .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+    .WriteRow()               && занести значения .m_arTblValues в графы таблицы
     .EndTable
     .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24)
 
   Else
 
     .SetFont(2, 28, rfsBold)
-    .WriteParagraph(" РќРѕРІС‹Рµ СѓС‡Р°СЃС‚РЅРёРєРё СЂР°СЃС‡РµС‚РѕРІ: ", raLeft, rfsUnderline, 0, 0, 2, 28)
+    .WriteParagraph(" Новые участники расчетов: ", raLeft, rfsUnderline, 0, 0, 2, 28)
     .WriteParagraph(" ", raLeft, rfsDefault, 0, 0, 2, 24)
-    .BeginTable                           && РЅР°С‡Р°Р»Рѕ С‚Р°Р±Р»РёС†С‹
+    .BeginTable                           && начало таблицы
     .SetColumnsCount(2)
-    .m_arTblWidths(1) = .Twips(2)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
-    .m_arTblWidths(2) = .Twips(12)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
+    .m_arTblWidths(1) = .Twips(2)         && ширины колонок (в скобках - см)
+    .m_arTblWidths(2) = .Twips(12)         && ширины колонок (в скобках - см)
     .SetFont(3, 20, rfsDefault)
     .SetupColumns()
 *~~~~
     Do p_com1
 *~~~~
     .SetFont(3, 20, rfsBold)
-    .m_arTblValues(1) = "РРўРћР“Рћ:"
+    .m_arTblValues(1) = "ИТОГО:"
     .m_arTblValues(2) = Str(kuch1)  && ssa Alltrim(Str(kuch1,18))
-    .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+    .WriteRow()               && занести значения .m_arTblValues в графы таблицы
     .EndTable
     .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24)
 
 
     .SetFont(2, 28, rfsBold)
-    .WriteParagraph(" Р’С‹Р±С‹РІС€РёРµ СѓС‡Р°СЃС‚РЅРёРєРё СЂР°СЃС‡РµС‚РѕРІ: ", raLeft, rfsUnderline, 0, 0, 2, 28)
+    .WriteParagraph(" Выбывшие участники расчетов: ", raLeft, rfsUnderline, 0, 0, 2, 28)
     .WriteParagraph(" ", raLeft, rfsDefault, 0, 0, 2, 24)
-    .BeginTable                           && РЅР°С‡Р°Р»Рѕ С‚Р°Р±Р»РёС†С‹
+    .BeginTable                           && начало таблицы
     .SetColumnsCount(2)
-    .m_arTblWidths(1) = .Twips(2)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
-    .m_arTblWidths(2) = .Twips(12)         && С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє (РІ СЃРєРѕР±РєР°С… - СЃРј)
+    .m_arTblWidths(1) = .Twips(2)         && ширины колонок (в скобках - см)
+    .m_arTblWidths(2) = .Twips(12)         && ширины колонок (в скобках - см)
     .SetFont(3, 20, rfsDefault)
     .SetupColumns()
 *~~~~
@@ -1177,15 +1169,15 @@ With (oFile)
 *~~~~
 
     .SetFont(3, 20, rfsBold)
-    .m_arTblValues(1) = "РРўРћР“Рћ:"
+    .m_arTblValues(1) = "ИТОГО:"
     .m_arTblValues(2) = Str(kuch2)  && ssa Alltrim(Str(kuch2,18))
-    .WriteRow()               && Р·Р°РЅРµСЃС‚Рё Р·РЅР°С‡РµРЅРёСЏ .m_arTblValues РІ РіСЂР°С„С‹ С‚Р°Р±Р»РёС†С‹
+    .WriteRow()               && занести значения .m_arTblValues в графы таблицы
     .EndTable
     .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24)
 
   Endif
 
-  .CloseFile  && Р·Р°РєСЂС‹С‚РёРµ С„Р°Р№Р»Р°
+  .CloseFile  && закрытие файла
 Endwith
 
 Use In d807
@@ -1198,7 +1190,7 @@ Go Top
 Local loWshShell As Wscript.Shell
 parms = 'wordpad.exe'+' '+cFileName_
 loWshShell=Createobject("WScript.Shell")
-loWshShell.Run(parms, 1, .F.) && .F. РЅРµ Р¶РґР°С‚СЊ РІС‹РїРѕР»РЅРµРЅРёСЏ wordpad.exe
+loWshShell.Run(parms, 1, .F.) && .F. не ждать выполнения wordpad.exe
 Release loWshShell
 
 Return
