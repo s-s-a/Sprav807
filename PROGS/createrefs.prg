@@ -124,8 +124,7 @@ If !File(okspr)
   Insert Into okato values ('99', 'Еврейская автономная область (г Биробиджан)')
   Use in okato 
 Endif
-=======
-* Создание справочников
+
 tipu = pathdata + 'tipuch.dbf'
 
 If !File(tipu)
