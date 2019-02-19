@@ -187,11 +187,11 @@ DEFINE CLASS form1 AS form
 		*ssa*				unzclose(a)
 		
 		      o = Createobject("shell.application")
-		      For Each oFile In o.NameSpace(uTaget88).items
-		        o.NameSpace(pathdata).copyhere(oFile)
+		      For Each oFile as shell.application In o.NameSpace(uTaget88).items
+		        o.NameSpace(pathdata).copyhere(oFile, 16)
 		      Endfor
 		
-		      If !File(pathdata+n_FileInZip)
+		      If !File(cXMLFile)
 		        Messagebox('Ошибка разархивации zip-архива справочника! '+uTaget88, 48, 'Загрузка СПРАВОЧНИКА БИК')
 		        .Command2.Caption = 'Импорт'
 		        Return .F.
