@@ -21,18 +21,18 @@ Declare Integer LoadKeyboardLayout In win32api String, Integer
 Declare Integer GetKeyboardLayout In Win32API Integer
 
 *----------------------------------------------------------------------
-Declare Integer unzOpen In ZLib String FileName
-Declare Integer unzClose In ZLib Integer FileID
-* declare integer unzGoToFirstFile in ZLib integer FileID
-Declare Integer unzGoToNextFile In ZLib Integer FileID
-Declare Integer unzOpenCurrentFile In ZLib Integer FileID
-Declare Integer unzGetCurrentFileInfo In ZLib;
-  integer FileID,      String @file_info,    String @namefile,;
-  integer LenNameFile, String @extraField,   Integer extraFieldBufferSize,;
-  string  @szComment,  Integer ComBufSize
-Declare Integer unzCloseCurrentFile In ZLib Integer FileID
-Declare Integer unzReadCurrentFile In ZLib Integer FileID, String @buf, Integer lbuf
-Declare Integer unzeof In ZLib Integer FileID
+*!*  Declare Integer unzOpen In ZLib String FileName
+*!*  Declare Integer unzClose In ZLib Integer FileID
+*!*  * declare integer unzGoToFirstFile in ZLib integer FileID
+*!*  Declare Integer unzGoToNextFile In ZLib Integer FileID
+*!*  Declare Integer unzOpenCurrentFile In ZLib Integer FileID
+*!*  Declare Integer unzGetCurrentFileInfo In ZLib;
+*!*    integer FileID,      String @file_info,    String @namefile,;
+*!*    integer LenNameFile, String @extraField,   Integer extraFieldBufferSize,;
+*!*    string  @szComment,  Integer ComBufSize
+*!*  Declare Integer unzCloseCurrentFile In ZLib Integer FileID
+*!*  Declare Integer unzReadCurrentFile In ZLib Integer FileID, String @buf, Integer lbuf
+*!*  Declare Integer unzeof In ZLib Integer FileID
 
 *----------------------------------------------------------------------
 
