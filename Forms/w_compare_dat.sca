@@ -81,12 +81,10 @@ DEFINE CLASS w_com_d AS form
 			Endif
 		*ssa*	qqo=pathdata+'a807'+SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)+'.dbf'
 		*ssa*	qqk=pathdata+'a807'+SUBSTR(DTOC(ThisForm.Text1.Value),7,4)+SUBSTR(DTOC(ThisForm.Text1.Value),4,2)+SUBSTR(DTOC(ThisForm.Text1.Value),1,2)+'.cdx'
-			qqo=pathdata+'a807'+Dtos(.Text1.Value)+'.dbf'
-			qqk=pathdata+'a807'+Dtos(.Text1.Value)+'.cdx'
+		*!*		qqo=pathdata+'a807'+Dtos(.Text1.Value)+'.dbf'
+		*!*		qqk=pathdata+'a807'+Dtos(.Text1.Value)+'.cdx'
 		
-		*=MESSAGEBOX(qqo+CHR(13)+qqk)
-		
-			If (!(File(qqo))) &&.OR.(!(FILE(qqk)))
+			If (!(File(pathdata+'a807'+Dtos(.Text1.Value)+'.dbf'))) &&.OR.(!(FILE(qqk)))
 				Messagebox('Отсутстует DBF-таблица БИК-ов (или индексный файл)!'+Chr(13)+;
 					'Необходимо сначала скачать справочник за указанную дату и сохранить по F7 !',0+48,'Внимание!',8000)
 				Return

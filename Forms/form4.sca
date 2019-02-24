@@ -491,7 +491,7 @@ DEFINE CLASS form4 AS form
 		Do Form mnu_form1 Name fr_mnu1 Noshow
 		fr_mnu1.Show(1)
 		Use
-		Select (al)
+		Select a807 && ssa (al)
 		
 	ENDPROC
 
@@ -502,7 +502,7 @@ DEFINE CLASS form4 AS form
 		Do Form mnu_form1 Name fr_mnu1 Noshow
 		fr_mnu1.Show(1)
 		Use
-		Select (al)
+		Select a807 && ssa (al)
 		
 	ENDPROC
 
@@ -513,7 +513,7 @@ DEFINE CLASS form4 AS form
 		Do Form mnu_form1 Name fr_mnu1 Noshow
 		fr_mnu1.Show(1)
 		Use
-		Select (al)
+		Select a807 && ssa (al)
 		
 	ENDPROC
 

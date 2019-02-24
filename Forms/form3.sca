@@ -118,7 +118,6 @@ DEFINE CLASS form3 AS form
 			.Grid1.Height = 79/19.25*(Sysmetric(2)/100) && Высота грид
 		*  ThisForm.Grid1.AutoFit()
 		
-		
 			.Grid1.Column1.ControlSource = 'p807.pNames'
 			.Grid1.Column1.Header1.Caption = 'Название атрибутов'
 			.Grid1.Column1.Width = 35/7*(Sysmetric(1)/100)

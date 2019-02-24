@@ -5,9 +5,6 @@ Set Century On
 Set Safety Off
 Set Procedure To procfile.prg, make_rtf.prg
 Set Sysmenu Off
-*SET ALTERNATE TO testalter.txt
-*SET ALTERNATE ON
-*SET CONSOLE OFF
 
 Declare Integer ShellExecute In SHELL32.Dll ;
   INTEGER nWinHandle, ;
@@ -45,8 +42,6 @@ Public al,al2, x_p_my, y_p_my, x_q_my, y_q_my, y_i_my, x_i_my, tx1, tx2, tx3, tx
   MyValue4, MyValue5, MyValue6, MyValue7, kus4, lcEntry6, lcValue6, lcEntry7, lcValue7,;
   g1_Width, g1_Height, g2_Height, g2_Top, g2_Width, tipu, uch01, okspr, numtext
 
-*        koef, koef2, koef3, koef4
-
 On Shutdown Do ExProg
 *ssa*  On Error Do errHandler With Error( ), Message( ), Message(1), Program( ), Lineno( )
 
@@ -63,7 +58,7 @@ g_naimenovanie ='' && наименование участника (в поиск
 numtext = ''
 
 With _Screen
-  .Left = 0
+*!*    .Left = 0
 *_Screen.Top = 0
 *ssa*    .Width = pWidth
 *ssa*    .Height = pHeight
@@ -170,7 +165,6 @@ If GetPrivStr("ClearHistory", lcEntry4, "", @lcBuffer, Len(lcBuffer), Curdir() +
 Endif
 
 _Screen.Caption = 'Справочник БИК (на основе ED807)'
-*ssa*  Zoom Window Screen Max
 
 On Key Label F11 Zoom Window Screen Max && распахивает главное окно на полный экран
 

@@ -1038,10 +1038,10 @@ DEFINE CLASS form2 AS form
 		With This
 			.Caption = .Caption+' '+m_EDNo+' '+m_EDDate+' '+m_EDAuthor+' '+m_CreationReason+' '+m_CreationDateTime+;
 				' '+m_InfoTypeCode+' '+m_ED11+' '+m_Bus11+' '+m_Dir11+;
-				'   '+' ;  F5 - поиск в табл. БИК; F6 - поиск в табл. счетов ; Ctrl+Home - верх ; Ctrl+End - низ ; F1 - помощь ; F7 - сохранить в DBF, F9 - экспорт в BNKSEEK.DBF'
+				'   '+' ;  F5 - поиск в табл. БИК; F6 - поиск в табл. счетов; Ctrl+Home - верх; Ctrl+End - низ; F1 - помощь; F7 - сохранить в DBF; F9 - экспорт в BNKSEEK.DBF'
 			With .Grid1
 				.RecordSourceType = 1
-				.RecordSource = (al)
+				.RecordSource = 'a807'  && ssa(al)
 		*  ThisForm.Grid1.ColumnCount = 15
 		*  ThisForm.Grid1.Column1.ControlSource = 'a807.NameP'
 		*  ThisForm.Grid1.AutoFit()
@@ -1249,20 +1249,19 @@ DEFINE CLASS form2 AS form
 	ENDPROC
 
 	PROCEDURE Command1.Click
-		SET FILTER TO 
-		COUNT TO k_filt
-		GO TOP 
-		ThisForm.Command1.Visible = .F.
-		 WAIT 'Записей = '+Transform(k_filt) WINDOW NOWAIT  && NOCLEAR 
+		Set Filter To
+		Count To k_filt
+		Go Top
+		Thisform.Command1.Visible = .F.
+		Wait 'Записей = '+Transform(k_filt) Window Nowait  && NOCLEAR
 		_vfp.StatusBar='Записей = '+Transform(k_filt)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column1.Header1.DblClick
 		Select (al)
 		r1=Recno()
 		Set Order To Tag BIC
-		*SET RELATION TO BIC INTO ACC807 ADDITIVE
-		*SET SKIP TO ACC807
 		Go r1
 		Thisform.Grid1.Refresh()
 		
@@ -1297,8 +1296,8 @@ DEFINE CLASS form2 AS form
 	ENDPROC
 
 	PROCEDURE Grid1.Column10.Header1.DblClick
-		SET ORDER TO TAG PtType
-		ThisForm.Grid1.Refresh()
+		Set Order To Tag PtType
+		Thisform.Grid1.Refresh()
 		
 	ENDPROC
 
@@ -1313,219 +1312,238 @@ DEFINE CLASS form2 AS form
 	ENDPROC
 
 	PROCEDURE Grid1.Column10.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column11.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column11.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column12.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column12.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column13.Header1.DblClick
-		SET ORDER TO TAG UID
-		ThisForm.Grid1.Refresh()
+		Set Order To Tag UID
+		Thisform.Grid1.Refresh()
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column13.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column13.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column14.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column14.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column15.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column15.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column16.Header1.DblClick
-		SELECT (al)
-		r1=RECNO()
-		SET ORDER TO TAG Regn
-		GO r1
-		ThisForm.Grid1.Refresh()
+		Select (al)
+		r1=Recno()
+		Set Order To Tag Regn
+		Go r1
+		Thisform.Grid1.Refresh()
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column16.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column16.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column17.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column17.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column18.Header1.DblClick
 		* SWBIC
-		SELECT (al)
-		r1=RECNO()
-		SET ORDER TO TAG SWBIC
-		GO r1
-		ThisForm.Grid1.Refresh()
+		Select (al)
+		r1=Recno()
+		Set Order To Tag SWBIC
+		Go r1
+		Thisform.Grid1.Refresh()
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column18.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column18.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column19.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column19.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column2.Header1.Click
@@ -1565,140 +1583,153 @@ DEFINE CLASS form2 AS form
 	ENDPROC
 
 	PROCEDURE Grid1.Column20.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column20.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column21.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column21.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column22.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column22.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column23.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column24.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column25.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column26.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column27.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column28.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column29.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column3.Header1.DblClick
@@ -1730,52 +1761,55 @@ DEFINE CLASS form2 AS form
 	ENDPROC
 
 	PROCEDURE Grid1.Column30.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column31.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column4.Header1.DblClick
-		SET ORDER TO Ind
-		ThisForm.Grid1.Refresh()
+		Set Order To Ind
+		Thisform.Grid1.Refresh()
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column4.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column4.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column5.Text1.MouseDown
@@ -1789,112 +1823,121 @@ DEFINE CLASS form2 AS form
 	ENDPROC
 
 	PROCEDURE Grid1.Column5.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column6.Header1.DblClick
-		SET ORDER TO TAG Nnp
-		ThisForm.Grid1.Refresh()
+		Set Order To Tag Nnp
+		Thisform.Grid1.Refresh()
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column6.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column6.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column7.Header1.DblClick
-		SET ORDER TO TAG Adr
-		ThisForm.Grid1.Refresh()
+		Set Order To Tag Adr
+		Thisform.Grid1.Refresh()
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column7.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column7.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column8.Header1.DblClick
-		SET ORDER TO TAG PrntBIC
-		ThisForm.Grid1.Refresh()
+		Set Order To Tag PrntBIC
+		Thisform.Grid1.Refresh()
 		
 	ENDPROC
 
 	PROCEDURE Grid1.Column8.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column8.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column9.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO p1menu
-		ENDIF 
+		If nButton=2
+			Do p1menu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column9.Text1.When
-		ax1=ALIAS()
+		ax1=Alias()
 		g_kolac = 0
-		SELECT acc807
-		IF !EOF()
-		 COUNT FOR BIC=a807.BIC TO g_kolac
-		ENDIF 
+		Select acc807
+		If !Eof()
+			Count For BIC=a807.BIC To g_kolac
+		Endif
 		_vfp.StatusBar='Записей БИК = '+Transform(k_filt)+'  Счетов: '+Transform(g_kolac)
-		SELECT (ax1)
+		Select (ax1)
+		
 	ENDPROC
 
 	PROCEDURE Grid1.MouseDown
@@ -1908,93 +1951,103 @@ DEFINE CLASS form2 AS form
 	ENDPROC
 
 	PROCEDURE Grid2.Column1.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO paccmenu
-		ENDIF 
+		If nButton=2
+			Do paccmenu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid2.Column10.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO paccmenu
-		ENDIF 
+		If nButton=2
+			Do paccmenu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid2.Column2.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO paccmenu
-		ENDIF 
+		If nButton=2
+			Do paccmenu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid2.Column3.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO paccmenu
-		ENDIF 
+		If nButton=2
+			Do paccmenu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid2.Column4.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO paccmenu
-		ENDIF 
+		If nButton=2
+			Do paccmenu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid2.Column5.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO paccmenu
-		ENDIF 
+		If nButton=2
+			Do paccmenu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid2.Column6.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO paccmenu
-		ENDIF 
+		If nButton=2
+			Do paccmenu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid2.Column7.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO paccmenu
-		ENDIF 
+		If nButton=2
+			Do paccmenu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid2.Column8.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO paccmenu
-		ENDIF 
+		If nButton=2
+			Do paccmenu
+		Endif
+		
 	ENDPROC
 
 	PROCEDURE Grid2.Column9.Text1.MouseDown
-		LPARAMETERS nButton, nShift, nXCoord, nYCoord
+		Lparameters nButton, nShift, nXCoord, nYCoord
 		x_p_my=nXCoord
 		y_p_my=nYCoord
-		IF nButton=2
-		 DO paccmenu
-		ENDIF 
+		If nButton=2
+			Do paccmenu
+		Endif
+		
 	ENDPROC
 
 ENDDEFINE

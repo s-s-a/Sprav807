@@ -94,7 +94,6 @@ DEFINE CLASS form2 AS form
 			.Grid1.Column1.Header1.Caption = 'КОД'
 			.Grid1.Column2.Header1.Caption = 'Наименование'
 		
-		
 			Do Case
 			Case numtext='4'
 				.Caption = 'Коды ОКАТО'
@@ -109,7 +108,6 @@ DEFINE CLASS form2 AS form
 				.Left = fr_4.Command2.Left
 				.Top = fr_4.Command2.Top
 			Endcase
-		
 		
 			.Width = .Grid1.Width + 2
 			.Height = .Grid1.Height + 2
