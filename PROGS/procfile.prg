@@ -510,45 +510,64 @@ Wait "Закачка файла завершена!" Window Nowait
 
 Endproc
 *--------------------------------------------------------------------
-Procedure Kopi
-Lparameters how_copy
+ PROCEDURE Kopi
+ LPARAMETERS how_copy
 
-dat77=Dtos(fr_start.Text1.Value)
+ IF FILE(pathdata+'a807'+dat77+'.dbf').OR.;
+    FILE(pathdata+'acc807'+dat77+'.dbf').OR.;
+    FILE(pathdata+'h807'+dat77+'.dbf').OR.;
+    FILE(pathdata+'accr807'+dat77+'.dbf')
+    IF how_copy='вручную'
+     =MESSAGEBOX('DBF-файлы справочника уже существуют.'+CHR(13)+'Копирование невозможно!',0+48,'Сохранение справочника в DBF')
+    ENDIF  
+  RETURN .F.
+ ENDIF 
 
-If IsFileExists(fr_start.Text1.Value)
-  If how_copy='вручную'
-    Messagebox('DBF-файлы справочника уже существуют.'+Chr(13)+'Копирование невозможно!',0+48,'Сохранение справочника в DBF')
-  Endif
-  Return .F.
-Endif
+ tmp_al = ALIAS()
+ tektmp=RECNO()
+ WAIT 'Копирование начато...' WINDOW NOWAIT 
+ SELECT (al)
+ to1='Data\a807'+dat77+'.dbf'
+ COPY TO &to1
+ SELECT (al2)
+ to2='Data\acc807'+dat77+'.dbf'
+ COPY TO &to2
+ to3='Data\h807'+dat77+'.dbf'
+ 
+ SELECT 0 && переключаемся в область, где нет таблтцы
+ CREATE DBF &to3 (EDNo C(9), EDDate C(10), EDAuthor C(10),  EDReceiver C(10),;
+                  CreationRe C(4), CreationDT C(20), InfoTypeCo C(4), BusinessDa C(10),;
+                  DirectoryV C(2))
+ APPEND BLANK 
+ 
+ 
+ 
+ REPLACE EDNo WITH m_EDNo, EDDate WITH m_EDDate, EDAuthor WITH m_EDAuthor, EDReceiver WITH m_ED11,;
+         CreationRe WITH m_CreationReason, CreationDT WITH m_CreationDateTime, InfoTypeCo WITH m_InfoTypeCode,;
+         BusinessDa WITH m_Bus11, DirectoryV WITH m_Dir11                  
 
-tmp_al = Alias()
-tektmp = Recno()
-Wait 'Копирование начато...' Window Nowait
-Select a807 && (al)
-Copy To 'Data\a807'+dat77+'.dbf'
-Select acc807 && (al2)
-Copy To 'Data\acc807'+dat77+'.dbf'
-to3 = 'Data\h807'+dat77+'.dbf'
-Select 0 && переключаемся в область, где нет таблтцы
-Create Dbf (to3) (EDNo C(9), EDDate C(10), EDAuthor C(10),  EDReceiver C(10),;
-  CreationRe C(4), CreationDT C(20), InfoTypeCo C(4), BusinessDa C(10),;
-  DirectoryV C(2))
-Append Blank
+ SELECT (al3)
+ to4='Data\accr807'+dat77+'.dbf'
+ COPY TO &to4
+ 
+ WAIT 'Копирование DBF завершено!' WINDOW NOWAIT 
+ 
+ dat77=SUBSTR(DTOC(fr_start.Text1.Value),7,4)+SUBSTR(DTOC(fr_start.Text1.Value),4,2)+SUBSTR(DTOC(fr_start.Text1.Value),1,2)
+ IF FILE(pathdata+'a807'+dat77+'.dbf').AND.;
+   FILE(pathdata+'acc807'+dat77+'.dbf').AND.;
+   FILE(pathdata+'h807'+dat77+'.dbf').AND.;
+   FILE(pathdata+'accr807'+dat77+'.dbf')
+  fr_start.Command2.ForeColor = RGB(0,128,0)
+ ELSE 
+  fr_start.Command2.ForeColor = RGB(255,128,0)
+ ENDIF 
+ 
+ SELECT (tmp_al)
+ IF !EOF()
+  GO tektmp
+ ENDIF  
+ENDPROC 
 
-Replace EDNo With m_EDNo, EDDate With m_EDDate, EDAuthor With m_EDAuthor, EDReceiver With m_ED11,;
-  CreationRe With m_CreationReason, CreationDT With m_CreationDateTime, InfoTypeCo With m_InfoTypeCode,;
-  BusinessDa With m_Bus11, DirectoryV With m_Dir11
-
-Wait 'Копирование DBF завершено!' Window Nowait
-
-fr_start.Command2.ForeColor = Iif(IsFileExists(fr_start.Text1.Value), Rgb(255,128,0), Rgb(0,128,0))
-
-Select (tmp_al)
-If !Eof()
-  Go tektmp
-Endif
-Endproc
 *--------------------------------------------------------------------
 Procedure pcompare
 
@@ -893,139 +912,170 @@ Deactivate Popup _3mp
 Release Popups _3mp
 Return
 *--------------------------------------------------------------------
-Function pRTF2(bWordStart_, cFileName_)
+FUNCTION prtf2(bWordStart_, cFileName_) 
 
-Wait 'Начало формирования листинга.... ' Window Nowait
-Hide Popup _1mq
-
-pal02=Alias()
+ WAIT 'Начало формирования листинга.... ' WINDOW NOWAIT 
+ HIDE POPUP _1mq 
+ 
+ pal02=ALIAS()
 
 * f02 = cFileName_ && файл вывода
 
-Erase (cFileName_)
+ Erase (cFileName_) 
 
-rr02=Recno()
-Go Top
-
-oFile = Createobject("CRtfFile", cFileName_,.T.)
-With (oFile)
-  .DefaultInit
-  .WriteHeader
+ rr02=RECNO()
+ GO TOP 
+ 
+   oFile = CreateObject("CRtfFile", cFileName_,.T.)
+ WITH (oFile) 
+    .DefaultInit
+    .WriteHeader
 *    .PageA4
-  .PageA4LandScape
+    .PageA4LandScape
+    
+    .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24)
 
-  .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24)
+    .BeginTable                           && начало таблицы
+    .SetColumnsCount(2)
+    .m_arTblWidths(1) = .Twips(8)         && ширины колонок (в скобках - см)
+    .m_arTblWidths(2) = .Twips(5)         && ширины колонок (в скобках - см)
+ 
+ 
+    .SetFont(3, 20, rfsDefault)
+    .SetupColumns()
+ tt=0
+ DO WHILE !EOF()
+  tt=tt+1
+ 
+    .m_arTblValues(1) = ALLTRIM(pNames)
+    IF tt=2
+     .SetFont(3, 20, rfsBold) 
+    ELSE 
+     .SetFont(3, 20, rfsDefault)  
+    ENDIF     
+    .m_arTblValues(2) = ALLTRIM(pZnach)
+    .WriteRow()               && занести значения .m_arTblValues в графы таблицы 
+   
+  SKIP 
+ ENDDO 
 
-  .BeginTable                           && начало таблицы
-  .SetColumnsCount(2)
-  .m_arTblWidths(1) = .Twips(8)         && ширины колонок (в скобках - см)
-  .m_arTblWidths(2) = .Twips(5)         && ширины колонок (в скобках - см)
+ .EndTable 
+ 
+ .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24)
+ 
+ 
+ SELECT acc807
+ ror=RECNO()
+ 
+    .BeginTable                           && начало таблицы
+    .SetColumnsCount(9)
+    .m_arTblWidths(1) = .Twips(4.5)         && ширины колонок (в скобках - см)
+    .m_arTblWidths(2) = .Twips(2)         && ширины колонок (в скобках - см)
+    .m_arTblWidths(3) = .Twips(2)
+    .m_arTblWidths(4) = .Twips(1.2)    
+    .m_arTblWidths(5) = .Twips(2.2)
+    .m_arTblWidths(6) = .Twips(1)        
+    .m_arTblWidths(7) = .Twips(1.2)
+    .m_arTblWidths(8) = .Twips(2)
+    .m_arTblWidths(9) = .Twips(1.5)            
+    
+    .SetFont(3, 20, rfsBold)
+    .SetupColumns()
+    
+    FOR zz=1 TO 9
+     .m_arTblAlign(zz) = raCenter
+    NEXT zz
+    
+    .m_arTblValues(1) = 'СЧЕТ'    
+    .m_arTblValues(2) = 'Дата откр.'
+    .m_arTblValues(3) = 'Дата искл.'
+    .m_arTblValues(4) = 'Статус'
+    .m_arTblValues(5) = 'БИК ПБР'
+    .m_arTblValues(6) = 'К.ключ'
+    .m_arTblValues(7) = 'Тип сч.'
+    .m_arTblValues(8) = 'Дата огран.'
+    .m_arTblValues(9) = 'Тип ограничения'
+    .WriteRow()               && занести значения .m_arTblValues в графы таблицы 
+    .SetFont(3, 20, rfsDefault)
 
-  .SetFont(3, 20, rfsDefault)
-  .SetupColumns()
-  tt=0
-  Scan
-    tt=tt+1
+ kk=0   
 
-    .m_arTblValues(1) = Alltrim(pNames)
-    If tt=2
-      .SetFont(3, 20, rfsBold)
-    Else
-      .SetFont(3, 20, rfsDefault)
-    Endif
-    .m_arTblValues(2) = Alltrim(pZnach)
-    .WriteRow()               && занести значения .m_arTblValues в графы таблицы
-  Endscan
-
-  .EndTable
-
-  .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24)
-
-  Select acc807
-  ror=Recno()
-
-  .BeginTable                           && начало таблицы
-  .SetColumnsCount(9)
-  .m_arTblWidths(1) = .Twips(4.5)         && ширины колонок (в скобках - см)
-  .m_arTblWidths(2) = .Twips(2)         && ширины колонок (в скобках - см)
-  .m_arTblWidths(3) = .Twips(2)
-  .m_arTblWidths(4) = .Twips(1.2)
-  .m_arTblWidths(5) = .Twips(2.2)
-  .m_arTblWidths(6) = .Twips(1)
-  .m_arTblWidths(7) = .Twips(1.2)
-  .m_arTblWidths(8) = .Twips(2)
-  .m_arTblWidths(9) = .Twips(1.5)
-
-  .SetFont(3, 20, rfsBold)
-  .SetupColumns()
-
-  For zz=1 To 9
-    .m_arTblAlign(zz) = raCenter
-  Next zz
-
-  .m_arTblValues(1) = 'СЧЕТ'
-  .m_arTblValues(2) = 'Дата откр.'
-  .m_arTblValues(3) = 'Дата искл.'
-  .m_arTblValues(4) = 'Статус'
-  .m_arTblValues(5) = 'БИК ПБР'
-  .m_arTblValues(6) = 'К.ключ'
-  .m_arTblValues(7) = 'Тип сч.'
-  .m_arTblValues(8) = 'Дата огран.'
-  .m_arTblValues(9) = 'Тип ограничения'
-  .WriteRow()               && занести значения .m_arTblValues в графы таблицы
-  .SetFont(3, 20, rfsDefault)
-
-  kk=0
-  Do While a807.BIC=BIC
-    kk=kk+1
-
-    .m_arTblValues(1) = Account
+ DO WHILE a807.BIC=BIC
+  kk=kk+1
+  kks=0
+    .m_arTblValues(1) = Account    
     .m_arTblValues(2) = DateIn
     .m_arTblValues(3) = DateOut
     .m_arTblValues(4) = AccountSta
     .m_arTblValues(5) = AccountCBR
     .m_arTblValues(6) = CK
     .m_arTblValues(7) = RAccountT
-    .m_arTblValues(8) = ARDat
-    .m_arTblValues(9) = AccRs
-    .WriteRow()               && занести значения .m_arTblValues в графы таблицы
-    Skip
-  Enddo
-  .m_arTblValues(1) = 'ИТОГО: '
-  .m_arTblValues(2) = ' '+Str(kk) && ssa Alltrim(Str(kk,18))
-  .m_arTblValues(3) = ''
-  .m_arTblValues(4) = ''
-  .m_arTblValues(5) = ''
-  .m_arTblValues(6) = ''
-  .m_arTblValues(7) = ''
-  .m_arTblValues(8) = ''
-  .m_arTblValues(9) = ''
-  .SetFont(3, 20, rfsBold)
-  .WriteRow()               && занести значения .m_arTblValues в графы таблицы
-  .EndTable
+    .m_arTblValues(8) = ''
+    .m_arTblValues(9) = ''
+    
+    SELECT accr807
+    prov=0
+    DO WHILE (acc807.account=account).AND.(!EOF())
+       kks=kks+1
+       prov=1
+      .m_arTblValues(8) = AccRstrDat
+      .m_arTblValues(9) = AccRstr
+      IF kks>1
+       .m_arTblValues(1) = ''    
+       .m_arTblValues(2) = ''
+       .m_arTblValues(3) = ''
+       .m_arTblValues(4) = ''
+       .m_arTblValues(5) = ''
+       .m_arTblValues(6) = ''
+       .m_arTblValues(7) = ''
+      ENDIF 
+      .WriteRow()  && занести значения .m_arTblValues в графы таблицы 
+      SKIP              
+    ENDDO 
 
-  .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24)
-
+    IF prov=0
+      .WriteRow()  && занести значения .m_arTblValues в графы таблицы 
+    ENDIF 
+    
+  SELECT acc807
+  SKIP 
+ ENDDO  
+ .m_arTblValues(1) = 'ИТОГО: '
+ .m_arTblValues(2) = ' '+ALLTRIM(STR(kk,18))
+ .m_arTblValues(3) = ''
+ .m_arTblValues(4) = ''
+ .m_arTblValues(5) = ''
+ .m_arTblValues(6) = ''
+ .m_arTblValues(7) = ''
+ .m_arTblValues(8) = ''
+ .m_arTblValues(9) = ''
+ .SetFont(3, 20, rfsBold) 
+ .WriteRow()               && занести значения .m_arTblValues в графы таблицы  
+ .EndTable
+ 
+ .WriteParagraph("", raLeft, rfsDefault, 0, 0, 2, 24) 
+  
 * GO ror
-  Select (pal02)
-  Go rr02
+ SELECT (pal02)
+ GO rr02
 
-  .CloseFile  && закрытие файла
+  .CloseFile  && закрытие файла 
 
-Endwith
+ 
+ ENDWITH 
+ 
+ WAIT CLEAR 
+ 
+ LOCAL loWshShell as Wscript.Shell   
+ parms = 'wordpad.exe'+' '+cFileName_
+ loWshShell=CREATEOBJECT("WScript.Shell")
+ loWshShell.Run(parms, 1, .F.) && .F. не ждать выполнения wordpad.exe
+ Release loWshShell
+ 
+ DEACTIVATE POPUP _1mq 
+ RELEASE POPUPS _1mq 
 
-Wait Clear
-
-Local loWshShell As Wscript.Shell
-parms = 'wordpad.exe'+' '+cFileName_
-loWshShell=Createobject("WScript.Shell")
-loWshShell.Run(parms, 1, .F.) && .F. не ждать выполнения wordpad.exe
-Release loWshShell
-
-Deactivate Popup _1mq
-Release Popups _1mq
-
-Return
+RETURN  
 *--------------------------------------------------------------------
 Function frtfcompare(bWordStart_, cFileName_)
 
