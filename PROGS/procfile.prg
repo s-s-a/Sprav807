@@ -145,27 +145,30 @@ Deactivate Popup _3mp
 Release Popups _3mp
 Return
 *-----------------------------------------------------------------------------------------------
-Procedure p1menu
+PROCEDURE p1menu
 
-Define Popup _3mp From y_p_my,x_p_my Margin Relative Shadow Font 'Arial', 10   && FONT 'Courier New', 10 STYLE 'B'
-Defi Bar 1 Of _3mp Prompt " Просмотр "
-Defi Bar 2 Of _3mp Prompt " Отбор по фильтру "
-Defi Bar 3 Of _3mp Prompt " Сброс фильтра "
-Defi Bar 4 Of _3mp Prompt " Поиск в таблице БИК "
-Defi Bar 5 Of _3mp Prompt " Копировать значение в буфер обмена "
-Defi Bar 6 Of _3mp Prompt " Сравнить с датой "
-Defi Bar 7 Of _3mp Prompt " Список клиентов "
-On Selec Bar 1 Of _3mp Do p2p
-On Selec Bar 2 Of _3mp Do p3p
-On Selec Bar 3 Of _3mp Do p4p
-On Selec Bar 4 Of _3mp Do poisk_men
-On Selec Bar 5 Of _3mp Do clipmy
-On Selec Bar 6 Of _3mp Do pcompare
-On Selec Bar 7 Of _3mp Do pcallrtf1 && plstl
-Activate Popup _3mp
-Release Popup _3mp
+ DEFINE POPUP _3mp FROM y_p_my,x_p_my MARGIN RELATIVE SHADOW FONT 'Arial', 10   && FONT 'Courier New', 10 STYLE 'B'  
+ DEFI BAR 1 OF _3mp PROMPT " Просмотр " COLOR SCHEME 3
+ DEFI BAR 2 OF _3mp PROMPT " Отбор по фильтру "   COLOR SCHEME 3 
+ DEFI BAR 3 OF _3mp PROMPT " Сброс фильтра "   COLOR SCHEME 3 
+ DEFI BAR 4 OF _3mp PROMPT " Поиск в таблице БИК "   COLOR SCHEME 3 
+ DEFI BAR 5 OF _3mp PROMPT " Копировать значение в буфер обмена "   COLOR SCHEME 3
+ DEFI BAR 6 OF _3mp PROMPT " Сравнить с датой "   COLOR SCHEME 3
+ DEFI BAR 7 OF _3mp PROMPT " Список клиентов "   COLOR SCHEME 3   
+ DEFI BAR 8 OF _3mp PROMPT " Список рестриктов "   COLOR SCHEME 3   
 
-Return
+ ON SELEC BAR 1 OF _3mp do p2p
+ ON SELEC BAR 2 OF _3mp do p3p 
+ ON SELEC BAR 3 OF _3mp do p4p 
+ ON SELEC BAR 4 OF _3mp do poisk_men
+ ON SELEC BAR 5 OF _3mp do clipmy
+ ON SELEC BAR 6 OF _3mp do pcompare 
+ ON SELEC BAR 7 OF _3mp do pcallrtf1 && plstl
+ ON SELEC BAR 8 OF _3mp do lstRestr
+ ACTIVATE POPUP _3mp 
+ RELEASE POPUP _3mp 
+
+RETURN 
 *--------------------------------------------------------------------------------------------------
 Procedure paccmenu
 Define Popup _7mp From y_p_my,x_p_my Margin Relative Shadow Font 'Arial', 10   && FONT 'Courier New', 10 STYLE 'B'
@@ -244,19 +247,31 @@ Release Popups _3mp
 
 Return
 *--------------------------------------------------------------------------------------------------
-Procedure p4p  && сброс фильтра
-Hide Popup _3mp
-Set Filter To
-Count To k_filt
-Go Top
-Wait 'Записей БИК = '+Str(k_filt) Window Nowait  && NOCLEAR
-_vfp.StatusBar='Записей БИК = '+Str(k_filt)
+PROCEDURE p4p  && сброс фильтра
+ HIDE POPUP _3mp
+ SET FILTER TO 
+ COUNT TO k_filt 
+ GO TOP
+ WAIT 'Записей БИК = '+ALLTRIM(STR(k_filt, 18)) WINDOW NOWAIT  && NOCLEAR 
+ _vfp.StatusBar='Записей БИК = '+ALLTRIM(STR(k_filt, 18))
 
-Store '' To tx1, tx2, tx3, tx4, tx5, tx6, tx7, tx8, tx9, kus4
+ tx1 = ''
+ tx2 = ''
+ tx3 = ''
+ tx4 = ''
+ tx5 = ''
+ tx6 = ''
+ tx7 = ''
+ tx8 = ''
+ tx9 = ''
+ kus4 = ''
+ fr_2.Grid1.SetFocus
+ fr_2.Grid1.Refresh
+ KEYBOARD '{DNARROW}'
+ DEACTIVATE POPUP _3mp
+ RELEASE POPUPS _3mp 
+RETURN 
 
-Deactivate Popup _3mp
-Release Popups _3mp
-Return
 *--------------------------------------------------------------------------------------------------
 Function My_activate_frm
 Lparameters tcFormName
@@ -1254,3 +1269,21 @@ Lparameters ldDate
 Local dat77 As Date
 dat77 = Dtos(ldDate)
 Return File(pathdata+'a807'+dat77+'.dbf') And File(pathdata+'acc807'+dat77+'.dbf') And File(pathdata+'h807'+dat77+'.dbf')
+
+*--------------------------------------------------------------------
+Procedure lstRestr
+  als=Alias()
+  SELECT accR807
+  SET ORDER TO 0
+  LIST TO FILE 'Data\lstrstr.txt' NOCONSOLE
+  SET ORDER TO ACCBIC
+  LOCAL loWshShell as Wscript.Shell   
+  parms = 'notepad.exe'+' '+'Data\lstrstr.txt'
+  loWshShell=CREATEOBJECT("WScript.Shell")
+  loWshShell.Run(parms, 1, .F.) && .F. не ждать выполнения wordpad.exe
+  Release loWshShell
+  SELECT (als)
+
+  DEACTIVATE POPUP _3mp  && д.б. последней
+EndProc
+*--------------------------------------------------------------------
