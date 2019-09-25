@@ -1035,7 +1035,7 @@ DEFINE CLASS form2 AS form
 	ADD OBJECT 'Label1' AS label WITH ;
 		AutoSize = .T., ;
 		Caption = "Label1", ;
-		Height = 0.84, ;
+		Height = 0.89, ;
 		Left = 132.86, ;
 		Name = "Label1", ;
 		Top = 37.63, ;
@@ -1311,6 +1311,10 @@ DEFINE CLASS form2 AS form
 		
 		 WAIT 'Записей = '+ALLTRIM(STR(k_filt, 18)) WINDOW NOWAIT  && NOCLEAR 
 		_vfp.StatusBar='Записей = '+ALLTRIM(STR(k_filt, 18))
+		 fr_2.Grid1.SetFocus
+		 fr_2.Grid1.Refresh
+		 KEYBOARD '{DNARROW}'
+		
 	ENDPROC
 
 	PROCEDURE Grid1.Column1.Header1.DblClick
